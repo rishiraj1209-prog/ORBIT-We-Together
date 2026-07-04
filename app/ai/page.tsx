@@ -1,5 +1,7 @@
 "use client";
-
+import { useEffect } from "react";
+import { useAuth } from "@/components/providers/auth-provider";
+import { loadChat, saveChat } from "@/lib/chat";
 import { useState } from "react";
 import {
   BrainCircuit,
@@ -45,6 +47,21 @@ export default function AICopilotPage() {
 
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const { user } = useAuth();
+
+useEffect(() => {
+  async function restoreChat() {
+    if (!user) return;
+
+    const history = await loadChat(user.uid);
+
+    if (history.length > 0) {
+      setMessages(history);
+    }
+  }
+
+  restoreChat();
+}, [user]);
 
   async function sendMessage(text?: string) {
     const value = text || input;
@@ -52,6 +69,9 @@ export default function AICopilotPage() {
     if (!value.trim()) return;
 
     setMessages((prev) => [...prev, { role: "user", text: value }]);
+    if (user) {
+  await saveChat(user.uid, "user", value);
+}
     setInput("");
     setLoading(true);
 
@@ -68,13 +88,20 @@ export default function AICopilotPage() {
 
     const data = await res.json();
 
-    setMessages((prev) => [
-      ...prev,
-      {
-        role: "ai",
-        text: data.reply || "Orbit AI could not generate a response.",
-      },
-    ]);
+    const aiReply =
+  data.reply || "Orbit AI could not generate a response.";
+
+setMessages((prev) => [
+  ...prev,
+  {
+    role: "ai",
+    text: aiReply,
+  },
+]);
+
+if (user) {
+  await saveChat(user.uid, "ai", aiReply);
+}
 
     setLoading(false);
   }

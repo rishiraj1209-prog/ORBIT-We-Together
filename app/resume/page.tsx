@@ -1,12 +1,33 @@
 "use client";
-
+import { createNotification } from "@/lib/notifications";
 import { useState } from "react";
+import { useEffect } from "react";
+import { useAuth } from "@/components/providers/auth-provider";
+import {
+  loadResumeAnalysis,
+  saveResumeAnalysis,
+} from "@/lib/resume-firestore";
 import { FileText, Sparkles } from "lucide-react";
 
 export default function ResumePage() {
   const [resumeText, setResumeText] = useState("");
   const [analysis, setAnalysis] = useState("");
   const [loading, setLoading] = useState(false);
+  const { user } = useAuth();
+
+useEffect(() => {
+  async function restoreAnalysis() {
+    if (!user) return;
+
+    const previous = await loadResumeAnalysis(user.uid);
+
+    if (previous) {
+      setAnalysis(previous);
+    }
+  }
+
+  restoreAnalysis();
+}, [user]);
 
   async function analyzeResume() {
     if (!resumeText.trim()) return;
@@ -27,6 +48,19 @@ export default function ResumePage() {
 
     const data = await res.json();
     setAnalysis(data.reply);
+
+if (user) {
+  await saveResumeAnalysis(user.uid, data.reply);
+  if (user) {
+  await saveResumeAnalysis(user.uid, data.reply);
+
+  await createNotification(user.uid, {
+    title: "Resume analyzed",
+    message: "Orbit AI generated your latest resume feedback.",
+    type: "resume",
+  });
+}
+}
     setLoading(false);
   }
 

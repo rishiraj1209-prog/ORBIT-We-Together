@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import {
   Award,
   Copy,
@@ -12,14 +13,23 @@ import {
   Users,
 } from "lucide-react";
 
-const leaderboard = [
-  { name: "Ananya Sharma", referrals: 18, badge: "Gold" },
-  { name: "Rohit Verma", referrals: 14, badge: "Silver" },
-  { name: "Priya Singh", referrals: 11, badge: "Bronze" },
-];
+import { getReferrals, Referral } from "@/lib/referrals";
 
 export default function ReferralsPage() {
   const referralLink = "https://orbit.app/invite/rishi-ai";
+
+  const [leaderboard, setLeaderboard] = useState<Referral[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function load() {
+      const data = await getReferrals();
+      setLeaderboard(data);
+      setLoading(false);
+    }
+
+    load();
+  }, []);
 
   async function copyLink() {
     await navigator.clipboard.writeText(referralLink);
@@ -38,8 +48,8 @@ export default function ReferralsPage() {
           <h1 className="text-5xl font-black">Grow the Orbit network.</h1>
 
           <p className="mt-4 max-w-2xl text-slate-400">
-            Invite students and alumni, unlock contribution badges, and help your
-            college community access mentorship and referrals.
+            Invite students and alumni, unlock contribution badges, and help
+            your college community access mentorship and referrals.
           </p>
         </div>
 
@@ -112,32 +122,41 @@ export default function ReferralsPage() {
             <h2 className="text-2xl font-bold">Top Contributors</h2>
           </div>
 
-          <div className="space-y-4">
-            {leaderboard.map((person, index) => (
-              <div
-                key={person.name}
-                className="flex items-center justify-between rounded-2xl border border-white/10 bg-black/20 p-5"
-              >
-                <div className="flex items-center gap-4">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-600 font-bold">
-                    {index + 1}
+          {loading ? (
+            <p className="text-slate-400">Loading contributors...</p>
+          ) : leaderboard.length === 0 ? (
+            <p className="text-slate-400">
+              No contributors found yet. Add documents in Firestore collection{" "}
+              <span className="text-indigo-300">referrals</span>.
+            </p>
+          ) : (
+            <div className="space-y-4">
+              {leaderboard.map((person, index) => (
+                <div
+                  key={person.id}
+                  className="flex items-center justify-between rounded-2xl border border-white/10 bg-black/20 p-5"
+                >
+                  <div className="flex items-center gap-4">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-600 font-bold">
+                      {index + 1}
+                    </div>
+
+                    <div>
+                      <p className="font-semibold">{person.name}</p>
+                      <p className="text-sm text-slate-400">
+                        {person.referrals} successful invites
+                      </p>
+                    </div>
                   </div>
 
-                  <div>
-                    <p className="font-semibold">{person.name}</p>
-                    <p className="text-sm text-slate-400">
-                      {person.referrals} successful invites
-                    </p>
+                  <div className="flex items-center gap-2 rounded-full border border-yellow-500/20 bg-yellow-500/10 px-4 py-2 text-yellow-300">
+                    <Medal size={16} />
+                    {person.badge}
                   </div>
                 </div>
-
-                <div className="flex items-center gap-2 rounded-full border border-yellow-500/20 bg-yellow-500/10 px-4 py-2 text-yellow-300">
-                  <Medal size={16} />
-                  {person.badge}
-                </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </section>
       </div>
     </main>

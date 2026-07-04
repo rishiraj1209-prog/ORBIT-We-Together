@@ -1,0 +1,46 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(uid) {
+      return signedIn() && request.auth.uid == uid;
+    }
+
+    match /profiles/{uid} {
+      allow read: if signedIn();
+      allow create, update, delete: if isOwner(uid);
+    }
+
+    match /users/{uid}/chat/{messageId} {
+      allow read, create, update, delete: if isOwner(uid);
+    }
+
+    match /resumeAnalysis/{uid} {
+      allow read, create, update, delete: if isOwner(uid);
+    }
+
+    match /roadmaps/{uid} {
+      allow read, create, update, delete: if isOwner(uid);
+    }
+
+    match /alumni/{docId} {
+      allow read: if signedIn();
+      allow write: if false;
+    }
+
+    match /opportunities/{docId} {
+      allow read: if signedIn();
+      allow write: if false;
+    }
+
+    match /referrals/{docId} {
+      allow read: if signedIn();
+      allow write: if false;
+    }
+  }
+}

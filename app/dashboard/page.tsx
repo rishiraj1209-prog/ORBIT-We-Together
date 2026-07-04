@@ -1,7 +1,8 @@
 "use client";
-
+import { getNotifications, Notification } from "@/lib/notifications";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { getDashboardStats } from "@/lib/dashboard";
 import {
   BrainCircuit,
   Briefcase,
@@ -50,6 +51,7 @@ export default function DashboardPage() {
 
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [profileLoading, setProfileLoading] = useState(true);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
 
   useEffect(() => {
     if (!loading && !user) router.push("/login");
@@ -65,6 +67,9 @@ export default function DashboardPage() {
       if (!user) return;
       const data = await getUserProfile(user.uid);
       setProfile(data);
+      const recentNotifications = await 
+      getNotifications(user.uid);
+setNotifications(recentNotifications.slice(0, 3));
       setProfileLoading(false);
     }
 
@@ -92,28 +97,35 @@ export default function DashboardPage() {
         skills: profile.skills || fallbackProfile.skills,
       }
     : fallbackProfile;
+    const stats = getDashboardStats(profile);
 
-  const cards = [
-    {
-      title: "Career Readiness",
-      value: profile ? "82%" : "42%",
-      icon: Target,
-      text: `Target: ${current.dreamCompany}.`,
-    },
-    {
-      title: "Best Alumni Matches",
-      value: "24",
-      icon: Users,
-      text: `Matching alumni using ${current.branch} and skills.`,
-    },
-    {
-      title: "Referral Opportunities",
-      value: "12",
-      icon: Briefcase,
-      text: "Referral-backed openings found.",
-    },
-  ];
-
+    const cards = [
+  {
+    title: "Profile Completion",
+    value: `${stats.profileCompletion}%`,
+    icon: Target,
+    text:
+      stats.profileCompletion === 100
+        ? "Your profile is complete."
+        : "Complete your profile to unlock better AI recommendations.",
+  },
+  {
+    title: "AI Readiness",
+    value: `${stats.aiReadiness}%`,
+    icon: BrainCircuit,
+    text: `${stats.skillsCount} skills detected.`,
+  },
+  {
+    title: "Career Goal",
+    value: stats.careerGoal,
+    icon: Briefcase,
+    text:
+      stats.careerGoal === "Not Set"
+        ? "Add your dream company in your profile."
+        : "Your AI recommendations are personalized for this goal.",
+  },
+];
+  
   return (
     <main className="min-h-screen px-6 py-8">
       <div className="mx-auto max-w-7xl">
@@ -169,7 +181,9 @@ export default function DashboardPage() {
             <div className="rounded-3xl border border-cyan-500/20 bg-cyan-500/10 p-6 text-center">
               <BrainCircuit className="mx-auto mb-3 text-cyan-300" size={38} />
               <p className="text-sm text-slate-400">AI Match Score</p>
-              <p className="text-5xl font-black">{profile ? "94%" : "48%"}</p>
+            <p className="text-5xl font-black">
+  {stats.aiReadiness}%
+</p>
             </div>
           </div>
         </section>
@@ -194,6 +208,25 @@ export default function DashboardPage() {
             );
           })}
         </section>
+        <section className="mt-8 rounded-3xl border border-white/10 bg-white/5 p-7 backdrop-blur-xl">
+  <h3 className="mb-5 text-2xl font-bold">Recent Activity</h3>
+
+  {notifications.length === 0 ? (
+    <p className="text-slate-400">No recent activity yet.</p>
+  ) : (
+    <div className="space-y-4">
+      {notifications.map((item) => (
+        <div
+          key={item.id}
+          className="rounded-2xl border border-white/10 bg-black/20 p-4"
+        >
+          <p className="font-semibold">{item.title}</p>
+          <p className="mt-1 text-sm text-slate-400">{item.message}</p>
+        </div>
+      ))}
+    </div>
+  )}
+</section>
       </div>
     </main>
   );

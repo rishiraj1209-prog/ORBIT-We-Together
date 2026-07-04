@@ -1,12 +1,33 @@
-"use client";
+"use client";import { createNotification } from "@/lib/notifications";
 
 import { useState } from "react";
+import { useEffect } from "react";
+import { useAuth } from "@/components/providers/auth-provider";
+import {
+  loadRoadmap,
+  saveRoadmap,
+} from "@/lib/roadmap-firestore";
 import { CalendarDays, Sparkles } from "lucide-react";
 
 export default function RoadmapPage() {
   const [goal, setGoal] = useState("AI Engineer at Google");
   const [roadmap, setRoadmap] = useState("");
   const [loading, setLoading] = useState(false);
+  const { user } = useAuth();
+
+useEffect(() => {
+  async function restoreRoadmap() {
+    if (!user) return;
+
+    const previous = await loadRoadmap(user.uid);
+
+    if (previous) {
+      setRoadmap(previous);
+    }
+  }
+
+  restoreRoadmap();
+}, [user]);
 
   async function generateRoadmap() {
     if (!goal.trim()) return;
@@ -27,6 +48,21 @@ export default function RoadmapPage() {
 
     const data = await res.json();
     setRoadmap(data.reply);
+
+if (user) {
+  await saveRoadmap(user.uid, data.reply);
+  setRoadmap(data.reply);
+
+if (user) {
+  await saveRoadmap(user.uid, data.reply);
+
+  await createNotification(user.uid, {
+    title: "Roadmap generated",
+    message: "Your AI-powered career roadmap is ready.",
+    type: "roadmap",
+  });
+}
+}
     setLoading(false);
   }
 
