@@ -53,7 +53,7 @@ export default function NotificationsPage() {
   }
 
   return (
-    <main className="min-h-screen px-6 py-10">
+    <div className="px-6 py-8">
       <div className="mx-auto max-w-5xl">
 
         <div className="mb-10">
@@ -125,6 +125,6 @@ export default function NotificationsPage() {
         )}
 
       </div>
-    </main>
+    </div>
   );
 }

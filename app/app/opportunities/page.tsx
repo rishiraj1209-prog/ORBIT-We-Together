@@ -20,7 +20,7 @@ export default function OpportunitiesPage() {
   }, []);
 
   return (
-    <main className="min-h-screen px-6 py-10">
+    <div className="px-6 py-8">
       <div className="mx-auto max-w-6xl">
         <p className="mb-3 inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-4 py-2 text-sm text-emerald-300">
           <Sparkles size={16} />
@@ -89,6 +89,6 @@ export default function OpportunitiesPage() {
           </section>
         )}
       </div>
-    </main>
+    </div>
   );
 }

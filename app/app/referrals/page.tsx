@@ -1,5 +1,5 @@
 "use client";
-
+import { toast, Toaster } from "sonner";
 import { useEffect, useState } from "react";
 import {
   Award,
@@ -33,11 +33,11 @@ export default function ReferralsPage() {
 
   async function copyLink() {
     await navigator.clipboard.writeText(referralLink);
-    alert("Referral link copied!");
+    toast.success("Referral link copied!");
   }
 
   return (
-    <main className="min-h-screen px-6 py-10">
+    <div className="px-6 py-8">
       <div className="mx-auto max-w-7xl">
         <div className="mb-10">
           <p className="mb-3 inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-4 py-2 text-sm text-emerald-300">
@@ -159,6 +159,6 @@ export default function ReferralsPage() {
           )}
         </section>
       </div>
-    </main>
+    </div>
   );
 }
