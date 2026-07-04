@@ -49,19 +49,21 @@ export default function Footer() {
             <h3 className="mb-4 font-semibold">Connect</h3>
 
             <div className="flex gap-4">
-             <Link
-  href="#"
-  className="rounded-xl border border-white/10 bg-white/5 p-3 transition hover:bg-white/10"
->
-  <Globe size={20} />
-</Link>
+              <a
+                href="https://orbit-we-together.vercel.app"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-xl border border-white/10 bg-white/5 p-3 transition hover:bg-white/10"
+              >
+                <Globe size={20} />
+              </a>
 
-<a
-  href="rishi12.09.2006rajsharma@gmail.com"
-  className="rounded-xl border border-white/10 bg-white/5 p-3 transition hover:bg-white/10"
->
-  <Mail size={20} />
-</a>
+              <a
+                href="mailto:rishi12.09.2006rajsharma@gmail.com"
+                className="rounded-xl border border-white/10 bg-white/5 p-3 transition hover:bg-white/10"
+              >
+                <Mail size={20} />
+              </a>
             </div>
           </div>
         </div>
@@ -73,13 +75,13 @@ export default function Footer() {
             © 2026 Orbit. Built as an AI career intelligence platform.
           </p>
 
-          <Link
-            href="/"
+          <a
+            href="#top"
             className="flex items-center gap-2 rounded-xl bg-white/5 px-4 py-2 text-sm transition hover:bg-white/10"
           >
             Back to top
             <ArrowUpRight size={16} />
-          </Link>
+          </a>
         </div>
       </div>
     </footer>

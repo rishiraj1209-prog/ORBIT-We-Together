@@ -7,7 +7,7 @@ import AnimatedBackground from "./animated-background";
 
 export default function Hero() {
   return (
-    <section className="relative flex min-h-screen items-center overflow-hidden px-6 pt-24">
+    <section id="top" className="relative flex min-h-screen items-center overflow-hidden px-6 pt-24">
       <AnimatedBackground />
 
       <div className="mx-auto grid max-w-7xl items-center gap-16 lg:grid-cols-[1.05fr_0.95fr]">
