@@ -12,7 +12,7 @@ export default function AISection() {
   return (
     <section
       id="ai"
-      className="relative overflow-hidden px-6 py-32"
+      className="relative overflow-hidden px-8 py-36 lg:px-10"
     >
       <div className="absolute right-0 top-20 h-96 w-96 rounded-full bg-green-500/10 blur-[120px]" />
 

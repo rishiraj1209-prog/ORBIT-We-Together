@@ -21,13 +21,13 @@ export default function Hero() {
   return (
     <section
       id="top"
-      className="relative min-h-screen overflow-hidden px-6 pt-32"
+      className="relative min-h-screen overflow-hidden px-8 pt-44 lg:px-10"
     >
       <div className="absolute left-1/2 top-24 h-96 w-96 -translate-x-1/2 rounded-full bg-green-500/20 blur-[120px]" />
       <div className="absolute right-10 top-40 h-72 w-72 rounded-full bg-lime-400/10 blur-[100px]" />
 
-      <div className="mx-auto grid max-w-7xl items-center gap-16 lg:grid-cols-[1fr_1fr]">
-        <div>
+      <div className="mx-auto grid w-full max-w-7xl items-center gap-24 lg:grid-cols-[1fr_1fr]">
+        <div className="max-w-2xl">
           <motion.p
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
@@ -41,7 +41,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="max-w-3xl text-5xl font-black leading-[1.02] tracking-tight md:text-7xl"
+            className="max-w-2xl text-5xl font-black leading-[1.02] tracking-tight md:text-7xl"
           >
             Your career,
             <br />
@@ -86,7 +86,7 @@ export default function Hero() {
           initial={{ opacity: 0, scale: 0.95, y: 32 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           transition={{ delay: 0.25 }}
-          className="relative"
+          className="relative lg:justify-self-end"
         >
           <div className="absolute -inset-8 rounded-[3rem] bg-green-500/20 blur-3xl" />
 
@@ -113,7 +113,7 @@ export default function Hero() {
         </motion.div>
       </div>
 
-      <div className="mx-auto mt-20 grid max-w-7xl gap-6 rounded-[2rem] border border-white/10 bg-white/[0.04] p-7 backdrop-blur-2xl md:grid-cols-4">
+      <div className="mx-auto mt-28 grid max-w-7xl gap-6 rounded-[2.5rem] border border-white/10 bg-gradient-to-br from-white/10 via-white/5 to-black/20 p-8 shadow-2xl shadow-green-950/30 backdrop-blur-2xl md:grid-cols-4 ">
         {stats.map(([value, label]) => (
           <div key={label} className="text-center">
             <p className="text-4xl font-black text-white">{value}</p>

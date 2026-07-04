@@ -6,7 +6,7 @@ import { ArrowRight, Sparkles } from "lucide-react";
 
 export default function CTA() {
   return (
-    <section id="contact" className="relative overflow-hidden px-6 py-32">
+    <section id="contact" className="relative overflow-hidden px-8 py-36 lg:px-10">
       <div className="absolute left-1/2 top-24 h-96 w-96 -translate-x-1/2 rounded-full bg-green-500/15 blur-[120px]" />
 
       <motion.div

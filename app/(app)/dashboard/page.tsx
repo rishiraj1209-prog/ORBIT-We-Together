@@ -139,7 +139,7 @@ export default function DashboardPage() {
             <p className="text-sm text-slate-400">Career Mission Control</p>
             <h1 className="mt-2 text-5xl font-black tracking-tight md:text-7xl">
               Welcome back,{" "}
-              <span className="bg-gradient-to-r from-lime-300 via-green-300 to-emarald-400 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-lime-300 via-green-300 to- emerald-400 bg-clip-text text-transparent">
                 {name}
               </span>
             </h1>

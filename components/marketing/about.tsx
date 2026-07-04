@@ -5,7 +5,7 @@ import { GraduationCap, Network, Sparkles, Target } from "lucide-react";
 
 export default function About() {
   return (
-    <section id="about" className="relative overflow-hidden px-6 py-32">
+    <section id="about" className="relative overflow-hidden px-8 py-36 lg:px-10">
       <div className="absolute left-0 top-24 h-80 w-80 rounded-full bg-green-500/10 blur-[110px]" />
 
       <div className="mx-auto grid max-w-7xl items-center gap-12 lg:grid-cols-[0.9fr_1.1fr]">

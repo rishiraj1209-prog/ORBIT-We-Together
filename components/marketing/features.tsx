@@ -52,7 +52,7 @@ const features = [
 
 export default function Features() {
   return (
-    <section id="features" className="relative px-6 py-32">
+    <section id="features" className="relative px-8 py-36 lg:px-10">
       <div className="absolute left-20 top-20 h-72 w-72 rounded-full bg-green-500/10 blur-[100px]" />
 
       <div className="mx-auto max-w-7xl">
