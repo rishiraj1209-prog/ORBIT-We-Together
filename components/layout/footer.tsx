@@ -49,13 +49,19 @@ export default function Footer() {
             <h3 className="mb-4 font-semibold">Connect</h3>
 
             <div className="flex gap-4">
-              <div className="rounded-xl border border-white/10 bg-white/5 p-3">
-                <Globe size={20} />
-              </div>
+             <Link
+  href="#"
+  className="rounded-xl border border-white/10 bg-white/5 p-3 transition hover:bg-white/10"
+>
+  <Globe size={20} />
+</Link>
 
-              <div className="rounded-xl border border-white/10 bg-white/5 p-3">
-                <Mail size={20} />
-              </div>
+<a
+  href="rishi12.09.2006rajsharma@gmail.com"
+  className="rounded-xl border border-white/10 bg-white/5 p-3 transition hover:bg-white/10"
+>
+  <Mail size={20} />
+</a>
             </div>
           </div>
         </div>
