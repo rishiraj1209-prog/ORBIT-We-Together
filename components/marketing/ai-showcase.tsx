@@ -26,7 +26,7 @@ const outcomes = [
 
 export default function AIShowcase() {
   return (
-    <section className="px-6 py-28">
+    <section id="ai" className="px-6 py-28">
       <div className="mx-auto grid max-w-7xl items-center gap-14 lg:grid-cols-[0.9fr_1.1fr]">
         <div>
           <p className="mb-5 inline-flex items-center gap-2 rounded-full border border-indigo-500/30 bg-indigo-500/10 px-4 py-2 text-sm text-indigo-300">

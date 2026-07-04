@@ -51,7 +51,7 @@ const features = [
 
 export default function Features() {
   return (
-    <section className="px-6 py-28">
+    <section id="features" className="px-6 py-28">
       <div className="mx-auto max-w-7xl">
         <div className="mx-auto mb-16 max-w-3xl text-center">
           <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-cyan-500/20 bg-cyan-500/10 px-4 py-2 text-sm text-cyan-300">

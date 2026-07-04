@@ -6,7 +6,7 @@ import { ArrowRight, Sparkles } from "lucide-react";
 
 export default function CTA() {
   return (
-    <section className="px-6 py-28">
+    <section id="contact" className="px-6 py-28">
       <motion.div
         initial={{ opacity: 0, y: 35 }}
         whileInView={{ opacity: 1, y: 0 }}

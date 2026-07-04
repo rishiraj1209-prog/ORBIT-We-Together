@@ -5,7 +5,7 @@ import Features from "@/components/marketing/features";
 import AIShowcase from "@/components/marketing/ai-showcase";
 import CTA from "@/components/marketing/cta";
 import Footer from "@/components/layout/footer";
-
+import About from "@/components/marketing/about";
 export default function Home() {
   return (
     <main className="min-h-screen overflow-x-hidden">
@@ -13,6 +13,7 @@ export default function Home() {
       <Hero />
       <DashboardPreview />
       <Features />
+      <About/>
       <AIShowcase />
       <CTA />
       <Footer />

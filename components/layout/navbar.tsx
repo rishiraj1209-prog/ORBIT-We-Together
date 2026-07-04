@@ -28,7 +28,13 @@ export default function Navbar() {
         </div>
 
         <button className="flex items-center gap-2 rounded-xl bg-indigo-600 px-5 py-3 font-semibold transition hover:scale-105">
-          Get Started
+          <Link
+  href="/login"
+  className="flex items-center gap-2 rounded-xl bg-indigo-600 px-5 py-3 font-semibold transition hover:scale-105"
+>
+  Get Started
+  <ArrowRight size={18} />
+</Link> Get Started
           <ArrowRight size={18} />
         </button>
       </div>
