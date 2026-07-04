@@ -34,7 +34,7 @@ export default function Navbar() {
 >
   Get Started
   <ArrowRight size={18} />
-</Link> Get Started
+</Link> 
           <ArrowRight size={18} />
         </button>
       </div>
