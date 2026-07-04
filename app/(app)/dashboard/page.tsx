@@ -137,9 +137,9 @@ export default function DashboardPage() {
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div>
             <p className="text-sm text-slate-400">Career Mission Control</p>
-            <h1 className="mt-2 text-4xl font-black tracking-tight md:text-6xl">
+            <h1 className="mt-2 text-5xl font-black tracking-tight md:text-7xl">
               Welcome back,{" "}
-              <span className="bg-gradient-to-r from-cyan-300 via-indigo-300 to-violet-400 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-lime-300 via-green-300 to-emarald-400 bg-clip-text text-transparent">
                 {name}
               </span>
             </h1>
@@ -148,7 +148,7 @@ export default function DashboardPage() {
           <div className="flex gap-3">
             <button
               onClick={() => router.push("/notifications")}
-              className="flex items-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-5 py-3 text-sm hover:bg-white/10"
+              className="flex items-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-5 py-3 text-sm hover:bg-green-500/10 hover:border-green-400/40 hover:-translate-y-1"
             >
               <Bell size={18} />
               Alerts
@@ -164,13 +164,13 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        <section className="relative overflow-hidden rounded-[2.2rem] border border-white/10 bg-gradient-to-br from-white/10 via-white/5 to-transparent p-8 shadow-2xl shadow-indigo-950/40 backdrop-blur-2xl">
-          <div className="absolute right-0 top-0 h-72 w-72 rounded-full bg-cyan-500/10 blur-3xl" />
-          <div className="absolute bottom-0 left-0 h-72 w-72 rounded-full bg-indigo-500/10 blur-3xl" />
+        <section className="relative overflow-hidden rounded-[2.2rem] border border-white/10 bg-gradient-to-br from-green-500/10 via-white/5 to-black/20 p-8 shadow-2xl shadow-green-950/40 backdrop-blur-2xl">
+          <div className="absolute right-0 top-0 h-72 w-72 rounded-full bg-lime-500/10 blur-3xl" />
+          <div className="absolute bottom-0 left-0 h-72 w-72 rounded-full bg-green-500/10 blur-3xl" />
 
           <div className="relative grid gap-8 lg:grid-cols-[1.4fr_0.8fr] lg:items-center">
             <div>
-              <p className="mb-5 inline-flex items-center gap-2 rounded-full border border-indigo-400/20 bg-indigo-500/10 px-4 py-2 text-sm text-indigo-200">
+              <p className="mb-5 inline-flex items-center gap-2 rounded-full border border-green-400/20 bg-green-500/10 px-4 py-2 text-sm text-green-200">
                 <Sparkles size={16} />
                 Orbit AI Insight
               </p>
@@ -195,15 +195,15 @@ export default function DashboardPage() {
 
                 <button
                   onClick={() => router.push("/roadmap")}
-                  className="rounded-2xl border border-white/10 bg-white/5 px-5 py-3 font-semibold text-white transition hover:bg-white/10"
+                  className="rounded-2xl border border-white/10 bg-white/5 px-5 py-3 font-semibold text-white transition hover:bg-green-500/10 hover:border-green-400/40 hover:-translate-y-1"
                 >
                   Generate Roadmap
                 </button>
               </div>
             </div>
 
-            <div className="rounded-[2rem] border border-cyan-400/20 bg-cyan-400/10 p-7 text-center">
-              <BrainCircuit className="mx-auto mb-4 text-cyan-300" size={42} />
+            <div className="rounded-[2rem] border border-green-400/20 bg-gradient-to-br from-green-500/15 to-lime-500/5 p-7 text-center">
+              <BrainCircuit className="mx-auto mb-4 text-lime-300" size={42} />
               <p className="text-sm text-slate-300">AI Readiness Score</p>
               <p className="mt-2 text-6xl font-black">{stats.aiReadiness}%</p>
               <Progress value={stats.aiReadiness} />
@@ -218,18 +218,18 @@ export default function DashboardPage() {
             return (
               <div
                 key={card.title}
-                className="group relative overflow-hidden rounded-[28px] border border-white/10 bg-gradient-to-br from-white/10 via-white/5 to-transparent p-7 backdrop-blur-2xl transition-all duration-300 hover:-translate-y-2 hover:border-cyan-400/30 hover:shadow-[0_0_40px_rgba(56,189,248,0.12)]"
+                className="group relative overflow-hidden rounded-[28px] border border-white/10 bg-gradient-to-br from-green-500/10 via-white/5 to-black/20 p-7 backdrop-blur-2xl transition-all duration-300 hover:-translate-y-2 hover:border-lime-400/30 hover:shadow-[0_0_55px_rgba(34,197,94,0.25)]"
               >
-                <div className="absolute right-0 top-0 h-32 w-32 rounded-full bg-cyan-500/10 blur-3xl transition-all duration-300 group-hover:bg-cyan-400/20" />
+                <div className="absolute right-0 top-0 h-32 w-32 rounded-full bg-lime-500/10 blur-3xl transition-all duration-300 group-hover:bg-lime-400/20" />
 
                 <div className="relative">
-                  <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500/30 to-cyan-500/30 shadow-lg shadow-cyan-500/20">
+                  <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-green-500/30 to-lime-500/30 shadow-lg shadow-lime-500/20">
                     <Icon />
                   </div>
 
                   <p className="text-slate-400">{card.title}</p>
 
-                  <h3 className="mt-3 bg-gradient-to-r from-white to-cyan-200 bg-clip-text text-4xl font-black text-transparent">
+                  <h3 className="mt-3 bg-gradient-to-r from-white to-lime-200 bg-clip-text text-4xl font-black text-transparent">
                     {card.value}
                   </h3>
 
@@ -247,7 +247,7 @@ export default function DashboardPage() {
             <h3 className="mb-6 text-2xl font-bold">Recent Activity</h3>
 
             {notifications.length === 0 ? (
-              <div className="rounded-3xl border border-white/10 bg-black/20 p-8 text-slate-400">
+              <div className="rounded-3xl border border-white/10 bg-gradient-to-r from-black/30 to-green-500/5 p-8 text-slate-400">
                 No recent activity yet. Analyze your resume or generate a
                 roadmap to start building your Orbit history.
               </div>
@@ -256,7 +256,7 @@ export default function DashboardPage() {
                 {notifications.map((item) => (
                   <div
                     key={item.id}
-                    className="rounded-2xl border border-white/10 bg-black/20 p-5"
+                    className="rounded-2xl border border-white/10 bg-gradient-to-r from-black/30 to-green-500/5 p-5"
                   >
                     <p className="font-semibold">{item.title}</p>
                     <p className="mt-1 text-sm text-slate-400">
@@ -279,10 +279,10 @@ export default function DashboardPage() {
                   <button
                     key={item.path}
                     onClick={() => router.push(item.path)}
-                    className="flex items-center gap-4 rounded-2xl border border-white/10 bg-black/20 p-4 text-left transition hover:bg-white/10"
+                    className="flex items-center gap-4 rounded-2xl border border-white/10 bg-gradient-to-r from-black/30 to-green-500/5 p-4 text-left transition hover:bg-green-500/10 hover:border-green-400/40 hover:-translate-y-1"
                   >
-                    <div className="rounded-xl bg-indigo-500/20 p-3">
-                      <Icon className="text-indigo-300" size={20} />
+                    <div className="rounded-xl bg-green-500/20 p-3">
+                      <Icon className="text-green-300" size={20} />
                     </div>
 
                     <span className="font-semibold">{item.label}</span>
@@ -297,17 +297,17 @@ export default function DashboardPage() {
           <h3 className="mb-5 text-2xl font-bold">Career Snapshot</h3>
 
           <div className="grid gap-4 md:grid-cols-3">
-            <div className="rounded-2xl bg-black/20 p-5">
+            <div className="rounded-2xl bg-gradient-to-r from-black/30 to-green-500/5 p-5">
               <p className="text-sm text-slate-400">Branch</p>
               <p className="mt-2 font-semibold">{branch}</p>
             </div>
 
-            <div className="rounded-2xl bg-black/20 p-5">
+            <div className="rounded-2xl bg-gradient-to-r from-black/30 to-green-500/5 p-5">
               <p className="text-sm text-slate-400">Skills</p>
               <p className="mt-2 font-semibold">{skills}</p>
             </div>
 
-            <div className="rounded-2xl bg-black/20 p-5">
+            <div className="rounded-2xl bg-gradient-to-r from-black/30 to-green-500/5 p-5">
               <p className="text-sm text-slate-400">Next Milestone</p>
               <p className="mt-2 font-semibold">Improve resume + roadmap</p>
             </div>

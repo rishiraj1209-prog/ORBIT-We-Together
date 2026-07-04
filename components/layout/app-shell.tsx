@@ -35,19 +35,17 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
   return (
-    <main className="min-h-screen overflow-x-hidden bg-[#050816] text-white">
-      <div className="fixed inset-0 -z-10 bg-[radial-gradient(circle_at_top_left,rgba(99,102,241,0.28),transparent_32%),radial-gradient(circle_at_bottom_right,rgba(34,211,238,0.18),transparent_34%),linear-gradient(180deg,#050816,#070a19)]" />
+    <main className="min-h-screen overflow-x-hidden bg-[#020617] text-white">
+      <div className="fixed inset-0 -z-10 bg-[radial-gradient(circle_at_20%_10%,rgba(34,197,94,0.18),transparent_30%),radial-gradient(circle_at_80%_20%,rgba(132,204,22,0.11),transparent_28%),radial-gradient(circle_at_50%_100%,rgba(20,184,166,0.12),transparent_35%),linear-gradient(180deg,#020617,#020617)]" />
 
       <div className="grid min-h-screen lg:grid-cols-[280px_1fr]">
         <aside className="hidden border-r border-white/10 bg-white/[0.035] p-6 backdrop-blur-2xl lg:block">
           <Link href="/dashboard" className="mb-10 flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 to-cyan-400 shadow-lg shadow-indigo-500/30">
-              <Sparkles size={20} />
+            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-green-400 to-lime-400 shadow-lg shadow-green-500/25">
+              <Sparkles className="text-slate-950" size={20} />
             </div>
 
-            <span className="bg-gradient-to-r from-cyan-300 via-indigo-300 to-violet-400 bg-clip-text text-3xl font-black text-transparent">
-              Orbit
-            </span>
+            <span className="text-3xl font-black text-white">Orbit</span>
           </Link>
 
           <nav className="space-y-2">
@@ -61,13 +59,13 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                   href={item.href}
                   className={`group flex items-center gap-3 rounded-2xl px-4 py-3 text-sm transition ${
                     active
-                      ? "bg-white/10 text-white shadow-lg shadow-indigo-500/10"
+                      ? "border border-green-400/20 bg-green-500/10 text-green-300 shadow-lg shadow-green-500/10"
                       : "text-slate-400 hover:bg-white/5 hover:text-white"
                   }`}
                 >
                   <Icon
                     size={18}
-                    className={active ? "text-cyan-300" : "group-hover:text-cyan-300"}
+                    className={active ? "text-green-300" : "group-hover:text-green-300"}
                   />
                   {item.label}
                 </Link>
@@ -77,11 +75,9 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         </aside>
 
         <section className="min-w-0 pb-24 lg:pb-0">
-          <div className="sticky top-0 z-40 border-b border-white/10 bg-[#050816]/75 px-6 py-4 backdrop-blur-2xl lg:hidden">
+          <div className="sticky top-0 z-40 border-b border-white/10 bg-[#020617]/80 px-6 py-4 backdrop-blur-2xl lg:hidden">
             <Link href="/dashboard" className="text-2xl font-black">
-              <span className="bg-gradient-to-r from-cyan-300 to-indigo-400 bg-clip-text text-transparent">
-                Orbit
-              </span>
+              Orbit
             </Link>
           </div>
 
@@ -89,7 +85,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         </section>
       </div>
 
-      <nav className="fixed bottom-4 left-1/2 z-50 grid w-[92%] max-w-md -translate-x-1/2 grid-cols-5 rounded-3xl border border-white/10 bg-[#0b1020]/90 p-2 shadow-2xl shadow-black/40 backdrop-blur-2xl lg:hidden">
+      <nav className="fixed bottom-4 left-1/2 z-50 grid w-[92%] max-w-md -translate-x-1/2 grid-cols-5 rounded-3xl border border-white/10 bg-[#020617]/95 p-2 shadow-2xl shadow-black/40 backdrop-blur-2xl lg:hidden">
         {mobileItems.map((item) => {
           const Icon = item.icon;
           const active = pathname === item.href;
@@ -99,7 +95,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
               key={item.href}
               href={item.href}
               className={`flex flex-col items-center gap-1 rounded-2xl px-2 py-2 text-[11px] transition ${
-                active ? "bg-white/10 text-cyan-300" : "text-slate-400"
+                active ? "bg-green-500/10 text-green-300" : "text-slate-400"
               }`}
             >
               <Icon size={18} />

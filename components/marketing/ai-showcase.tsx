@@ -3,138 +3,170 @@
 import { motion } from "motion/react";
 import {
   BrainCircuit,
+  Bot,
   CheckCircle2,
-  FileText,
-  Route,
-  Send,
   Sparkles,
-  Users,
 } from "lucide-react";
 
-const suggestions = [
-  "Create my Google roadmap",
-  "Review my resume",
-  "Find AI mentors",
-  "Write referral message",
-];
-
-const outcomes = [
-  { icon: FileText, label: "Resume gaps detected" },
-  { icon: Route, label: "90-day roadmap generated" },
-  { icon: Users, label: "24 alumni matches found" },
-];
-
-export default function AIShowcase() {
+export default function AISection() {
   return (
-    <section id="ai" className="px-6 py-28">
-      <div className="mx-auto grid max-w-7xl items-center gap-14 lg:grid-cols-[0.9fr_1.1fr]">
-        <div>
-          <p className="mb-5 inline-flex items-center gap-2 rounded-full border border-indigo-500/30 bg-indigo-500/10 px-4 py-2 text-sm text-indigo-300">
-            <Sparkles size={16} />
-            Orbit AI Copilot
-          </p>
+    <section
+      id="ai"
+      className="relative overflow-hidden px-6 py-32"
+    >
+      <div className="absolute right-0 top-20 h-96 w-96 rounded-full bg-green-500/10 blur-[120px]" />
 
-          <h2 className="text-4xl font-black leading-tight md:text-6xl">
-            One AI assistant for your entire career journey.
-          </h2>
+      <div className="mx-auto grid max-w-7xl items-center gap-16 lg:grid-cols-2">
 
-          <p className="mt-6 text-lg leading-8 text-slate-400">
-            Orbit understands your profile, resume, roadmap and goals — then
-            turns scattered career advice into clear next actions.
-          </p>
-
-          <div className="mt-10 grid gap-3 sm:grid-cols-2">
-            {suggestions.map((item) => (
-              <div
-                key={item}
-                className="rounded-2xl border border-white/10 bg-white/5 p-4 text-sm text-slate-300 transition hover:border-cyan-400/30 hover:bg-white/10"
-              >
-                {item}
-              </div>
-            ))}
-          </div>
-        </div>
+        {/* Left */}
 
         <motion.div
-          initial={{ opacity: 0, y: 36 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, x: -40 }}
+          whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
-          className="relative overflow-hidden rounded-[2.2rem] border border-white/10 bg-gradient-to-br from-white/10 via-white/5 to-transparent p-7 shadow-2xl shadow-indigo-950/40 backdrop-blur-2xl"
         >
-          <div className="absolute right-0 top-0 h-56 w-56 rounded-full bg-cyan-500/10 blur-3xl" />
+          <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-green-500/30 bg-green-500/10 px-4 py-2 text-green-300">
+            <Sparkles size={16} />
+            Orbit AI Copilot
+          </div>
 
-          <div className="relative">
-            <div className="mb-8 flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="flex h-13 w-13 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 to-cyan-400 p-3">
-                  <BrainCircuit />
-                </div>
+          <h2 className="text-5xl font-black leading-tight">
+            One AI assistant
+            <br />
+            for your entire
+            <br />
+            <span className="green-text">career journey.</span>
+          </h2>
 
-                <div>
-                  <h3 className="font-bold">Orbit AI</h3>
-                  <p className="text-sm text-emerald-400">Online · Context aware</p>
-                </div>
-              </div>
+          <p className="mt-8 max-w-xl text-lg leading-8 text-slate-400">
+            Orbit understands your profile, resume, roadmap and goals,
+            then transforms scattered career advice into one intelligent
+            action plan.
+          </p>
 
-              <span className="rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1 text-xs text-emerald-300">
-                Live
-              </span>
-            </div>
+          <div className="mt-10 space-y-5">
 
-            <div className="space-y-5">
-              <div className="ml-auto max-w-sm rounded-[1.4rem] bg-indigo-600/25 p-5">
-                I’m an ECE student. Help me become an AI engineer.
-              </div>
+            <Feature text="Generate personalized roadmaps" />
 
-              <div className="rounded-[1.4rem] border border-white/10 bg-black/20 p-5">
-                <p className="font-semibold text-cyan-200">
-                  Here’s your personalized strategy:
-                </p>
+            <Feature text="Analyze resumes instantly" />
 
-                <div className="mt-5 space-y-3">
-                  {[
-                    "Strengthen DSA and Python fundamentals.",
-                    "Build one deployed AI + full-stack project.",
-                    "Connect with alumni in AI, robotics and ML roles.",
-                  ].map((item) => (
-                    <div key={item} className="flex items-center gap-3">
-                      <CheckCircle2 className="text-emerald-400" size={19} />
-                      <span className="text-slate-300">{item}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
+            <Feature text="Write referral requests" />
 
-              <div className="grid gap-3 sm:grid-cols-3">
-                {outcomes.map((item) => {
-                  const Icon = item.icon;
+            <Feature text="Recommend internships" />
 
-                  return (
-                    <div
-                      key={item.label}
-                      className="rounded-2xl border border-white/10 bg-white/5 p-4"
-                    >
-                      <Icon className="mb-3 text-cyan-300" size={20} />
-                      <p className="text-sm text-slate-300">{item.label}</p>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
+            <Feature text="Match alumni automatically" />
 
-            <div className="mt-7 flex overflow-hidden rounded-2xl border border-white/10 bg-black/30">
-              <input
-                placeholder="Ask Orbit AI..."
-                className="flex-1 bg-transparent px-5 py-4 outline-none"
-              />
-
-              <button className="flex items-center justify-center bg-indigo-600 px-6 transition hover:bg-indigo-500">
-                <Send size={18} />
-              </button>
-            </div>
           </div>
         </motion.div>
+
+        {/* Right */}
+
+        <motion.div
+          initial={{ opacity: 0, x: 40 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+        >
+          <div className="green-glass rounded-[2.5rem] p-8">
+
+            <div className="mb-8 flex items-center gap-4">
+
+              <div className="rounded-2xl bg-gradient-to-br from-green-400 to-lime-400 p-4">
+
+                <Bot className="text-slate-950" size={30} />
+
+              </div>
+
+              <div>
+
+                <h3 className="text-2xl font-bold">
+                  Orbit AI
+                </h3>
+
+                <p className="text-green-300">
+                  Online · Context aware
+                </p>
+
+              </div>
+
+            </div>
+
+            <div className="rounded-3xl bg-slate-900/60 p-5">
+
+              <p className="text-slate-300">
+                I'm an ECE student. Help me become an AI Engineer.
+              </p>
+
+            </div>
+
+            <div className="my-5 h-px bg-white/10" />
+
+            <div className="rounded-3xl border border-green-500/20 bg-green-500/10 p-6">
+
+              <p className="mb-4 text-green-300 font-semibold">
+                Here's your personalized strategy
+              </p>
+
+              <div className="space-y-4">
+
+                <Task text="Master DSA fundamentals" />
+
+                <Task text="Build 3 AI projects" />
+
+                <Task text="Reach Codeforces Specialist" />
+
+                <Task text="Apply for ML internships" />
+
+              </div>
+
+            </div>
+
+            <div className="mt-6 rounded-2xl bg-black/30 p-4">
+
+              <input
+                placeholder="Ask Orbit AI anything..."
+                className="w-full bg-transparent outline-none placeholder:text-slate-500"
+              />
+
+            </div>
+
+          </div>
+
+        </motion.div>
+
       </div>
+
     </section>
+  );
+}
+
+function Feature({ text }: { text: string }) {
+  return (
+    <div className="flex items-center gap-4">
+      <div className="rounded-full bg-green-500/20 p-2">
+        <BrainCircuit
+          size={18}
+          className="text-green-300"
+        />
+      </div>
+
+      <span className="text-lg">
+        {text}
+      </span>
+    </div>
+  );
+}
+
+function Task({ text }: { text: string }) {
+  return (
+    <div className="flex items-center gap-3">
+
+      <CheckCircle2
+        className="text-green-400"
+        size={20}
+      />
+
+      <span>{text}</span>
+
+    </div>
   );
 }

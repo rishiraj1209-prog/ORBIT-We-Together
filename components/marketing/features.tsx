@@ -2,69 +2,74 @@
 
 import { motion } from "motion/react";
 import {
+  Bell,
   BrainCircuit,
-  Users,
   Briefcase,
-  Target,
+  FileText,
+  Network,
+  Route,
   Sparkles,
-  TrendingUp,
 } from "lucide-react";
 
 const features = [
   {
     icon: BrainCircuit,
     title: "AI Career Copilot",
-    description: "Ask career questions, generate roadmaps, and get personalized next steps.",
-    metric: "24×7",
+    description:
+      "Ask career questions, generate next steps, and get personalized advice.",
   },
   {
-    icon: Users,
+    icon: FileText,
+    title: "Smart Resume Analysis",
+    description:
+      "Analyze resume gaps, improve ATS readiness, and sharpen project impact.",
+  },
+  {
+    icon: Network,
     title: "Alumni Intelligence",
-    description: "Find the right alumni by company, role, branch, and career path.",
-    metric: "Smart Match",
+    description:
+      "Find the right alumni by company, branch, role, and career path.",
+  },
+  {
+    icon: Route,
+    title: "Personalized Roadmap",
+    description:
+      "Generate a practical weekly roadmap based on your dream company.",
   },
   {
     icon: Briefcase,
-    title: "Referral Engine",
-    description: "Discover referral-backed opportunities matched to your profile.",
-    metric: "AI Ranked",
+    title: "Opportunity Engine",
+    description:
+      "Discover internships, jobs, referrals, and programs matched to you.",
   },
   {
-    icon: Target,
-    title: "Roadmap Builder",
-    description: "Turn your dream company goal into practical weekly career missions.",
-    metric: "90 Days",
-  },
-  {
-    icon: Sparkles,
-    title: "Resume Intelligence",
-    description: "Analyze resume gaps, improve ATS readiness, and save feedback.",
-    metric: "ATS Ready",
-  },
-  {
-    icon: TrendingUp,
-    title: "Progress Dashboard",
-    description: "Track profile completion, AI readiness, activity, and career growth.",
-    metric: "Live Score",
+    icon: Bell,
+    title: "Real-time Notifications",
+    description:
+      "Track resume, roadmap, AI, referral, and opportunity updates instantly.",
   },
 ];
 
 export default function Features() {
   return (
-    <section id="features" className="px-6 py-28">
+    <section id="features" className="relative px-6 py-32">
+      <div className="absolute left-20 top-20 h-72 w-72 rounded-full bg-green-500/10 blur-[100px]" />
+
       <div className="mx-auto max-w-7xl">
         <div className="mx-auto mb-16 max-w-3xl text-center">
-          <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-cyan-500/20 bg-cyan-500/10 px-4 py-2 text-sm text-cyan-300">
+          <p className="mb-5 inline-flex items-center gap-2 rounded-full border border-green-500/30 bg-green-500/10 px-4 py-2 text-sm text-green-300">
             <Sparkles size={16} />
-            One career operating system
+            Everything you need
           </p>
 
           <h2 className="text-4xl font-black tracking-tight md:text-6xl">
-            Everything students need to move from ambition to opportunity.
+            One platform.{" "}
+            <span className="green-text">Infinite possibilities.</span>
           </h2>
 
           <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-slate-400">
-            Orbit brings together AI, alumni, resumes, referrals, roadmaps and progress tracking inside one polished career workspace.
+            Powerful AI tools and intelligent connections to accelerate your
+            career journey.
           </p>
         </div>
 
@@ -79,18 +84,14 @@ export default function Features() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.06 }}
                 viewport={{ once: true }}
-                className="group relative overflow-hidden rounded-[2rem] border border-white/10 bg-gradient-to-br from-white/10 via-white/5 to-transparent p-7 backdrop-blur-2xl transition-all duration-300 hover:-translate-y-2 hover:border-cyan-400/30 hover:shadow-[0_0_40px_rgba(56,189,248,0.12)]"
+                className="group green-glass relative overflow-hidden rounded-[2rem] p-7 transition-all duration-300 hover:-translate-y-2 hover:border-green-400/40 hover:shadow-[0_0_45px_rgba(34,197,94,0.16)]"
               >
-                <div className="absolute right-0 top-0 h-32 w-32 rounded-full bg-cyan-500/10 blur-3xl transition group-hover:bg-cyan-400/20" />
+                <div className="absolute right-0 top-0 h-32 w-32 rounded-full bg-green-500/10 blur-3xl transition group-hover:bg-lime-400/20" />
 
                 <div className="relative">
-                  <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500/30 to-cyan-500/30 shadow-lg shadow-cyan-500/20">
-                    <Icon size={28} className="text-cyan-200" />
+                  <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-green-400 to-lime-400 shadow-lg shadow-green-500/20">
+                    <Icon size={27} className="text-slate-950" />
                   </div>
-
-                  <p className="mb-3 text-sm font-semibold text-cyan-300">
-                    {feature.metric}
-                  </p>
 
                   <h3 className="text-2xl font-bold">{feature.title}</h3>
 

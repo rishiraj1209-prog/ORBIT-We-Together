@@ -97,29 +97,35 @@ export default function AICopilotPage() {
   return (
     <div className="px-6 py-10">
       <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[1.5fr_0.8fr]">
-        <section className="overflow-hidden rounded-[2rem] border border-white/10 bg-white/5 backdrop-blur-2xl">
-          <div className="border-b border-white/10 bg-gradient-to-r from-indigo-500/10 to-cyan-500/10 p-6">
-            <p className="mb-3 inline-flex items-center gap-2 rounded-full border border-cyan-500/20 bg-cyan-500/10 px-4 py-2 text-sm text-cyan-300">
-              <Sparkles size={16} />
-              Orbit AI Copilot
-            </p>
+        <section className="overflow-hidden rounded-[2.4rem] border border-white/10 bg-white/[0.04] shadow-2xl shadow-green-950/30 backdrop-blur-2xl">
+          <div className="relative border-b border-white/10 bg-gradient-to-r from-green-500/10 to-lime-500/10 p-7">
+            <div className="absolute right-0 top-0 h-40 w-40 rounded-full bg-green-500/10 blur-3xl" />
 
-            <h1 className="text-4xl font-black">Ask anything about your career.</h1>
+            <div className="relative">
+              <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-green-500/30 bg-green-500/10 px-4 py-2 text-sm text-green-300">
+                <Sparkles size={16} />
+                Orbit AI Copilot
+              </p>
 
-            <p className="mt-3 max-w-2xl text-slate-400">
-              Resume feedback, alumni strategy, roadmaps, referrals and career
-              decisions — all in one intelligent assistant.
-            </p>
+              <h1 className="text-4xl font-black md:text-5xl">
+                Ask anything about your career.
+              </h1>
+
+              <p className="mt-4 max-w-2xl leading-7 text-slate-400">
+                Resume feedback, alumni strategy, roadmaps, referrals and career
+                decisions — all inside one intelligent assistant.
+              </p>
+            </div>
           </div>
 
-          <div className="h-[560px] space-y-5 overflow-y-auto p-6">
+          <div className="h-[580px] space-y-5 overflow-y-auto p-6">
             {messages.map((message, index) => (
               <div
                 key={`${message.role}-${index}`}
                 className={
                   message.role === "user"
-                    ? "ml-auto max-w-2xl rounded-[1.5rem] bg-indigo-600/30 p-5"
-                    : "max-w-2xl rounded-[1.5rem] border border-white/10 bg-black/20 p-5"
+                    ? "ml-auto max-w-2xl rounded-[1.6rem] border border-green-500/20 bg-green-500/10 p-5"
+                    : "max-w-2xl rounded-[1.6rem] border border-white/10 bg-black/25 p-5"
                 }
               >
                 <p className="whitespace-pre-wrap leading-8 text-slate-200">
@@ -129,9 +135,9 @@ export default function AICopilotPage() {
             ))}
 
             {loading && (
-              <div className="max-w-lg rounded-[1.5rem] border border-white/10 bg-black/20 p-5">
+              <div className="max-w-lg rounded-[1.6rem] border border-white/10 bg-black/25 p-5">
                 <div className="flex items-center gap-3 text-slate-400">
-                  <BrainCircuit className="animate-pulse text-cyan-300" />
+                  <BrainCircuit className="animate-pulse text-green-300" />
                   Orbit AI is thinking...
                 </div>
               </div>
@@ -141,12 +147,12 @@ export default function AICopilotPage() {
           </div>
 
           <div className="border-t border-white/10 p-5">
-            <div className="flex overflow-hidden rounded-2xl border border-white/10 bg-black/30">
+            <div className="flex overflow-hidden rounded-2xl border border-white/10 bg-black/35">
               <input
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Ask Orbit AI..."
-                className="flex-1 bg-transparent px-5 py-4 outline-none"
+                className="flex-1 bg-transparent px-5 py-4 outline-none placeholder:text-slate-500"
                 onKeyDown={(e) => {
                   if (e.key === "Enter") sendMessage();
                 }}
@@ -155,7 +161,7 @@ export default function AICopilotPage() {
               <button
                 onClick={() => sendMessage()}
                 disabled={loading}
-                className="bg-indigo-600 px-6 transition hover:bg-indigo-500 disabled:opacity-60"
+                className="bg-gradient-to-r from-green-400 to-lime-400 px-6 text-slate-950 transition hover:opacity-90 disabled:opacity-60"
               >
                 <Send size={18} />
               </button>
@@ -164,9 +170,9 @@ export default function AICopilotPage() {
         </section>
 
         <aside className="space-y-6">
-          <div className="rounded-[2rem] border border-white/10 bg-white/5 p-6 backdrop-blur-2xl">
+          <div className="green-glass rounded-[2rem] p-6">
             <h3 className="mb-5 flex items-center gap-2 text-xl font-bold">
-              <Wand2 size={20} />
+              <Wand2 className="text-green-300" size={20} />
               Quick Actions
             </h3>
 
@@ -175,7 +181,7 @@ export default function AICopilotPage() {
                 <button
                   key={prompt}
                   onClick={() => sendMessage(prompt)}
-                  className="w-full rounded-2xl border border-white/10 bg-black/20 p-4 text-left text-sm transition hover:bg-white/10"
+                  className="w-full rounded-2xl border border-white/10 bg-black/25 p-4 text-left text-sm transition hover:border-green-400/40 hover:bg-green-500/10"
                 >
                   {prompt}
                 </button>
@@ -187,27 +193,24 @@ export default function AICopilotPage() {
             {
               icon: Route,
               title: "Roadmap Generator",
-              text: "Generate personalized 30-day and 90-day career plans.",
+              text: "Generate personalized career plans.",
             },
             {
               icon: FileText,
               title: "Resume Analyzer",
-              text: "Improve ATS score, keywords and project descriptions.",
+              text: "Improve ATS score and project impact.",
             },
             {
               icon: Users,
               title: "Alumni Strategy",
-              text: "Find the right alumni and generate intro messages.",
+              text: "Find the right alumni and request referrals.",
             },
           ].map((item) => {
             const Icon = item.icon;
 
             return (
-              <div
-                key={item.title}
-                className="rounded-[2rem] border border-white/10 bg-white/5 p-6 backdrop-blur-2xl"
-              >
-                <Icon className="mb-4 text-cyan-300" />
+              <div key={item.title} className="green-glass rounded-[2rem] p-6">
+                <Icon className="mb-4 text-green-300" />
                 <h3 className="text-xl font-bold">{item.title}</h3>
                 <p className="mt-3 text-slate-400">{item.text}</p>
               </div>

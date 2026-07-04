@@ -144,7 +144,7 @@ export default function ProfilePage() {
     <div className="px-6 py-10">
       <div className="mx-auto max-w-6xl space-y-8">
         <div>
-          <p className="mb-3 inline-flex items-center gap-2 rounded-full border border-indigo-500/30 bg-indigo-500/10 px-4 py-2 text-sm text-indigo-300">
+          <p className="mb-3 inline-flex items-center gap-2 rounded-full border border-green-500/30 bg-green-500/10 px-4 py-2 text-sm text-green-300">
             <Sparkles size={16} />
             Orbit Identity
           </p>
@@ -162,10 +162,10 @@ export default function ProfilePage() {
         <div className="grid gap-8 lg:grid-cols-[0.85fr_1.15fr]">
           <aside className="space-y-6">
             <section className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-gradient-to-br from-white/10 via-white/5 to-transparent p-7 backdrop-blur-2xl">
-              <div className="absolute right-0 top-0 h-40 w-40 rounded-full bg-cyan-500/10 blur-3xl" />
+              <div className="absolute right-0 top-0 h-40 w-40 rounded-full bg-lime-500/10 blur-3xl" />
 
               <div className="relative">
-                <div className="flex h-24 w-24 items-center justify-center rounded-[2rem] bg-gradient-to-br from-indigo-500 to-cyan-400 text-4xl font-black shadow-2xl shadow-indigo-500/20">
+                <div className="flex h-24 w-24 items-center justify-center rounded-[2rem] bg-gradient-to-br from-green-500 to-lime-400 text-4xl font-black shadow-2xl shadow-green-500/20">
                   {(profile.name || "O")
                     .split(" ")
                     .map((item) => item[0])
@@ -179,9 +179,9 @@ export default function ProfilePage() {
 
                 <p className="mt-2 text-slate-400">{profile.email}</p>
 
-                <div className="mt-6 rounded-2xl border border-emerald-500/20 bg-emerald-500/10 p-4">
+                <div className="mt-6 rounded-2xl border border-green-500/20 bg-green-500/10 p-4">
                   <div className="flex items-center gap-3">
-                    <BadgeCheck className="text-emerald-300" />
+                    <BadgeCheck className="text-green-300" />
                     <div>
                       <p className="font-semibold">Verified Career Profile</p>
                       <p className="text-sm text-slate-400">
@@ -213,7 +213,7 @@ export default function ProfilePage() {
                   {skills.map((skill) => (
                     <span
                       key={skill}
-                      className="rounded-full border border-cyan-500/20 bg-cyan-500/10 px-3 py-1 text-sm text-cyan-200"
+                      className="rounded-full border border-lime-500/20 bg-lime-500/10 px-3 py-1 text-sm text-lime-200"
                     >
                       {skill}
                     </span>
@@ -224,7 +224,7 @@ export default function ProfilePage() {
 
             <section className="grid gap-4">
               <div className="rounded-3xl border border-white/10 bg-white/5 p-5">
-                <GraduationCap className="mb-3 text-indigo-300" />
+                <GraduationCap className="mb-3 text-green-300" />
                 <p className="text-sm text-slate-400">Education</p>
                 <p className="mt-1 font-semibold">
                   {profile.branch || "Branch not added"} ·{" "}
@@ -233,7 +233,7 @@ export default function ProfilePage() {
               </div>
 
               <div className="rounded-3xl border border-white/10 bg-white/5 p-5">
-                <Briefcase className="mb-3 text-cyan-300" />
+                <Briefcase className="mb-3 text-lime-300" />
                 <p className="text-sm text-slate-400">Dream Company</p>
                 <p className="mt-1 font-semibold">
                   {profile.dreamCompany || "Not added"}
@@ -244,8 +244,8 @@ export default function ProfilePage() {
 
           <section className="rounded-[2rem] border border-white/10 bg-white/5 p-7 backdrop-blur-2xl">
             <div className="mb-7 flex items-center gap-3">
-              <div className="rounded-2xl bg-indigo-500/20 p-3">
-                <User className="text-indigo-300" />
+              <div className="rounded-2xl bg-green-500/20 p-3">
+                <User className="text-green-300" />
               </div>
 
               <div>
@@ -303,7 +303,7 @@ export default function ProfilePage() {
 
             <button
               onClick={save}
-              className="mt-7 flex items-center gap-2 rounded-2xl bg-indigo-600 px-6 py-4 font-semibold transition hover:scale-105 hover:bg-indigo-500"
+              className="mt-7 flex items-center gap-2 rounded-2xl bg-green-600 px-6 py-4 font-semibold transition hover:scale-105 hover:bg-green-500"
             >
               <Save size={18} />
               Save Profile
