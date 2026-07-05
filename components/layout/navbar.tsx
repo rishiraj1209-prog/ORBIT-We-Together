@@ -12,7 +12,7 @@ export default function Navbar() {
       transition={{ duration: 0.6 }}
       className="fixed left-0 right-0 top-0 z-50 border-b border-white/10 bg-[#020617]/95 backdrop-blur-2xl"
     >
-      <div className="mx-auto flex h-20 w-full max-w-7xl display= align cenre items-center justify-between px-4 sm:px-6 lg:px-16">
+      <div className="mx-auto flex h-20 w-full max-w-7xl justify content:around items-center justify-between px-4 sm:px-6 lg:px-16">
         <Link href="/" className="flex items-center gap-3">
           <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-green-400 to-lime-400 shadow-lg shadow-green-500/30">
             <Orbit className="text-slate-950" size={22} />

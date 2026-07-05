@@ -5,7 +5,7 @@ import { ArrowUpRight,Globe, Mail, Sparkles } from "lucide-react";
 
 export default function Footer() {
   return (
-    <footer className="relative overflow-hidden border-t border-white/10 bg-[#020617]/95">
+    <footer className="relative justify content:around overflow-hidden border-t border-white/10 bg-[#020617]/95">
       <div className="absolute left-1/2 top-0 h-px w-2/3 -translate-x-1/2 bg-gradient-to-r from-transparent via-green-400 to-transparent" />
       <div className="absolute bottom-0 right-0 h-72 w-72 rounded-full bg-green-500/10 blur-[110px]" />
 
