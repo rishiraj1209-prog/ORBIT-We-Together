@@ -21,7 +21,7 @@ export default function Hero() {
   return (
     <section
       id="top"
-      className="relative min-h-screen scroll-mt-28 overflow-visible px-4 pt-56 sm:px-6 sm:pt-60 lg:px-16 lg:pt-72"
+      className="relative min-h-screen scroll-mt-28 overflow-visible px-4 pt-20 sm:px-6 sm:pt-24 lg:px-16 lg:pt-32"
     >
       <div className="absolute left-1/2 top-24 h-96 w-96 -translate-x-1/2 rounded-full bg-green-500/20 blur-[120px]" />
       <div className="absolute right-10 top-40 h-72 w-72 rounded-full bg-lime-400/10 blur-[100px]" />
