@@ -1,36 +1,270 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🚀 Orbit – AI Career Intelligence Platform
 
-## Getting Started
+> **Orbit** is an AI-powered career intelligence platform that helps students accelerate their career journey through personalized AI guidance, resume analysis, career roadmaps, alumni networking, and opportunity discovery.
 
-First, run the development server:
+🌐 **Live Demo:** https://orbit-we-together.vercel.app/
+
+---
+
+## ✨ Features
+
+### 🤖 AI Career Assistant
+- AI-powered career guidance
+- Personalized career conversations
+- Smart career recommendations
+- Goal-oriented mentoring
+
+### 📄 AI Resume Analyzer
+- ATS-style resume analysis
+- Resume improvement suggestions
+- Skill gap identification
+- Personalized feedback
+
+### 🗺️ Career Roadmap Generator
+- AI-generated learning roadmap
+- Goal-based planning
+- Structured career milestones
+- Personalized action plans
+
+### 👨‍🎓 Alumni Network
+- Discover alumni
+- Search by company, role and branch
+- AI-powered matching
+- Request introductions
+
+### 💼 Opportunity Engine
+- Internship discovery
+- Job opportunities
+- Referral requests
+- AI opportunity matching
+
+### 🔔 Notification Center
+- Resume updates
+- AI activity
+- Career roadmap notifications
+- Platform alerts
+
+### 🎁 Referral System
+- Referral leaderboard
+- Contribution badges
+- Community rewards
+
+### 👤 User Profile
+- Skills management
+- Career goals
+- Academic profile
+- AI readiness tracking
+
+### 🔐 Authentication
+- Google Sign-In
+- Email & Password Authentication
+- Firebase Authentication
+- Secure user management
+
+---
+
+# 🛠️ Tech Stack
+
+## Frontend
+- Next.js 16
+- React
+- TypeScript
+- Tailwind CSS
+- Motion
+- Lucide React
+
+## Backend
+- Firebase Authentication
+- Cloud Firestore
+- Firebase Storage
+
+## AI
+- Google Gemini AI
+
+## Deployment
+- Vercel
+
+---
+
+# 📁 Project Structure
+
+```
+app/
+│
+├── ai/
+├── dashboard/
+├── profile/
+├── resume/
+├── roadmap/
+├── alumni/
+├── opportunities/
+├── notifications/
+├── referrals/
+├── settings/
+│
+components/
+│
+├── marketing/
+├── dashboard/
+├── providers/
+└── ui/
+│
+lib/
+│
+├── firebase/
+├── ai/
+├── firestore/
+├── notifications/
+├── opportunities/
+├── profile/
+└── roadmap/
+```
+
+---
+
+# 🚀 Getting Started
+
+## Clone the Repository
+
+```bash
+git clone https://github.com/rishiraj1209-prog/ORBIT-We-Together.git
+```
+
+## Navigate into the Project
+
+```bash
+cd ORBIT-We-Together
+```
+
+## Install Dependencies
+
+```bash
+npm install
+```
+
+## Create Environment Variables
+
+Create a `.env.local` file.
+
+```env
+NEXT_PUBLIC_FIREBASE_API_KEY=
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=
+NEXT_PUBLIC_FIREBASE_APP_ID=
+
+FIREBASE_PROJECT_ID=
+FIREBASE_CLIENT_EMAIL=
+FIREBASE_PRIVATE_KEY=
+
+GEMINI_API_KEY=
+```
+
+## Start Development Server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+# 📦 Build for Production
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm run build
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+# 🚀 Deployment
 
-## Deploy on Vercel
+Orbit is optimized for deployment on **Vercel**.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+git add .
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+git commit -m "Deploy latest version"
+
+git push
+```
+
+Vercel automatically builds and deploys the latest version.
+
+---
+
+# 🎯 Future Roadmap
+
+- AI Mock Interviews
+- Resume PDF Parsing
+- Application Tracker
+- Company Insights
+- AI Interview Feedback
+- Skill Analytics Dashboard
+- Personalized AI Mentor
+- Mobile Application
+- Calendar Integration
+- Email Notifications
+
+---
+
+# 🤝 Contributing
+
+Contributions are welcome.
+
+1. Fork the repository
+2. Create a feature branch
+
+```bash
+git checkout -b feature-name
+```
+
+3. Commit your changes
+
+```bash
+git commit -m "Add new feature"
+```
+
+4. Push the branch
+
+```bash
+git push origin feature-name
+```
+
+5. Open a Pull Request
+
+---
+
+# 📄 License
+
+This project is licensed under the **MIT License**.
+
+---
+
+# 👨‍💻 Author
+
+**Rishi Raj Sharma**
+
+B.Tech Electronics & Communication Engineering  
+National Institute of Technology Jamshedpur
+
+GitHub:
+https://github.com/rishiraj1209-prog
+
+---
+
+## ⭐ Support
+
+If you found this project useful, consider giving it a ⭐ on GitHub.
+
+It helps others discover the project and supports future development.
+
+---
+
+**Built with ❤️ using Next.js, Firebase and Google Gemini AI**

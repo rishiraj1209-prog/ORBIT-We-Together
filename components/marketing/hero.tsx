@@ -21,12 +21,12 @@ export default function Hero() {
   return (
     <section
       id="top"
-      className="relative min-h-screen overflow-hidden px-8 pt-44 lg:px-10"
-    >
+      className="relative min-h-screen overflow-visible px-4 pt-40 sm:px-6 sm:pt-44 lg:px-16 lg:pt-64"
+    ><div className="absolute left-0 right-0 top-0 h-20 bg-[#020617]" />
       <div className="absolute left-1/2 top-24 h-96 w-96 -translate-x-1/2 rounded-full bg-green-500/20 blur-[120px]" />
       <div className="absolute right-10 top-40 h-72 w-72 rounded-full bg-lime-400/10 blur-[100px]" />
 
-      <div className="mx-auto grid w-full max-w-7xl items-center gap-24 lg:grid-cols-[1fr_1fr]">
+      <div className="mx-auto grid w-full max-w-7xl items-center gap-12 px-0 sm:px-4 lg:grid-cols-[0.95fr_1.05fr] lg:gap-20 lg:px-12">
         <div className="max-w-2xl">
           <motion.p
             initial={{ opacity: 0, y: 18 }}
@@ -41,8 +41,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="max-w-2xl text-5xl font-black leading-[1.02] tracking-tight md:text-7xl"
-          >
+            className="mt-8 max-w-2xl text-4xl font-black leading-[1.15] tracking-tight sm:text-5xl md:text-7xl">
             Your career,
             <br />
             intelligently{" "}
@@ -53,7 +52,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="mt-7 max-w-2xl text-lg leading-8 text-slate-300"
+            className="mt-6 max-w-2xl text-base leading-7 text-slate-300 sm:text-lg sm:leading-8"
           >
             Orbit connects your profile, resume, roadmap, alumni network and
             opportunities into one AI-powered career command center.
@@ -63,11 +62,11 @@ export default function Hero() {
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="mt-9 flex flex-wrap gap-4"
+            className="mt-8 flex flex-wrap gap-3 sm:gap-4"
           >
             <Link
               href="/login"
-              className="green-button inline-flex items-center gap-2 rounded-2xl px-7 py-4"
+className="green-button inline-flex items-center gap-2 rounded-2xl px-4 py-3 text-sm sm:px-7 sm:py-4 sm:text-base"
             >
               Launch Orbit
               <ArrowRight size={18} />
@@ -75,7 +74,7 @@ export default function Hero() {
 
             <Link
               href="/dashboard"
-              className="rounded-2xl border border-white/15 bg-white/5 px-7 py-4 font-semibold text-white backdrop-blur-xl transition hover:border-green-400/40 hover:bg-white/10"
+              className="rounded-2xl border border-white/15 bg-white/5 px-4 py-3 text-sm font-semibold text-white backdrop-blur-xl transition hover:border-green-400/40 hover:bg-white/10 sm:px-7 sm:py-4 sm:text-base"
             >
               View Demo
             </Link>
@@ -113,7 +112,7 @@ export default function Hero() {
         </motion.div>
       </div>
 
-      <div className="mx-auto mt-28 grid max-w-7xl gap-6 rounded-[2.5rem] border border-white/10 bg-gradient-to-br from-white/10 via-white/5 to-black/20 p-8 shadow-2xl shadow-green-950/30 backdrop-blur-2xl md:grid-cols-4 ">
+      <div className="mx-auto mt-16 grid w-full max-w-7xl gap-6 rounded-[2rem] border border-white/10 bg-gradient-to-br from-white/10 via-white/5 to-black/20 p-6 shadow-2xl shadow-green-950/30 backdrop-blur-2xl sm:mt-24 sm:rounded-[2.5rem] sm:p-8 md:grid-cols-4 lg:px-12">
         {stats.map(([value, label]) => (
           <div key={label} className="text-center">
             <p className="text-4xl font-black text-white">{value}</p>
