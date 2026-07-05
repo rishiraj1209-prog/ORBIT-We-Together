@@ -7,13 +7,11 @@ import {
   BrainCircuit,
   Briefcase,
   FileText,
-  Gift,
   LogOut,
   Network,
   Route,
   Sparkles,
   Target,
-  Users,
 } from "lucide-react";
 import { signOut } from "firebase/auth";
 
@@ -68,23 +66,18 @@ export default function DashboardPage() {
 
   if (loading || profileLoading) {
     return (
-      <div className="px-6 py-8">
-        <div className="mx-auto max-w-7xl">
+      <div className="px-4 py-8 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-6xl">
           <div className="mb-8 h-10 w-44 animate-pulse rounded-xl bg-white/10" />
-
-          <div className="rounded-[2rem] border border-white/10 bg-white/5 p-8">
+          <div className="glass rounded-3xl p-8">
             <div className="h-6 w-52 animate-pulse rounded-full bg-white/10" />
             <div className="mt-6 h-16 max-w-3xl animate-pulse rounded-2xl bg-white/10" />
             <div className="mt-5 h-6 max-w-xl animate-pulse rounded-xl bg-white/10" />
           </div>
-
-          <div className="mt-8 grid gap-6 md:grid-cols-3">
+          <div className="mt-6 grid gap-4 md:grid-cols-3">
             {[1, 2, 3].map((item) => (
-              <div
-                key={item}
-                className="rounded-3xl border border-white/10 bg-white/5 p-6"
-              >
-                <div className="h-14 w-14 animate-pulse rounded-2xl bg-white/10" />
+              <div key={item} className="glass rounded-2xl p-6">
+                <div className="h-12 w-12 animate-pulse rounded-xl bg-white/10" />
                 <div className="mt-6 h-5 w-32 animate-pulse rounded-xl bg-white/10" />
                 <div className="mt-4 h-10 w-24 animate-pulse rounded-xl bg-white/10" />
               </div>
@@ -132,134 +125,134 @@ export default function DashboardPage() {
   ];
 
   return (
-    <div className="px-6 py-8">
-      <div className="mx-auto max-w-7xl space-y-8">
+    <div className="px-4 py-8 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-6xl space-y-6">
+        {/* Header */}
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div>
-            <p className="text-sm text-slate-400">Career Mission Control</p>
-            <h1 className="mt-2 text-5xl font-black tracking-tight md:text-7xl">
+            <p className="text-sm font-medium uppercase tracking-[0.18em] text-primary">
+              Career Mission Control
+            </p>
+            <h1 className="mt-2 text-balance font-display text-4xl font-bold tracking-tight sm:text-5xl">
               Welcome back,{" "}
-              <span className="bg-gradient-to-r from-lime-300 via-green-300 to- emerald-400 bg-clip-text text-transparent">
-                {name}
-              </span>
+              <span className="text-gradient">{name}</span>
             </h1>
           </div>
 
-          <div className="flex gap-3">
+          <div className="flex gap-2.5">
             <button
               onClick={() => router.push("/notifications")}
-              className="flex items-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-5 py-3 text-sm hover:bg-green-500/10 hover:border-green-400/40 hover:-translate-y-1"
+              className="inline-flex items-center gap-2 rounded-xl border border-border bg-white/5 px-4 py-2.5 text-sm font-medium transition hover:border-primary/40 hover:bg-primary/10"
             >
-              <Bell size={18} />
+              <Bell className="h-4 w-4" />
               Alerts
             </button>
-
             <button
               onClick={logout}
-              className="flex items-center gap-2 rounded-2xl border border-red-500/20 bg-red-500/10 px-5 py-3 text-sm text-red-200 hover:bg-red-500/20"
+              className="inline-flex items-center gap-2 rounded-xl border border-destructive/25 bg-destructive/10 px-4 py-2.5 text-sm font-medium text-destructive-foreground transition hover:bg-destructive/20"
             >
-              <LogOut size={18} />
+              <LogOut className="h-4 w-4" />
               Logout
             </button>
           </div>
         </div>
 
-        <section className="relative overflow-hidden rounded-[2.2rem] border border-white/10 bg-gradient-to-br from-green-500/10 via-white/5 to-black/20 p-8 shadow-2xl shadow-green-950/40 backdrop-blur-2xl">
-          <div className="absolute right-0 top-0 h-72 w-72 rounded-full bg-lime-500/10 blur-3xl" />
-          <div className="absolute bottom-0 left-0 h-72 w-72 rounded-full bg-green-500/10 blur-3xl" />
+        {/* Hero insight */}
+        <section className="glass-strong relative overflow-hidden rounded-3xl p-6 sm:p-8">
+          <div className="pointer-events-none absolute -right-10 -top-10 h-64 w-64 rounded-full bg-primary/15 blur-3xl" />
+          <div className="pointer-events-none absolute -bottom-10 -left-10 h-64 w-64 rounded-full bg-accent/10 blur-3xl" />
 
-          <div className="relative grid gap-8 lg:grid-cols-[1.4fr_0.8fr] lg:items-center">
+          <div className="relative grid gap-8 lg:grid-cols-[1.5fr_1fr] lg:items-center">
             <div>
-              <p className="mb-5 inline-flex items-center gap-2 rounded-full border border-green-400/20 bg-green-500/10 px-4 py-2 text-sm text-green-200">
-                <Sparkles size={16} />
+              <p className="inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/10 px-4 py-1.5 text-sm font-medium text-primary">
+                <Sparkles className="h-4 w-4" />
                 Orbit AI Insight
               </p>
-
-              <h2 className="text-3xl font-black leading-tight md:text-5xl">
+              <h2 className="mt-5 text-balance font-display text-3xl font-bold leading-tight tracking-tight sm:text-4xl">
                 You are {stats.aiReadiness}% career-ready.
               </h2>
-
-              <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-300">
+              <p className="mt-4 max-w-2xl text-pretty leading-relaxed text-muted-foreground">
                 Orbit is building your personalized career graph using your
                 profile, skills, resume, roadmap, alumni network and referral
                 opportunities.
               </p>
-
-              <div className="mt-7 flex flex-wrap gap-3">
+              <div className="mt-7 flex flex-wrap gap-2.5">
                 <button
                   onClick={() => router.push("/profile")}
-                  className="rounded-2xl bg-white px-5 py-3 font-semibold text-slate-950 transition hover:scale-105"
+                  className="btn-primary rounded-xl px-5 py-3 text-sm"
                 >
                   Complete Profile
                 </button>
-
                 <button
                   onClick={() => router.push("/roadmap")}
-                  className="rounded-2xl border border-white/10 bg-white/5 px-5 py-3 font-semibold text-white transition hover:bg-green-500/10 hover:border-green-400/40 hover:-translate-y-1"
+                  className="rounded-xl border border-border bg-white/5 px-5 py-3 text-sm font-medium transition hover:border-primary/40 hover:bg-primary/10"
                 >
                   Generate Roadmap
                 </button>
               </div>
             </div>
 
-            <div className="rounded-[2rem] border border-green-400/20 bg-gradient-to-br from-green-500/15 to-lime-500/5 p-7 text-center">
-              <BrainCircuit className="mx-auto mb-4 text-lime-300" size={42} />
-              <p className="text-sm text-slate-300">AI Readiness Score</p>
-              <p className="mt-2 text-6xl font-black">{stats.aiReadiness}%</p>
+            <div className="rounded-2xl border border-primary/20 bg-primary/[0.06] p-6 text-center">
+              <BrainCircuit className="mx-auto mb-3 h-10 w-10 text-primary" />
+              <p className="text-sm text-muted-foreground">AI Readiness Score</p>
+              <p className="mt-1 font-display text-6xl font-bold">
+                {stats.aiReadiness}%
+              </p>
               <Progress value={stats.aiReadiness} />
             </div>
           </div>
         </section>
 
-        <section className="grid gap-6 md:grid-cols-3">
+        {/* Stat cards */}
+        <section className="grid gap-4 md:grid-cols-3">
           {cards.map((card) => {
             const Icon = card.icon;
-
             return (
               <div
                 key={card.title}
-                className="group relative overflow-hidden rounded-[28px] border border-white/10 bg-gradient-to-br from-green-500/10 via-white/5 to-black/20 p-7 backdrop-blur-2xl transition-all duration-300 hover:-translate-y-2 hover:border-lime-400/30 hover:shadow-[0_0_55px_rgba(34,197,94,0.25)]"
+                className="glass group relative overflow-hidden rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1.5 hover:border-primary/30"
               >
-                <div className="absolute right-0 top-0 h-32 w-32 rounded-full bg-lime-500/10 blur-3xl transition-all duration-300 group-hover:bg-lime-400/20" />
-
+                <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-primary/10 blur-2xl transition group-hover:bg-primary/20" />
                 <div className="relative">
-                  <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-green-500/30 to-lime-500/30 shadow-lg shadow-lime-500/20">
-                    <Icon />
-                  </div>
-
-                  <p className="text-slate-400">{card.title}</p>
-
-                  <h3 className="mt-3 bg-gradient-to-r from-white to-lime-200 bg-clip-text text-4xl font-black text-transparent">
+                  <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/12">
+                    <Icon className="h-5 w-5 text-primary" />
+                  </span>
+                  <p className="mt-5 text-sm text-muted-foreground">
+                    {card.title}
+                  </p>
+                  <h3 className="mt-1.5 font-display text-3xl font-bold tracking-tight">
                     {card.value}
                   </h3>
-
                   {card.progress !== null && <Progress value={card.progress} />}
-
-                  <p className="mt-4 leading-7 text-slate-400">{card.text}</p>
+                  <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+                    {card.text}
+                  </p>
                 </div>
               </div>
             );
           })}
         </section>
 
-        <section className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-          <div className="rounded-[2rem] border border-white/10 bg-white/5 p-7 backdrop-blur-2xl">
-            <h3 className="mb-6 text-2xl font-bold">Recent Activity</h3>
-
+        {/* Activity + Quick actions */}
+        <section className="grid gap-4 lg:grid-cols-[1.3fr_1fr]">
+          <div className="glass rounded-3xl p-6 sm:p-7">
+            <h3 className="mb-5 font-display text-xl font-semibold">
+              Recent Activity
+            </h3>
             {notifications.length === 0 ? (
-              <div className="rounded-3xl border border-white/10 bg-gradient-to-r from-black/30 to-green-500/5 p-8 text-slate-400">
-                No recent activity yet. Analyze your resume or generate a
-                roadmap to start building your Orbit history.
+              <div className="rounded-2xl border border-border bg-black/20 p-8 text-sm leading-relaxed text-muted-foreground">
+                No recent activity yet. Analyze your resume or generate a roadmap
+                to start building your Orbit history.
               </div>
             ) : (
-              <div className="space-y-4">
+              <div className="space-y-3">
                 {notifications.map((item) => (
                   <div
                     key={item.id}
-                    className="rounded-2xl border border-white/10 bg-gradient-to-r from-black/30 to-green-500/5 p-5"
+                    className="rounded-2xl border border-border bg-black/20 p-5"
                   >
                     <p className="font-semibold">{item.title}</p>
-                    <p className="mt-1 text-sm text-slate-400">
+                    <p className="mt-1 text-sm text-muted-foreground">
                       {item.message}
                     </p>
                   </div>
@@ -268,24 +261,23 @@ export default function DashboardPage() {
             )}
           </div>
 
-          <div className="rounded-[2rem] border border-white/10 bg-white/5 p-7 backdrop-blur-2xl">
-            <h3 className="mb-6 text-2xl font-bold">Quick Actions</h3>
-
-            <div className="grid gap-3">
+          <div className="glass rounded-3xl p-6 sm:p-7">
+            <h3 className="mb-5 font-display text-xl font-semibold">
+              Quick Actions
+            </h3>
+            <div className="grid gap-2.5">
               {quickActions.map((item) => {
                 const Icon = item.icon;
-
                 return (
                   <button
                     key={item.path}
                     onClick={() => router.push(item.path)}
-                    className="flex items-center gap-4 rounded-2xl border border-white/10 bg-gradient-to-r from-black/30 to-green-500/5 p-4 text-left transition hover:bg-green-500/10 hover:border-green-400/40 hover:-translate-y-1"
+                    className="flex items-center gap-3.5 rounded-2xl border border-border bg-black/20 p-4 text-left transition hover:border-primary/40 hover:bg-primary/10"
                   >
-                    <div className="rounded-xl bg-green-500/20 p-3">
-                      <Icon className="text-green-300" size={20} />
-                    </div>
-
-                    <span className="font-semibold">{item.label}</span>
+                    <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/15">
+                      <Icon className="h-[18px] w-[18px] text-primary" />
+                    </span>
+                    <span className="font-medium">{item.label}</span>
                   </button>
                 );
               })}
@@ -293,22 +285,22 @@ export default function DashboardPage() {
           </div>
         </section>
 
-        <section className="rounded-[2rem] border border-white/10 bg-white/5 p-7 backdrop-blur-2xl">
-          <h3 className="mb-5 text-2xl font-bold">Career Snapshot</h3>
-
-          <div className="grid gap-4 md:grid-cols-3">
-            <div className="rounded-2xl bg-gradient-to-r from-black/30 to-green-500/5 p-5">
-              <p className="text-sm text-slate-400">Branch</p>
+        {/* Career snapshot */}
+        <section className="glass rounded-3xl p-6 sm:p-7">
+          <h3 className="mb-5 font-display text-xl font-semibold">
+            Career Snapshot
+          </h3>
+          <div className="grid gap-3 md:grid-cols-3">
+            <div className="rounded-2xl border border-border bg-black/20 p-5">
+              <p className="text-sm text-muted-foreground">Branch</p>
               <p className="mt-2 font-semibold">{branch}</p>
             </div>
-
-            <div className="rounded-2xl bg-gradient-to-r from-black/30 to-green-500/5 p-5">
-              <p className="text-sm text-slate-400">Skills</p>
+            <div className="rounded-2xl border border-border bg-black/20 p-5">
+              <p className="text-sm text-muted-foreground">Skills</p>
               <p className="mt-2 font-semibold">{skills}</p>
             </div>
-
-            <div className="rounded-2xl bg-gradient-to-r from-black/30 to-green-500/5 p-5">
-              <p className="text-sm text-slate-400">Next Milestone</p>
+            <div className="rounded-2xl border border-border bg-black/20 p-5">
+              <p className="text-sm text-muted-foreground">Next Milestone</p>
               <p className="mt-2 font-semibold">Improve resume + roadmap</p>
             </div>
           </div>

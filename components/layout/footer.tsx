@@ -1,52 +1,50 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowUpRight,Globe, Mail, Sparkles } from "lucide-react";
+import { ArrowUpRight, Globe, Mail, Orbit } from "lucide-react";
 
 export default function Footer() {
   return (
-    <footer className="relative overflow-hidden border-t border-white/10 bg-[#020617]/95">
-      <div className="absolute left-1/2 top-0 h-px w-2/3 -translate-x-1/2 bg-gradient-to-r from-transparent via-green-400 to-transparent" />
-      <div className="absolute bottom-0 right-0 h-72 w-72 rounded-full bg-green-500/10 blur-[110px]" />
+    <footer className="relative overflow-hidden border-t border-border">
+      <div className="pointer-events-none absolute inset-x-0 top-0 mx-auto h-px w-2/3 hairline" />
+      <div className="pointer-events-none absolute bottom-0 right-0 -z-10 h-72 w-72 rounded-full bg-primary/10 blur-[120px]" />
 
-      <div className="relative mx-auto grid max-w-7xl gap-12 px-6 py-16 lg:grid-cols-[1.2fr_1fr]">
+      <div className="mx-auto grid max-w-6xl gap-12 px-4 py-16 sm:px-6 lg:grid-cols-[1.3fr_1fr]">
         <div>
-          <Link href="/" className="flex items-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-green-400 to-lime-400 shadow-lg shadow-green-500/25">
-              <Sparkles className="text-slate-950" size={22} />
-            </div>
-
-            <span className="text-3xl font-black text-white">Orbit</span>
+          <Link href="/" className="flex items-center gap-2.5">
+            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-accent shadow-lg shadow-primary/25">
+              <Orbit className="h-5 w-5 text-primary-foreground" />
+            </span>
+            <span className="font-display text-2xl font-bold">Orbit</span>
           </Link>
 
-          <p className="mt-6 max-w-md leading-7 text-slate-400">
+          <p className="mt-6 max-w-md leading-relaxed text-muted-foreground">
             AI-powered career intelligence platform helping students turn
-            profiles, resumes, roadmaps, alumni and opportunities into one
-            focused career system.
+            profiles, resumes, roadmaps, alumni and opportunities into one focused
+            career system.
           </p>
 
-          <div className="mt-7 flex gap-4">
+          <div className="mt-7 flex gap-3">
             <a
               href="https://orbit-we-together.vercel.app"
               target="_blank"
               rel="noopener noreferrer"
-              className="rounded-2xl border border-white/10 bg-white/5 p-3 transition hover:border-green-400/40 hover:bg-green-500/10"
+              aria-label="Website"
+              className="flex h-11 w-11 items-center justify-center rounded-xl border border-border bg-white/5 text-muted-foreground transition hover:border-primary/40 hover:bg-primary/10 hover:text-primary"
             >
-              <Globe size={20} />
+              <Globe className="h-5 w-5" />
             </a>
-
             <a
               href="mailto:rishi12.09.2006rajsharma@gmail.com"
-              className="rounded-2xl border border-white/10 bg-white/5 p-3 transition hover:border-green-400/40 hover:bg-green-500/10"
+              aria-label="Email"
+              className="flex h-11 w-11 items-center justify-center rounded-xl border border-border bg-white/5 text-muted-foreground transition hover:border-primary/40 hover:bg-primary/10 hover:text-primary"
             >
-              <Mail size={20} />
+              <Mail className="h-5 w-5" />
             </a>
-
-           
           </div>
         </div>
 
-        <div className="grid gap-10 sm:grid-cols-3">
+        <div className="grid gap-8 sm:grid-cols-3">
           <FooterColumn
             title="Product"
             links={[
@@ -56,7 +54,6 @@ export default function Footer() {
               ["Roadmap", "/roadmap"],
             ]}
           />
-
           <FooterColumn
             title="Network"
             links={[
@@ -66,7 +63,6 @@ export default function Footer() {
               ["Notifications", "/notifications"],
             ]}
           />
-
           <FooterColumn
             title="Start"
             links={[
@@ -79,16 +75,15 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="relative border-t border-white/10 py-6">
-        <div className="mx-auto flex max-w-7xl flex-col gap-4 px-6 text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between">
+      <div className="border-t border-border">
+        <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-6 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between sm:px-6">
           <p>© 2026 Orbit. Built as an AI career intelligence platform.</p>
-
           <a
             href="#top"
-            className="flex w-fit items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-slate-300 transition hover:border-green-400/40 hover:bg-green-500/10"
+            className="flex w-fit items-center gap-2 rounded-xl border border-border bg-white/5 px-4 py-2 text-foreground transition hover:border-primary/40 hover:bg-primary/10"
           >
             Back to top
-            <ArrowUpRight size={16} />
+            <ArrowUpRight className="h-4 w-4" />
           </a>
         </div>
       </div>
@@ -105,14 +100,13 @@ function FooterColumn({
 }) {
   return (
     <div>
-      <h3 className="mb-4 font-semibold text-white">{title}</h3>
-
+      <h3 className="mb-4 text-sm font-semibold text-foreground">{title}</h3>
       <div className="space-y-3">
         {links.map(([label, href]) => (
           <Link
             key={label}
             href={href}
-            className="block text-slate-400 transition hover:text-green-300"
+            className="block text-sm text-muted-foreground transition hover:text-primary"
           >
             {label}
           </Link>

@@ -10,9 +10,9 @@ import {
   Gift,
   Home,
   Network,
+  Orbit,
   Route,
   Settings,
-  Sparkles,
   User,
 } from "lucide-react";
 
@@ -35,49 +35,65 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
   return (
-    <main className="min-h-screen overflow-x-hidden bg-[#020617] text-white">
-      <div className="fixed inset-0 -z-10 bg-[radial-gradient(circle_at_20%_10%,rgba(34,197,94,0.18),transparent_30%),radial-gradient(circle_at_80%_20%,rgba(132,204,22,0.11),transparent_28%),radial-gradient(circle_at_50%_100%,rgba(20,184,166,0.12),transparent_35%),linear-gradient(180deg,#020617,#020617)]" />
-
-      <div className="grid min-h-screen lg:grid-cols-[280px_1fr]">
-        <aside className="hidden border-r border-white/10 bg-white/[0.035] p-6 backdrop-blur-2xl lg:block">
-          <Link href="/dashboard" className="mb-10 flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-green-400 to-lime-400 shadow-lg shadow-green-500/25">
-              <Sparkles className="text-slate-950" size={20} />
-            </div>
-
-            <span className="text-3xl font-black text-white">Orbit</span>
+    <div className="min-h-screen text-foreground">
+      <div className="grid min-h-screen lg:grid-cols-[264px_1fr]">
+        {/* Desktop sidebar */}
+        <aside className="sticky top-0 hidden h-screen flex-col border-r border-border bg-sidebar/60 p-5 backdrop-blur-2xl lg:flex">
+          <Link href="/dashboard" className="mb-8 flex items-center gap-2.5 px-2">
+            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-accent shadow-lg shadow-primary/25">
+              <Orbit className="h-5 w-5 text-primary-foreground" />
+            </span>
+            <span className="font-display text-2xl font-bold">Orbit</span>
           </Link>
 
-          <nav className="space-y-2">
+          <nav className="flex-1 space-y-1">
             {navItems.map((item) => {
               const Icon = item.icon;
               const active = pathname === item.href;
-
               return (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`group flex items-center gap-3 rounded-2xl px-4 py-3 text-sm transition ${
+                  className={`group flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-medium transition ${
                     active
-                      ? "border border-green-400/20 bg-green-500/10 text-green-300 shadow-lg shadow-green-500/10"
-                      : "text-slate-400 hover:bg-white/5 hover:text-white"
+                      ? "border border-primary/25 bg-primary/12 text-primary"
+                      : "border border-transparent text-muted-foreground hover:bg-white/5 hover:text-foreground"
                   }`}
                 >
                   <Icon
-                    size={18}
-                    className={active ? "text-green-300" : "group-hover:text-green-300"}
+                    className={`h-[18px] w-[18px] ${
+                      active ? "text-primary" : "group-hover:text-foreground"
+                    }`}
                   />
                   {item.label}
                 </Link>
               );
             })}
           </nav>
+
+          <div className="glass mt-4 rounded-2xl p-4">
+            <p className="text-sm font-semibold text-foreground">Orbit Pro</p>
+            <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+              Unlock deeper AI insights and unlimited roadmaps.
+            </p>
+          </div>
         </aside>
 
-        <section className="min-w-0 pb-24 lg:pb-0">
-          <div className="sticky top-0 z-40 border-b border-white/10 bg-[#020617]/80 px-6 py-4 backdrop-blur-2xl lg:hidden">
-            <Link href="/dashboard" className="text-2xl font-black">
-              Orbit
+        {/* Content */}
+        <section className="min-w-0 pb-28 lg:pb-0">
+          <div className="sticky top-0 z-40 flex items-center justify-between border-b border-border bg-background/70 px-4 py-3.5 backdrop-blur-2xl lg:hidden">
+            <Link href="/dashboard" className="flex items-center gap-2">
+              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-accent">
+                <Orbit className="h-4 w-4 text-primary-foreground" />
+              </span>
+              <span className="font-display text-xl font-bold">Orbit</span>
+            </Link>
+            <Link
+              href="/notifications"
+              aria-label="Notifications"
+              className="flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-white/5 text-muted-foreground"
+            >
+              <Bell className="h-[18px] w-[18px]" />
             </Link>
           </div>
 
@@ -85,25 +101,25 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         </section>
       </div>
 
-      <nav className="fixed bottom-4 left-1/2 z-50 grid w-[92%] max-w-md -translate-x-1/2 grid-cols-5 rounded-3xl border border-white/10 bg-[#020617]/95 p-2 shadow-2xl shadow-black/40 backdrop-blur-2xl lg:hidden">
+      {/* Mobile bottom nav */}
+      <nav className="glass-strong fixed bottom-3 left-1/2 z-50 grid w-[94%] max-w-md -translate-x-1/2 grid-cols-5 gap-1 rounded-2xl p-2 lg:hidden">
         {mobileItems.map((item) => {
           const Icon = item.icon;
           const active = pathname === item.href;
-
           return (
             <Link
               key={item.href}
               href={item.href}
-              className={`flex flex-col items-center gap-1 rounded-2xl px-2 py-2 text-[11px] transition ${
-                active ? "bg-green-500/10 text-green-300" : "text-slate-400"
+              className={`flex flex-col items-center gap-1 rounded-xl px-1 py-2 text-[11px] font-medium transition ${
+                active ? "bg-primary/12 text-primary" : "text-muted-foreground"
               }`}
             >
-              <Icon size={18} />
+              <Icon className="h-[18px] w-[18px]" />
               {item.label}
             </Link>
           );
         })}
       </nav>
-    </main>
+    </div>
   );
 }

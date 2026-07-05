@@ -3,13 +3,16 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import {
-  createUserWithEmailAndPassword,
-  updateProfile,
-} from "firebase/auth";
-import { ArrowRight, Sparkles, UserPlus } from "lucide-react";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { ArrowRight, Lock, Mail, Orbit, Sparkles, User } from "lucide-react";
 
 import { auth } from "@/lib/firebase";
+
+const highlights = [
+  "Instant AI resume feedback",
+  "Weekly personalized roadmaps",
+  "Opportunity & referral tracking",
+];
 
 export default function SignupPage() {
   const router = useRouter();
@@ -44,95 +47,117 @@ export default function SignupPage() {
     }
   }
 
+  function onKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (
+      e.key === "Enter" &&
+      !e.nativeEvent.isComposing &&
+      e.keyCode !== 229 &&
+      !loading
+    ) {
+      signup();
+    }
+  }
+
   return (
-    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#020617] px-6 py-12 text-white">
-      <div className="absolute left-1/2 top-10 h-96 w-96 -translate-x-1/2 rounded-full bg-green-500/20 blur-[120px]" />
-      <div className="absolute bottom-0 right-0 h-80 w-80 rounded-full bg-lime-400/10 blur-[110px]" />
+    <main className="relative flex min-h-screen items-center justify-center overflow-hidden px-4 py-10 sm:px-6">
+      <div className="pointer-events-none absolute left-1/2 top-0 -z-10 h-96 w-96 -translate-x-1/2 rounded-full bg-primary/20 blur-[140px]" />
+      <div className="pointer-events-none absolute bottom-0 right-0 -z-10 h-80 w-80 rounded-full bg-accent/15 blur-[120px]" />
 
-      <div className="relative grid w-full max-w-6xl overflow-hidden rounded-[2.5rem] border border-white/10 bg-white/[0.04] shadow-2xl shadow-green-950/40 backdrop-blur-2xl lg:grid-cols-[0.9fr_1fr]">
-        <section className="hidden border-r border-white/10 p-10 lg:block">
-          <Link href="/" className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-green-400 to-lime-400">
-              <Sparkles className="text-slate-950" size={20} />
-            </div>
-
-            <span className="text-3xl font-black">Orbit</span>
+      <div className="glass-strong relative grid w-full max-w-5xl overflow-hidden rounded-3xl lg:grid-cols-2">
+        {/* Brand side */}
+        <section className="hidden flex-col justify-between border-r border-border p-10 lg:flex">
+          <Link href="/" className="flex items-center gap-2.5">
+            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-accent shadow-lg shadow-primary/25">
+              <Orbit className="h-5 w-5 text-primary-foreground" />
+            </span>
+            <span className="font-display text-2xl font-bold">Orbit</span>
           </Link>
 
-          <div className="mt-24">
-            <p className="mb-5 inline-flex rounded-full border border-green-500/30 bg-green-500/10 px-4 py-2 text-sm text-green-300">
+          <div>
+            <p className="inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/10 px-4 py-1.5 text-sm font-medium text-primary">
+              <Sparkles className="h-4 w-4" />
               Start your career orbit
             </p>
-
-            <h1 className="text-5xl font-black leading-tight">
+            <h1 className="mt-5 text-balance font-display text-4xl font-bold leading-tight tracking-tight">
               Build a smarter{" "}
-              <span className="green-text">career identity.</span>
+              <span className="text-gradient">career identity.</span>
             </h1>
-
-            <p className="mt-6 max-w-md leading-8 text-slate-400">
+            <p className="mt-5 max-w-md leading-relaxed text-muted-foreground">
               Create your Orbit account and unlock AI-powered resume analysis,
               roadmaps, alumni intelligence and opportunity tracking.
             </p>
           </div>
+
+          <ul className="space-y-3">
+            {highlights.map((item) => (
+              <li key={item} className="flex items-center gap-3 text-sm text-muted-foreground">
+                <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+                {item}
+              </li>
+            ))}
+          </ul>
         </section>
 
-        <section className="p-8 md:p-12">
-          <div className="mx-auto max-w-md">
+        {/* Form side */}
+        <section className="p-6 sm:p-10">
+          <div className="mx-auto flex h-full max-w-sm flex-col justify-center">
             <div className="mb-8 text-center">
-              <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-green-400 to-lime-400 shadow-lg shadow-green-500/25">
-                <UserPlus className="text-slate-950" />
-              </div>
-
-              <h2 className="text-4xl font-black">Create account</h2>
-
-              <p className="mt-3 text-slate-400">
+              <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-accent shadow-lg shadow-primary/25 lg:hidden">
+                <Orbit className="h-6 w-6 text-primary-foreground" />
+              </span>
+              <h2 className="mt-4 font-display text-3xl font-bold lg:mt-0">
+                Create account
+              </h2>
+              <p className="mt-2 text-sm text-muted-foreground">
                 Join Orbit and start building your career command center.
               </p>
             </div>
 
             {error && (
-              <div className="mb-5 rounded-2xl border border-red-500/20 bg-red-500/10 p-4 text-sm text-red-300">
+              <div className="mb-5 rounded-xl border border-destructive/30 bg-destructive/10 p-3.5 text-sm text-destructive-foreground">
                 {error}
               </div>
             )}
 
-            <div className="space-y-4">
-              <input
+            <div className="space-y-3.5">
+              <Field
+                icon={User}
+                type="text"
                 placeholder="Full name"
                 value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="w-full rounded-2xl border border-white/10 bg-black/30 px-5 py-4 outline-none transition focus:border-green-400/50"
+                onChange={setName}
+                onKeyDown={onKeyDown}
               />
-
-              <input
+              <Field
+                icon={Mail}
                 type="email"
                 placeholder="Email address"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full rounded-2xl border border-white/10 bg-black/30 px-5 py-4 outline-none transition focus:border-green-400/50"
+                onChange={setEmail}
+                onKeyDown={onKeyDown}
               />
-
-              <input
+              <Field
+                icon={Lock}
                 type="password"
                 placeholder="Password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full rounded-2xl border border-white/10 bg-black/30 px-5 py-4 outline-none transition focus:border-green-400/50"
+                onChange={setPassword}
+                onKeyDown={onKeyDown}
               />
 
               <button
                 onClick={signup}
                 disabled={loading}
-                className="green-button flex w-full items-center justify-center gap-2 rounded-2xl px-5 py-4 disabled:opacity-60"
+                className="btn-primary flex w-full items-center justify-center gap-2 rounded-xl px-5 py-3.5 disabled:opacity-60"
               >
                 {loading ? "Creating..." : "Create Account"}
-                <ArrowRight size={18} />
+                <ArrowRight className="h-4 w-4" />
               </button>
             </div>
 
-            <p className="mt-8 text-center text-sm text-slate-400">
+            <p className="mt-7 text-center text-sm text-muted-foreground">
               Already have an account?{" "}
-              <Link href="/login" className="text-green-300 hover:text-green-200">
+              <Link href="/login" className="font-medium text-primary hover:underline">
                 Login
               </Link>
             </p>
@@ -140,5 +165,35 @@ export default function SignupPage() {
         </section>
       </div>
     </main>
+  );
+}
+
+function Field({
+  icon: Icon,
+  type,
+  placeholder,
+  value,
+  onChange,
+  onKeyDown,
+}: {
+  icon: typeof Mail;
+  type: string;
+  placeholder: string;
+  value: string;
+  onChange: (v: string) => void;
+  onKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+}) {
+  return (
+    <div className="flex items-center gap-3 rounded-xl border border-border bg-black/30 px-4 transition focus-within:border-primary/50">
+      <Icon className="h-4 w-4 shrink-0 text-muted-foreground" />
+      <input
+        type={type}
+        placeholder={placeholder}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        onKeyDown={onKeyDown}
+        className="w-full bg-transparent py-3.5 text-sm outline-none placeholder:text-muted-foreground"
+      />
+    </div>
   );
 }
