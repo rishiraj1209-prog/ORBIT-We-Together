@@ -21,8 +21,8 @@ export default function Hero() {
   return (
     <section
       id="top"
-      className="relative min-h-screen overflow-visible px-4 pt-40 sm:px-6 sm:pt-44 lg:px-16 lg:pt-64"
-    ><div className="absolute left-0 right-0 top-0 h-20 bg-[#020617]" />
+      className="relative min-h-screen scroll-mt-28 overflow-visible px-4 pt-56 sm:px-6 sm:pt-60 lg:px-16 lg:pt-72"
+    >
       <div className="absolute left-1/2 top-24 h-96 w-96 -translate-x-1/2 rounded-full bg-green-500/20 blur-[120px]" />
       <div className="absolute right-10 top-40 h-72 w-72 rounded-full bg-lime-400/10 blur-[100px]" />
 
@@ -41,7 +41,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="mt-8 max-w-2xl text-4xl font-black leading-[1.15] tracking-tight sm:text-5xl md:text-7xl">
+            className="mt-10 max-w-2xl text-4xl font-black leading-[1.18] tracking-tight sm:text-5xl md:text-7xl">
             Your career,
             <br />
             intelligently{" "}
