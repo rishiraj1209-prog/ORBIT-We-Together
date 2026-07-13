@@ -1,5 +1,6 @@
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { AuthProvider } from "@/components/providers/auth-provider";
+import { PwaRuntime } from "@/components/pwa/pwa-runtime";
 
 export function AppProviders({ children }: { children: React.ReactNode }) {
   return (
@@ -10,6 +11,7 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
       disableTransitionOnChange={false}
     >
       <AuthProvider>{children}</AuthProvider>
+      <PwaRuntime />
     </ThemeProvider>
   );
 }

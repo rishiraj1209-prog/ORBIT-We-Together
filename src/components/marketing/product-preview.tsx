@@ -64,7 +64,7 @@ export function ProductPreview({ className }: { className?: string }) {
 
           <div className="space-y-4 p-4 sm:p-6">
             <div>
-              <p className="text-xs text-text-tertiary">Good morning, Arjun</p>
+              <p className="text-xs text-text-tertiary">Good morning</p>
               <h3 className="mt-1 text-base font-semibold tracking-tight">
                 AI matches for you
               </h3>
@@ -76,23 +76,23 @@ export function ProductPreview({ className }: { className?: string }) {
                   <div className="flex items-center gap-3">
                     <div className="relative">
                       <div className="flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-accent/30 to-ai/30 text-sm font-semibold text-accent">
-                        PS
+                        OM
                       </div>
                       <span className="absolute -bottom-0.5 -right-0.5 h-3.5 w-3.5 rounded-full border-2 border-surface bg-success" />
                     </div>
                     <div>
-                      <p className="text-sm font-semibold">Priya Sharma</p>
+                      <p className="text-sm font-semibold">Verified member</p>
                       <p className="text-xs text-text-secondary">
-                        PM at Stripe · CS &apos;19
+                        Product leader · Alumni &apos;19
                       </p>
                     </div>
                   </div>
                   <div className="flex flex-col items-center">
                     <div className="flex h-12 w-12 items-center justify-center rounded-full border-2 border-accent text-sm font-semibold text-accent">
-                      92%
+                      High
                     </div>
                     <span className="mt-1 text-[10px] text-text-tertiary">
-                      match
+                      fit
                     </span>
                   </div>
                 </div>

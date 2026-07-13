@@ -9,10 +9,10 @@ import { Container } from "@/components/ui/container";
 const reveal = { initial: { opacity: 0, y: 28 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true, margin: "-80px" }, transition: { duration: .7, ease: [0.22, 1, 0.36, 1] as const } };
 
 const people = [
-  { initials: "AM", name: "Anika Mehta", role: "Climate investor", score: "96%", pos: "left-[8%] top-[18%]" },
-  { initials: "RK", name: "Rohan Kapoor", role: "Founder, Northstar", score: "91%", pos: "right-[5%] top-[13%]" },
-  { initials: "SP", name: "Sara Patel", role: "Product, Linear", score: "89%", pos: "left-[2%] bottom-[16%]" },
-  { initials: "VD", name: "Vikram Das", role: "Design leader", score: "87%", pos: "right-[4%] bottom-[12%]" },
+  { initials: "CI", name: "Climate investor", role: "Shared thesis", score: "Strong fit", pos: "left-[8%] top-[18%]" },
+  { initials: "FO", name: "Founder", role: "Mutual connection", score: "Warm path", pos: "right-[5%] top-[13%]" },
+  { initials: "PL", name: "Product leader", role: "Shared experience", score: "Relevant", pos: "left-[2%] bottom-[16%]" },
+  { initials: "DL", name: "Design leader", role: "Open to mentoring", score: "Timely", pos: "right-[4%] bottom-[12%]" },
 ];
 
 function Constellation() {
@@ -98,7 +98,7 @@ export function OrbitExperience() {
             <div><span className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-[#c8a96c]/40"><MessageCircle className="h-5 w-5 text-[#c8a96c]"/></span><h2 className="font-display mt-8 text-5xl leading-none sm:text-7xl">Meet Aura, your relationship concierge.</h2><p className="mt-6 max-w-lg text-base leading-7 text-[#aaa99f]">Not a chatbot bolted onto a dashboard. Aura understands your network, spots timely openings, prepares introductions, and turns a vague goal into a clear next move.</p></div>
             <div className="rounded-[32px] border border-white/10 bg-white/[.035] p-4 shadow-2xl sm:p-7">
               <div className="flex items-center gap-3 border-b border-white/10 pb-5"><span className="relative flex h-10 w-10 items-center justify-center rounded-full bg-[#c8a96c] text-[#10130f]"><Sparkles className="h-4 w-4"/><span className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full border-2 border-[#10130f] bg-[#8dc7a9]"/></span><div><p className="text-sm font-medium">Aura</p><p className="text-[11px] text-[#777a72]">Relationship concierge · Active</p></div></div>
-              <div className="space-y-4 py-7"><div className="max-w-[84%] rounded-2xl rounded-tl-sm bg-white/[.07] p-4 text-sm leading-6 text-[#d9d5cc]">I found a strong path to three climate investors through people you already trust. Anika is the best first conversation—your work overlaps, and she opened two mentoring slots yesterday.</div><div className="ml-auto max-w-[76%] rounded-2xl rounded-tr-sm bg-[#e9e2d4] p-4 text-sm text-[#171a16]">Prepare a warm introduction and give me the context before I send it.</div><div className="max-w-[84%] rounded-2xl rounded-tl-sm border border-[#c8a96c]/20 bg-[#c8a96c]/10 p-4 text-sm leading-6 text-[#e8dfcf]">Done. I drafted the note, mapped the mutual value, and suggested Thursday morning when both calendars are typically open.</div></div>
+              <div className="space-y-4 py-7"><div className="max-w-[84%] rounded-2xl rounded-tl-sm bg-white/[.07] p-4 text-sm leading-6 text-[#d9d5cc]">I found a promising path to a climate investor through someone you already trust. Your work overlaps, and their profile says they are open to mentoring.</div><div className="ml-auto max-w-[76%] rounded-2xl rounded-tr-sm bg-[#e9e2d4] p-4 text-sm text-[#171a16]">Prepare a warm introduction and give me the context before I send it.</div><div className="max-w-[84%] rounded-2xl rounded-tl-sm border border-[#c8a96c]/20 bg-[#c8a96c]/10 p-4 text-sm leading-6 text-[#e8dfcf]">Done. I drafted the note, mapped the mutual value, and left it ready for your review.</div></div>
               <div className="flex gap-2 border-t border-white/10 pt-5"><span className="flex-1 rounded-full border border-white/10 px-5 py-3 text-sm text-[#777a72]">Ask Aura anything about your network…</span><span className="flex h-11 w-11 items-center justify-center rounded-full bg-[#c8a96c] text-[#10130f]"><ArrowRight className="h-4 w-4"/></span></div>
             </div>
           </motion.div>

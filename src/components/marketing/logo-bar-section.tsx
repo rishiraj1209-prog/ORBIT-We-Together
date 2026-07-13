@@ -1,12 +1,12 @@
 import { Container } from "@/components/ui/container";
 
-const colleges = [
-  "IIT Delhi",
-  "BITS Pilani",
-  "NIT Trichy",
-  "IIIT Hyderabad",
-  "DTU",
-  "VIT",
+const communityTypes = [
+  "Alumni networks",
+  "Universities",
+  "Accelerators",
+  "Enterprise groups",
+  "Venture communities",
+  "Leadership circles",
 ];
 
 export function LogoBarSection() {
@@ -14,15 +14,15 @@ export function LogoBarSection() {
     <section className="border-y border-border bg-surface/50 py-10">
       <Container>
         <p className="mb-8 text-center text-sm font-medium text-text-tertiary">
-          Trusted by alumni communities at leading institutions
+          Relationship infrastructure for ambitious communities
         </p>
         <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-4">
-          {colleges.map((college) => (
+          {communityTypes.map((community) => (
             <span
-              key={college}
+              key={community}
               className="text-sm font-medium tracking-tight text-text-secondary/70 transition-colors hover:text-text-secondary"
             >
-              {college}
+              {community}
             </span>
           ))}
         </div>

@@ -1,9 +1,10 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { AppProviders } from "@/components/providers/app-providers";
 import { SITE } from "@/lib/constants/site";
 import "./globals.css";
 
 export const metadata: Metadata = {
+  applicationName: SITE.name,
   title: {
     default: `${SITE.name} — ${SITE.tagline}`,
     template: `%s · ${SITE.name}`,
@@ -21,6 +22,22 @@ export const metadata: Metadata = {
     title: SITE.name,
     description: SITE.description,
   },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: SITE.name,
+  },
+  other: {
+    "mobile-web-app-capable": "yes",
+  },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: "#0d100d",
+  colorScheme: "dark",
 };
 
 export default function RootLayout({

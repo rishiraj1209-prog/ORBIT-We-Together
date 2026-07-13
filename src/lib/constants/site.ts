@@ -15,7 +15,7 @@ export const MARKETING_NAV = [
 ] as const;
 
 export const STATS = [
-  { label: "Verified alumni", value: "2,400+" },
-  { label: "Warm intros made", value: "850+" },
-  { label: "Avg. match score", value: "89%" },
+  { label: "Identity layer", value: "Verified" },
+  { label: "Community data", value: "Private" },
+  { label: "Match logic", value: "Explainable" },
 ] as const;

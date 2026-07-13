@@ -8,7 +8,7 @@ const steps = [
     step: "01",
     title: "Join & verify",
     description:
-      "Sign up with Google or college email. Complete your profile in under 3 minutes. AI polishes it instantly.",
+      "Sign up with Google or college email, then add the context that makes your profile useful to the community.",
   },
   {
     step: "02",
@@ -33,7 +33,7 @@ export function HowItWorksSection() {
             Three steps to your first meaningful connection
           </h2>
           <p className="mt-4 text-lg text-text-secondary">
-            From signup to warm intro in minutes — not months of cold messaging.
+            From verified identity to a thoughtful introduction, without cold messaging.
           </p>
         </div>
 

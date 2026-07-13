@@ -56,9 +56,9 @@ export function AuthLayout({ children, title, subtitle }: AuthLayoutProps) {
 
               <div className="mt-10 grid grid-cols-3 gap-4">
                 {[
-                  { label: "Verified", value: "100%" },
-                  { label: "Setup time", value: "< 3 min" },
-                  { label: "Match quality", value: "89%" },
+                  { label: "Identity", value: "Verified" },
+                  { label: "Data model", value: "Private" },
+                  { label: "Matching", value: "Contextual" },
                 ].map((stat) => (
                   <div
                     key={stat.label}

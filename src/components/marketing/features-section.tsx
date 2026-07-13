@@ -17,7 +17,7 @@ const features = [
     highlights: [
       "Daily personalized match cards",
       "Natural language alumni search",
-      "92% average match relevance",
+      "Human-readable match context",
     ],
     align: "left" as const,
   },
@@ -57,9 +57,9 @@ function FeatureVisual({ id }: { id: string }) {
       <div className="rounded-xl border border-border bg-background/60 p-6">
         <div className="space-y-3">
           {[
-            { name: "Priya Sharma", score: 92, role: "PM · Stripe" },
-            { name: "Rahul Mehta", score: 87, role: "Founder · Exited" },
-            { name: "Anita Desai", score: 84, role: "SWE · Google" },
+            { name: "Product leader", fit: "Strong fit", role: "Fintech · Alumni" },
+            { name: "Founder", fit: "Shared goals", role: "Climate · Alumni" },
+            { name: "Engineer", fit: "Shared context", role: "AI systems · Alumni" },
           ].map((match) => (
             <div
               key={match.name}
@@ -69,8 +69,8 @@ function FeatureVisual({ id }: { id: string }) {
                 <p className="text-sm font-medium">{match.name}</p>
                 <p className="text-xs text-text-tertiary">{match.role}</p>
               </div>
-              <span className="text-sm font-semibold tabular-nums text-accent">
-                {match.score}%
+              <span className="text-xs font-semibold text-accent">
+                {match.fit}
               </span>
             </div>
           ))}
@@ -117,12 +117,12 @@ function FeatureVisual({ id }: { id: string }) {
   return (
     <div className="rounded-xl border border-border bg-background/60 p-6">
       <div className="mb-4 rounded-lg border border-dashed border-accent/40 bg-accent-subtle p-4 text-center">
-        <p className="font-mono text-sm text-accent">orbit.app/signup?ref=ARJUN2026</p>
+        <p className="font-mono text-sm text-accent">orbit.app/signup?ref=COMMUNITY</p>
       </div>
       <div className="space-y-2">
         {[
-          { rank: 1, name: "Rahul K.", count: 14 },
-          { rank: 2, name: "Anita S.", count: 11 },
+          { rank: 1, name: "Connector A", count: 14 },
+          { rank: 2, name: "Connector B", count: 11 },
           { rank: 3, name: "You", count: 8 },
         ].map((row) => (
           <div

@@ -1,32 +1,28 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
 import { Container } from "@/components/ui/container";
 import { STATS } from "@/lib/constants/site";
 
-const testimonials = [
+const communityUseCases = [
   {
-    quote:
-      "I got an intro to a PM at my dream company in 48 hours. The AI match reasons were spot on — I didn't feel awkward reaching out.",
-    name: "Arjun Patel",
-    role: "Final year CS · Student",
-    initials: "AP",
+    title: "For students",
+    description:
+      "Discover relevant alumni with clear context before sending a thoughtful request.",
+    marker: "ST",
   },
   {
-    quote:
-      "Finally, intro requests with context. I approve in 30 seconds, AI drafts the message, done. This is how alumni networks should work.",
-    name: "Priya Sharma",
-    role: "Product Manager · Stripe",
-    initials: "PS",
+    title: "For alumni",
+    description:
+      "Review well-framed requests, mentor intentionally, and open trusted doors without inbox noise.",
+    marker: "AL",
   },
   {
-    quote:
-      "We went from a dead Google Sheet to 400 verified alumni in one semester. The referral leaderboard made it fun.",
-    name: "Dr. Mehta",
-    role: "Alumni Relations · IIT Delhi",
-    initials: "DM",
+    title: "For community teams",
+    description:
+      "Operate a living, permission-aware directory instead of a stale spreadsheet.",
+    marker: "CT",
   },
 ];
 
@@ -36,7 +32,7 @@ export function SocialProofSection() {
       <Container>
         <div className="mx-auto max-w-2xl text-center">
           <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-            Loved by students, alumni, and college offices
+            Designed for every side of a trusted community
           </h2>
         </div>
 
@@ -59,9 +55,9 @@ export function SocialProofSection() {
         </div>
 
         <div className="mt-12 grid gap-6 md:grid-cols-3">
-          {testimonials.map((item, index) => (
+          {communityUseCases.map((item, index) => (
             <motion.div
-              key={item.name}
+              key={item.title}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-40px" }}
@@ -69,18 +65,15 @@ export function SocialProofSection() {
             >
               <Card className="h-full border-border/80">
                 <CardContent className="flex h-full flex-col p-6">
-                  <blockquote className="flex-1 text-sm leading-relaxed text-text-secondary">
-                    &ldquo;{item.quote}&rdquo;
-                  </blockquote>
-                  <div className="mt-6 flex items-center gap-3 border-t border-border pt-6">
-                    <Avatar className="h-10 w-10">
-                      <AvatarFallback className="bg-accent-subtle text-accent">
-                        {item.initials}
-                      </AvatarFallback>
-                    </Avatar>
+                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-accent-subtle text-xs font-semibold text-accent">
+                    {item.marker}
+                  </div>
+                  <div className="mt-8 border-t border-border pt-6">
                     <div>
-                      <p className="text-sm font-medium">{item.name}</p>
-                      <p className="text-xs text-text-tertiary">{item.role}</p>
+                      <p className="text-base font-medium">{item.title}</p>
+                      <p className="mt-2 text-sm leading-relaxed text-text-secondary">
+                        {item.description}
+                      </p>
                     </div>
                   </div>
                 </CardContent>
