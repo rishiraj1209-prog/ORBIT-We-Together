@@ -1,8 +1,18 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { getCurrentUser } from "@/lib/auth/server";
 import { isFirebaseAdminConfigured } from "@/lib/firebase/config";
+import { z } from "zod";
 
 export const runtime = "nodejs";
+
+const profileUpdateSchema = z.object({
+  displayName: z.string().trim().min(1).max(100).optional(),
+  headline: z.string().trim().max(160).optional(),
+  bio: z.string().trim().max(2_000).optional(),
+  location: z.string().trim().max(120).optional(),
+  industry: z.string().trim().max(120).optional(),
+  skills: z.array(z.string().trim().min(1).max(80)).max(50).optional(),
+}).strict();
 
 export async function GET() {
   const user = await getCurrentUser();
@@ -36,10 +46,13 @@ export async function PATCH(request: NextRequest) {
     return NextResponse.json({ success: true });
   }
 
-  const body = await request.json();
+  const result = profileUpdateSchema.safeParse(await request.json());
+  if (!result.success) {
+    return NextResponse.json({ error: "Invalid profile update." }, { status: 400 });
+  }
   const { updateUserProfile, userDocumentToAlumniProfile } = await import(
     "@/lib/firebase/profile"
   );
-  const updated = await updateUserProfile(user.uid, body);
+  const updated = await updateUserProfile(user.uid, result.data);
   return NextResponse.json({ profile: userDocumentToAlumniProfile(updated) });
 }

@@ -36,7 +36,7 @@ export interface TimelineEvent {
 
 export interface AlumniProfile {
   uid: string;
-  email: string;
+  email?: string;
   displayName: string;
   photoURL: string | null;
   role: "alumni" | "student" | "admin";

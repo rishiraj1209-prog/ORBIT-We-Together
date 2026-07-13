@@ -16,5 +16,12 @@ export async function GET() {
     const { listAllUsers } = await import("@/lib/firebase/profile");
     users = await listAllUsers();
   }
-  return NextResponse.json({ users });
+  return NextResponse.json({
+    users: users.map(({ uid, displayName, email, verificationStatus }) => ({
+      uid,
+      displayName,
+      email,
+      verificationStatus,
+    })),
+  });
 }

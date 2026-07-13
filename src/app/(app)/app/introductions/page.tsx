@@ -7,6 +7,8 @@ export const metadata: Metadata = { title: "Introductions" };
 
 export default async function IntroductionsPage() {
   const user = await requireOnboardingComplete();
-  const profiles = (await listDirectoryProfiles()).filter((profile) => profile.uid !== user.uid);
+  const profiles = user.verificationStatus === "verified" || user.role === "admin"
+    ? (await listDirectoryProfiles()).filter((profile) => profile.uid !== user.uid)
+    : [];
   return <IntroductionsView profiles={profiles} />;
 }

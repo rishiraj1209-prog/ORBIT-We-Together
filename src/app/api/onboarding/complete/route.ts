@@ -7,14 +7,25 @@ import { z } from "zod";
 export const runtime = "nodejs";
 
 const ONBOARDING_COOKIE = "orbit_onboarded";
+const safeWebUrl = z.string().trim().max(2_048).refine(
+  (value) => value === "" || value.startsWith("https://"),
+  "Only secure HTTPS URLs are allowed."
+);
+const safePhotoUrl = z.string().trim().max(750_000).refine(
+  (value) =>
+    value === "" ||
+    value.startsWith("https://") ||
+    /^data:image\/(jpeg|png|webp);base64,/i.test(value),
+  "Invalid profile image."
+);
 
 const bodySchema = z.object({
-  displayName: z.string().optional(),
+  displayName: z.string().trim().min(1).max(100).optional(),
   role: z.enum(["alumni", "student"]).optional(),
-  headline: z.string().optional(),
-  bio: z.string().optional(),
-  aiSummary: z.string().optional(),
-  skills: z.array(z.string()).optional(),
+  headline: z.string().trim().max(160).optional(),
+  bio: z.string().trim().max(2_000).optional(),
+  aiSummary: z.string().trim().max(2_000).optional(),
+  skills: z.array(z.string().trim().min(1).max(80)).max(50).optional(),
   experience: z.array(z.object({
     id: z.string(),
     title: z.string(),
@@ -23,8 +34,8 @@ const bodySchema = z.object({
     startDate: z.string(),
     endDate: z.string().optional(),
     current: z.boolean().optional(),
-    description: z.string().optional(),
-  })).optional(),
+    description: z.string().max(2_000).optional(),
+  })).max(30).optional(),
   education: z.array(z.object({
     id: z.string(),
     school: z.string(),
@@ -32,21 +43,21 @@ const bodySchema = z.object({
     field: z.string().optional(),
     startYear: z.number().optional(),
     endYear: z.number().optional(),
-  })).optional(),
-  location: z.string().optional(),
-  industry: z.string().optional(),
-  graduationYear: z.number().optional(),
-  batch: z.string().optional(),
-  department: z.string().optional(),
-  photoURL: z.string().optional(),
-  resumeUrl: z.string().optional(),
+  })).max(20).optional(),
+  location: z.string().trim().max(120).optional(),
+  industry: z.string().trim().max(120).optional(),
+  graduationYear: z.number().int().min(1940).max(2100).optional(),
+  batch: z.string().trim().max(40).optional(),
+  department: z.string().trim().max(120).optional(),
+  photoURL: safePhotoUrl.optional(),
+  resumeUrl: safeWebUrl.optional(),
   socialLinks: z.object({
-    linkedin: z.string().optional(),
-    twitter: z.string().optional(),
-    github: z.string().optional(),
-    website: z.string().optional(),
-  }).optional(),
-});
+    linkedin: safeWebUrl.optional(),
+    twitter: safeWebUrl.optional(),
+    github: safeWebUrl.optional(),
+    website: safeWebUrl.optional(),
+  }).strict().optional(),
+}).strict();
 
 export async function POST(request: NextRequest) {
   const user = await getCurrentUser();

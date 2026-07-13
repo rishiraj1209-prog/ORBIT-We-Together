@@ -4,6 +4,7 @@ const RATE_LIMIT_WINDOW_MS = 60_000;
 const RATE_LIMIT_MAX_REQUESTS = 20;
 
 const requestLog = new Map<string, { count: number; resetAt: number }>();
+const MAX_TRACKED_CLIENTS = 10_000;
 
 export function checkRateLimit(
   request: NextRequest,
@@ -11,6 +12,11 @@ export function checkRateLimit(
 ): { allowed: boolean; remaining: number; resetAt: number } {
   const identifier = `${key}:${getClientIp(request)}`;
   const now = Date.now();
+  if (requestLog.size >= MAX_TRACKED_CLIENTS) {
+    for (const [entryKey, value] of requestLog) {
+      if (value.resetAt <= now) requestLog.delete(entryKey);
+    }
+  }
   const entry = requestLog.get(identifier);
 
   if (!entry || now >= entry.resetAt) {
@@ -33,6 +39,10 @@ export function checkRateLimit(
 }
 
 function getClientIp(request: NextRequest): string {
+  const vercelForwarded = request.headers.get("x-vercel-forwarded-for");
+  if (vercelForwarded) {
+    return vercelForwarded.split(",")[0]?.trim() ?? "unknown";
+  }
   const forwarded = request.headers.get("x-forwarded-for");
   if (forwarded) {
     return forwarded.split(",")[0]?.trim() ?? "unknown";

@@ -4,6 +4,9 @@ import { parseResumeText } from "@/lib/ai/profile";
 
 export const runtime = "nodejs";
 
+const MAX_RESUME_BYTES = 256 * 1024;
+const MAX_RESUME_TEXT = 100_000;
+
 export async function POST(request: NextRequest) {
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -16,6 +19,9 @@ export async function POST(request: NextRequest) {
     const formData = await request.formData();
     const file = formData.get("file") as File | null;
     if (file) {
+      if (file.size > MAX_RESUME_BYTES || file.type !== "text/plain") {
+        return NextResponse.json({ error: "Use a plain-text resume smaller than 256 KB." }, { status: 400 });
+      }
       text = await file.text();
       fileName = file.name;
     }
@@ -25,8 +31,12 @@ export async function POST(request: NextRequest) {
     fileName = body.fileName ?? "resume.txt";
   }
 
+  if (text.length > MAX_RESUME_TEXT) {
+    return NextResponse.json({ error: "Resume text is too long." }, { status: 400 });
+  }
+
   if (!text.trim()) {
-    text = `Software Engineer at Tech Company (2020-present)\nB.S. Computer Science, University (2018)\nSkills: JavaScript, TypeScript, React, Node.js, Python, AWS`;
+    return NextResponse.json({ error: "Resume text is required." }, { status: 400 });
   }
 
   await new Promise((r) => setTimeout(r, 1200));

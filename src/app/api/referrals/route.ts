@@ -25,7 +25,8 @@ export async function GET(request: NextRequest) {
     const { listAllUsers } = await import("@/lib/firebase/profile");
     users = await listAllUsers();
   }
-  const leaderboard = users
+  const leaderboard = (user.verificationStatus === "verified" || user.role === "admin" ? users : [])
+    .filter((member) => member.verificationStatus === "verified")
     .map((member) => ({
       uid: member.uid,
       displayName: member.displayName ?? "Orbit member",

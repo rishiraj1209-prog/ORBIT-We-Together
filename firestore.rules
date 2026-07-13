@@ -14,6 +14,11 @@ service cloud.firestore {
       allow read: if isOwner(userId);
       allow create: if isOwner(userId)
         && request.resource.data.uid == userId
+        && request.resource.data.email == request.auth.token.email
+        && request.resource.data.emailVerified == request.auth.token.email_verified
+        && request.resource.data.role == 'alumni'
+        && request.resource.data.verificationStatus == 'pending'
+        && request.resource.data.onboardingComplete == false
         && request.resource.data.keys().hasAll([
           'uid', 'email', 'displayName', 'photoURL', 'role',
           'verificationStatus', 'emailVerified', 'onboardingComplete',
@@ -21,7 +26,17 @@ service cloud.firestore {
         ]);
       allow update: if isOwner(userId)
         && request.resource.data.uid == userId
-        && request.resource.data.email == resource.data.email;
+        && request.resource.data.email == resource.data.email
+        && request.resource.data.role == resource.data.role
+        && request.resource.data.verificationStatus == resource.data.verificationStatus
+        && request.resource.data.emailVerified == resource.data.emailVerified
+        && request.resource.data.createdAt == resource.data.createdAt
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'displayName', 'photoURL', 'headline', 'bio', 'aiSummary', 'skills',
+          'experience', 'education', 'socialLinks', 'location', 'industry',
+          'graduationYear', 'batch', 'department', 'resumeUrl', 'achievements',
+          'profileCompleteness', 'onboardingComplete', 'updatedAt', 'lastActiveAt'
+        ]);
       allow delete: if false;
     }
 

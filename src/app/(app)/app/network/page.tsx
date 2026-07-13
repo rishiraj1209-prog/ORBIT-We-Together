@@ -7,6 +7,8 @@ export const metadata: Metadata = { title: "Network" };
 
 export default async function NetworkPage() {
   const user = await requireOnboardingComplete();
-  const profiles = await listDirectoryProfiles();
+  const profiles = user.verificationStatus === "verified" || user.role === "admin"
+    ? await listDirectoryProfiles()
+    : [];
   return <NetworkView user={user} profiles={profiles} />;
 }

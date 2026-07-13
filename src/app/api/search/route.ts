@@ -8,6 +8,9 @@ export const runtime = "nodejs";
 export async function GET(request: NextRequest) {
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (user.verificationStatus !== "verified" && user.role !== "admin") {
+    return NextResponse.json({ error: "Verification required" }, { status: 403 });
+  }
 
   const q = request.nextUrl.searchParams.get("q") ?? "";
   const profiles = await listDirectoryProfiles();

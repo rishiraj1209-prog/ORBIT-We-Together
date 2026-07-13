@@ -21,16 +21,7 @@ import { Separator } from "@/components/ui/separator";
 
 export const dynamic = "force-dynamic";
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}): Promise<Metadata> {
-  const { id } = await params;
-  const document = await getAdminUserDocument(id);
-  const profile = document ? userDocumentToAlumniProfile(document) : null;
-  return { title: profile?.displayName ?? "Profile" };
-}
+export const metadata: Metadata = { title: "Member profile" };
 
 export default async function ProfilePage({
   params,
@@ -39,8 +30,12 @@ export default async function ProfilePage({
 }) {
   const user = await requireOnboardingComplete();
   const { id } = await params;
+  if (id !== user.uid && user.verificationStatus !== "verified" && user.role !== "admin") notFound();
   const document = await getAdminUserDocument(id);
-  if (!document || document.verificationStatus === "rejected") notFound();
+  if (
+    !document ||
+    (id !== user.uid && user.role !== "admin" && document.verificationStatus !== "verified")
+  ) notFound();
   const profile = userDocumentToAlumniProfile(document);
 
   const isOwn = id === user.uid;

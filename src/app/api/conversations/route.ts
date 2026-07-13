@@ -11,6 +11,7 @@ export const runtime = "nodejs";
 export async function GET() {
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (user.verificationStatus !== "verified" && user.role !== "admin") return NextResponse.json({ error: "Verification required" }, { status: 403 });
 
   const convs = memoryStore.conversations.getByUser(user.uid);
   const otherUids = convs.map((conversation) =>
@@ -40,12 +41,13 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (user.verificationStatus !== "verified" && user.role !== "admin") return NextResponse.json({ error: "Verification required" }, { status: 403 });
 
   const { participantId } = (await request.json()) as { participantId?: string };
   if (!participantId) return NextResponse.json({ error: "Missing participantId" }, { status: 400 });
   if (participantId === user.uid) return NextResponse.json({ error: "You cannot message yourself" }, { status: 400 });
   const participant = await getAdminUserDocument(participantId);
-  if (!participant || participant.verificationStatus === "rejected") {
+  if (!participant || participant.verificationStatus !== "verified") {
     return NextResponse.json({ error: "Member not found" }, { status: 404 });
   }
 

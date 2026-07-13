@@ -9,6 +9,9 @@ export const dynamic = "force-dynamic";
 
 export default async function DirectoryPage() {
   const user = await requireOnboardingComplete();
+  if (user.verificationStatus !== "verified" && user.role !== "admin") {
+    return <DirectoryView profiles={[]} currentUserId={user.uid} />;
+  }
   const profiles = await listDirectoryProfiles();
   return <DirectoryView profiles={profiles} currentUserId={user.uid} />;
 }

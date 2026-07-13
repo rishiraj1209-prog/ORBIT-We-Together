@@ -11,6 +11,7 @@ export async function POST(
 ) {
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (user.verificationStatus !== "verified" && user.role !== "admin") return NextResponse.json({ error: "Verification required" }, { status: 403 });
 
   const { id: eventId } = await params;
   const { status } = (await request.json()) as { status?: RsvpStatus };

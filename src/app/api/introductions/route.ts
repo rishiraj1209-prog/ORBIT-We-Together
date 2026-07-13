@@ -12,6 +12,7 @@ export const runtime = "nodejs";
 export async function GET() {
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (user.verificationStatus !== "verified" && user.role !== "admin") return NextResponse.json({ error: "Verification required" }, { status: 403 });
 
   const intros = memoryStore.introductions.getByUser(user.uid);
   const profiles = await getAdminUserDocuments(intros.flatMap((intro) => [
@@ -42,6 +43,7 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (user.verificationStatus !== "verified" && user.role !== "admin") return NextResponse.json({ error: "Verification required" }, { status: 403 });
 
   const { connectorId, targetId, context } = (await request.json()) as {
     connectorId?: string;
@@ -60,7 +62,12 @@ export async function POST(request: NextRequest) {
     getAdminUserDocument(connectorId),
     getAdminUserDocument(targetId),
   ]);
-  if (!connector || !target) {
+  if (
+    !connector ||
+    !target ||
+    connector.verificationStatus !== "verified" ||
+    target.verificationStatus !== "verified"
+  ) {
     return NextResponse.json({ error: "Member not found" }, { status: 404 });
   }
 

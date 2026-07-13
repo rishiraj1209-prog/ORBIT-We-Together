@@ -41,7 +41,9 @@ export async function getDashboardData(user: AuthUser): Promise<DashboardData> {
       ]);
     userDoc = await getAdminUserDocument(user.uid);
     [realProfiles, realEvents, realOpportunities] = await Promise.all([
-      listDirectoryProfiles(),
+      user.verificationStatus === "verified" || user.role === "admin"
+        ? listDirectoryProfiles()
+        : Promise.resolve([]),
       listEventsForUser(user.uid),
       listOpportunities(),
     ]);

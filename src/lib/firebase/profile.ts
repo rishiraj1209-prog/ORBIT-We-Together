@@ -17,6 +17,22 @@ function timestampToIso(value: unknown, fallback = ""): string {
   return fallback;
 }
 
+function safeExternalUrl(value?: string): string | undefined {
+  if (!value) return undefined;
+  try {
+    const url = new URL(value);
+    return url.protocol === "https:" ? url.toString() : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+function safePhotoUrl(value: string | null): string | null {
+  if (!value) return null;
+  if (value.startsWith("https://")) return value;
+  return /^data:image\/(jpeg|png|webp);base64,/i.test(value) ? value : null;
+}
+
 export async function updateUserProfile(
   uid: string,
   input: UpdateProfileInput
@@ -85,7 +101,7 @@ export async function listDirectoryProfiles(
   const users = await listAllUsers(limit);
 
   return users
-    .filter((user) => user.verificationStatus !== "rejected")
+    .filter((user) => user.verificationStatus === "verified")
     .sort((a, b) => {
       const aActive = timestampToIso(a.lastActiveAt ?? a.updatedAt);
       const bActive = timestampToIso(b.lastActiveAt ?? b.updatedAt);
@@ -110,9 +126,8 @@ export async function updateUserVerification(
 export function userDocumentToAlumniProfile(user: UserDocument): import("@/types/profile").AlumniProfile {
   return {
     uid: user.uid,
-    email: user.email,
     displayName: user.displayName ?? "Anonymous",
-    photoURL: user.photoURL,
+    photoURL: safePhotoUrl(user.photoURL),
     role: user.role,
     headline: user.headline,
     bio: user.bio,
@@ -120,7 +135,12 @@ export function userDocumentToAlumniProfile(user: UserDocument): import("@/types
     skills: user.skills ?? [],
     experience: user.experience ?? [],
     education: user.education ?? [],
-    socialLinks: user.socialLinks ?? {},
+    socialLinks: {
+      linkedin: safeExternalUrl(user.socialLinks?.linkedin),
+      twitter: safeExternalUrl(user.socialLinks?.twitter),
+      github: safeExternalUrl(user.socialLinks?.github),
+      website: safeExternalUrl(user.socialLinks?.website),
+    },
     location: user.location,
     industry: user.industry,
     graduationYear: user.graduationYear,
@@ -128,7 +148,6 @@ export function userDocumentToAlumniProfile(user: UserDocument): import("@/types
     department: user.department,
     verificationStatus: user.verificationStatus,
     profileCompleteness: user.profileCompleteness ?? 0,
-    isOnline: true,
-    lastActiveAt: timestampToIso(user.lastActiveAt ?? user.updatedAt),
+    isOnline: false,
   };
 }
