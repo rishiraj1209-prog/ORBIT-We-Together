@@ -3,9 +3,8 @@ import { getCurrentUser } from "@/lib/auth/server";
 import {
   memoryStore,
   generateId,
-  seedInitialConversations,
 } from "@/lib/data/memory-store";
-import { getSeedAlumniById } from "@/lib/data/seed-alumni";
+import { getAdminUserDocument, getAdminUserDocuments } from "@/lib/firebase/admin-users";
 
 export const runtime = "nodejs";
 
@@ -13,12 +12,15 @@ export async function GET() {
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  seedInitialConversations(user.uid);
   const convs = memoryStore.conversations.getByUser(user.uid);
+  const otherUids = convs.map((conversation) =>
+    conversation.participantIds.find((id) => id !== user.uid) ?? ""
+  );
+  const profiles = await getAdminUserDocuments(otherUids);
 
   const previews = convs.map((c) => {
     const otherUid = c.participantIds.find((id) => id !== user.uid) ?? "";
-    const profile = getSeedAlumniById(otherUid);
+    const profile = profiles.get(otherUid);
     return {
       ...c,
       participants: [
@@ -41,6 +43,11 @@ export async function POST(request: NextRequest) {
 
   const { participantId } = (await request.json()) as { participantId?: string };
   if (!participantId) return NextResponse.json({ error: "Missing participantId" }, { status: 400 });
+  if (participantId === user.uid) return NextResponse.json({ error: "You cannot message yourself" }, { status: 400 });
+  const participant = await getAdminUserDocument(participantId);
+  if (!participant || participant.verificationStatus === "rejected") {
+    return NextResponse.json({ error: "Member not found" }, { status: 404 });
+  }
 
   const conv = {
     id: generateId("conv"),

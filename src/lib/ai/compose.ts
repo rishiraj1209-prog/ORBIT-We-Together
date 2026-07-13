@@ -60,19 +60,15 @@ export function generateSmartInsights(profile: {
   }
 
   if (profile.skills.length < 5) {
-    insights.push("Add more skills to improve AI match accuracy by up to 40%.");
+    insights.push("Add more skills so Orbit can explain stronger, more relevant matches.");
   }
 
   if (profile.connectionCount < 5) {
-    insights.push("Members with 5+ connections receive 3× more introduction requests.");
-  }
-
-  if (profile.industry === "Technology") {
-    insights.push("12 alumni in your industry are active this week — great time to reach out.");
+    insights.push("Build a few trusted connections to unlock useful warm-introduction paths.");
   }
 
   if (insights.length === 0) {
-    insights.push("Your profile is performing well — you're in the top 20% of active members.");
+    insights.push("Your profile is ready. New recommendations will appear as real members join your network.");
   }
 
   return insights;

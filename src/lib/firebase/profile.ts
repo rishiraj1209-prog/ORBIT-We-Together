@@ -7,6 +7,16 @@ function generateReferralCode(uid: string): string {
   return `ORBIT-${uid.slice(0, 6).toUpperCase()}`;
 }
 
+function timestampToIso(value: unknown, fallback = ""): string {
+  if (typeof value === "string") return value;
+  if (value instanceof Date) return value.toISOString();
+  if (value && typeof value === "object" && "toDate" in value) {
+    const toDate = (value as { toDate?: () => Date }).toDate;
+    if (typeof toDate === "function") return toDate.call(value).toISOString();
+  }
+  return fallback;
+}
+
 export async function updateUserProfile(
   uid: string,
   input: UpdateProfileInput
@@ -63,7 +73,25 @@ export async function listAllUsers(limit = 100): Promise<UserDocument[]> {
     .limit(limit)
     .get();
 
-  return snapshot.docs.map((doc) => doc.data() as UserDocument);
+  return snapshot.docs.map((doc) => ({
+    ...(doc.data() as UserDocument),
+    uid: doc.id,
+  }));
+}
+
+export async function listDirectoryProfiles(
+  limit = 100
+): Promise<import("@/types/profile").AlumniProfile[]> {
+  const users = await listAllUsers(limit);
+
+  return users
+    .filter((user) => user.verificationStatus !== "rejected")
+    .sort((a, b) => {
+      const aActive = timestampToIso(a.lastActiveAt ?? a.updatedAt);
+      const bActive = timestampToIso(b.lastActiveAt ?? b.updatedAt);
+      return bActive.localeCompare(aActive);
+    })
+    .map(userDocumentToAlumniProfile);
 }
 
 export async function updateUserVerification(
@@ -101,5 +129,6 @@ export function userDocumentToAlumniProfile(user: UserDocument): import("@/types
     verificationStatus: user.verificationStatus,
     profileCompleteness: user.profileCompleteness ?? 0,
     isOnline: true,
+    lastActiveAt: timestampToIso(user.lastActiveAt ?? user.updatedAt),
   };
 }

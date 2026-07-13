@@ -2,8 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { Search, Sparkles, X } from "lucide-react";
-import { SEED_ALUMNI } from "@/lib/data/seed-alumni";
+import { Search, Sparkles, UserPlus, X } from "lucide-react";
 import { semanticSearch } from "@/lib/ai/matching";
 import { APP_ROUTES } from "@/lib/constants/app";
 import type { AlumniProfile } from "@/types/profile";
@@ -14,20 +13,25 @@ import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { EmptyState } from "@/components/ui/empty-state";
 
-export function DirectoryView() {
+interface DirectoryViewProps {
+  profiles: AlumniProfile[];
+  currentUserId: string;
+}
+
+export function DirectoryView({ profiles, currentUserId }: DirectoryViewProps) {
   const [query, setQuery] = useState("");
   const [industry, setIndustry] = useState("");
   const [role, setRole] = useState("");
   const [selected, setSelected] = useState<AlumniProfile | null>(null);
 
-  const industries = [...new Set(SEED_ALUMNI.map((a) => a.industry).filter(Boolean))];
+  const industries = [...new Set(profiles.map((a) => a.industry).filter(Boolean))];
 
   const filtered = useMemo(() => {
-    let results = query ? semanticSearch(query, SEED_ALUMNI) : SEED_ALUMNI;
+    let results = query ? semanticSearch(query, profiles) : profiles;
     if (industry) results = results.filter((a) => a.industry === industry);
     if (role) results = results.filter((a) => a.role === role);
     return results;
-  }, [query, industry, role]);
+  }, [profiles, query, industry, role]);
 
   return (
     <div className="space-y-6">
@@ -66,7 +70,14 @@ export function DirectoryView() {
         </Select>
       </div>
 
-      {filtered.length === 0 ? (
+      {profiles.length === 0 ? (
+        <EmptyState
+          icon={UserPlus}
+          title="Be the first profile in your network"
+          description="Your directory is connected to Firestore and ready for real members. Invite alumni to create the first trusted constellation."
+          action={<Link href={APP_ROUTES.referrals}><Button>Invite alumni</Button></Link>}
+        />
+      ) : filtered.length === 0 ? (
         <EmptyState
           icon={Search}
           title="No alumni found"
@@ -96,7 +107,7 @@ export function DirectoryView() {
               </div>
               <div className="mt-4 flex items-center justify-between text-xs text-text-tertiary">
                 <span>{alumni.location}</span>
-                <span className="text-accent">{alumni.mutualConnections ?? 0} mutual</span>
+                <span className="text-accent">{alumni.uid === currentUserId ? "Your profile" : `${alumni.mutualConnections ?? 0} mutual`}</span>
               </div>
             </button>
           ))}
@@ -119,7 +130,9 @@ export function DirectoryView() {
                 <div>
                   <p className="text-xl font-semibold text-text-primary">{selected.displayName}</p>
                   <p className="text-sm text-text-secondary">{selected.headline}</p>
-                  <Badge variant="success" className="mt-2">Verified</Badge>
+                  <Badge variant={selected.verificationStatus === "verified" ? "success" : "default"} className="mt-2">
+                    {selected.verificationStatus === "verified" ? "Verified" : "Verification pending"}
+                  </Badge>
                 </div>
               </div>
               {selected.aiSummary && (
@@ -140,9 +153,9 @@ export function DirectoryView() {
                 <Link href={APP_ROUTES.profile(selected.uid)} className="flex-1">
                   <Button className="w-full">View full profile</Button>
                 </Link>
-                <Link href={APP_ROUTES.network}>
+                {selected.uid !== currentUserId && <Link href={APP_ROUTES.network}>
                   <Button variant="secondary">Connect</Button>
-                </Link>
+                </Link>}
               </div>
             </div>
           </div>

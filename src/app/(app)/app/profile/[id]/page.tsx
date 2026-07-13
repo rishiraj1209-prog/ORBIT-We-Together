@@ -9,8 +9,9 @@ import {
   Pencil,
   Sparkles,
 } from "lucide-react";
-import { getSeedAlumniById } from "@/lib/data/seed-alumni";
 import { requireOnboardingComplete } from "@/lib/auth/guards";
+import { getAdminUserDocument } from "@/lib/firebase/admin-users";
+import { userDocumentToAlumniProfile } from "@/lib/firebase/profile";
 import { APP_ROUTES } from "@/lib/constants/app";
 import { UserAvatar } from "@/components/ui/user-avatar";
 import { Badge } from "@/components/ui/badge";
@@ -26,7 +27,8 @@ export async function generateMetadata({
   params: Promise<{ id: string }>;
 }): Promise<Metadata> {
   const { id } = await params;
-  const profile = getSeedAlumniById(id);
+  const document = await getAdminUserDocument(id);
+  const profile = document ? userDocumentToAlumniProfile(document) : null;
   return { title: profile?.displayName ?? "Profile" };
 }
 
@@ -37,29 +39,12 @@ export default async function ProfilePage({
 }) {
   const user = await requireOnboardingComplete();
   const { id } = await params;
-  const profile = getSeedAlumniById(id);
-
-  if (!profile && id !== user.uid) notFound();
+  const document = await getAdminUserDocument(id);
+  if (!document || document.verificationStatus === "rejected") notFound();
+  const profile = userDocumentToAlumniProfile(document);
 
   const isOwn = id === user.uid;
-  const display = profile ?? {
-    uid: user.uid,
-    displayName: user.displayName ?? "You",
-    photoURL: user.photoURL,
-    headline: user.headline ?? "Orbit Member",
-    bio: "",
-    aiSummary: "Active member of the Orbit alumni network.",
-    skills: user.skills ?? [],
-    experience: [],
-    education: [],
-    socialLinks: {},
-    location: "",
-    industry: user.industry ?? "Technology",
-    verificationStatus: "verified" as const,
-    profileCompleteness: user.profileCompleteness ?? 80,
-    email: user.email ?? "",
-    role: user.role,
-  };
+  const display = profile;
 
   return (
     <div className="mx-auto max-w-4xl space-y-8">
@@ -73,7 +58,9 @@ export default async function ProfilePage({
                 <h1 className="text-2xl font-semibold text-text-primary">{display.displayName}</h1>
                 <p className="text-text-secondary">{display.headline}</p>
                 <div className="mt-2 flex flex-wrap gap-2">
-                  <Badge variant="success">Verified</Badge>
+                  <Badge variant={display.verificationStatus === "verified" ? "success" : "default"}>
+                    {display.verificationStatus === "verified" ? "Verified" : "Verification pending"}
+                  </Badge>
                   {display.industry && <Badge variant="default">{display.industry}</Badge>}
                 </div>
               </div>

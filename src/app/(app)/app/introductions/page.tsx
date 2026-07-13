@@ -1,8 +1,12 @@
 import type { Metadata } from "next";
 import { IntroductionsView } from "@/components/introductions/introductions-view";
+import { requireOnboardingComplete } from "@/lib/auth/guards";
+import { listDirectoryProfiles } from "@/lib/firebase/profile";
 
 export const metadata: Metadata = { title: "Introductions" };
 
-export default function IntroductionsPage() {
-  return <IntroductionsView />;
+export default async function IntroductionsPage() {
+  const user = await requireOnboardingComplete();
+  const profiles = (await listDirectoryProfiles()).filter((profile) => profile.uid !== user.uid);
+  return <IntroductionsView profiles={profiles} />;
 }

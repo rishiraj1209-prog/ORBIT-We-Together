@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { getCurrentUser } from "@/lib/auth/server";
 import { composeMessageAssist, generateIntroductionMessage } from "@/lib/ai/compose";
-import { getSeedAlumniById } from "@/lib/data/seed-alumni";
+import { getAdminUserDocuments } from "@/lib/firebase/admin-users";
 
 export const runtime = "nodejs";
 
@@ -20,8 +20,11 @@ export async function POST(request: NextRequest) {
   };
 
   if (body.type === "introduction") {
-    const target = getSeedAlumniById(body.targetUid ?? "");
-    const connector = getSeedAlumniById(body.connectorUid ?? "seed-002");
+    const targetUid = body.targetUid ?? "";
+    const connectorUid = body.connectorUid ?? "";
+    const profiles = await getAdminUserDocuments([targetUid, connectorUid]);
+    const target = profiles.get(targetUid);
+    const connector = profiles.get(connectorUid);
     const message = generateIntroductionMessage({
       requesterName: user.displayName ?? "Alumni",
       connectorName: body.connectorName ?? connector?.displayName ?? "Connector",

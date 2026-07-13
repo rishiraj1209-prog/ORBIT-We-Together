@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { Handshake, Sparkles } from "lucide-react";
-import { SEED_ALUMNI } from "@/lib/data/seed-alumni";
 import { UserAvatar } from "@/components/ui/user-avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -13,6 +12,7 @@ import { Label } from "@/components/ui/label";
 import { EmptyState } from "@/components/ui/empty-state";
 import { AuthSpinner } from "@/components/auth/auth-spinner";
 import { cn } from "@/lib/utils/cn";
+import type { AlumniProfile } from "@/types/profile";
 
 interface IntroductionItem {
   id: string;
@@ -25,12 +25,12 @@ interface IntroductionItem {
   timeline: Array<{ label: string; description?: string; timestamp: string }>;
 }
 
-export function IntroductionsView() {
+export function IntroductionsView({ profiles }: { profiles: AlumniProfile[] }) {
   const [introductions, setIntroductions] = useState<IntroductionItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
-  const [connectorId, setConnectorId] = useState("seed-002");
-  const [targetId, setTargetId] = useState("seed-004");
+  const [connectorId, setConnectorId] = useState(profiles[0]?.uid ?? "");
+  const [targetId, setTargetId] = useState(profiles[1]?.uid ?? profiles[0]?.uid ?? "");
   const [context, setContext] = useState("");
   const [aiMessage, setAiMessage] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -83,7 +83,7 @@ export function IntroductionsView() {
           <h1 className="text-3xl font-semibold text-text-primary">Warm Introductions</h1>
           <p className="mt-1 text-text-secondary">Get introduced through mutual connections</p>
         </div>
-        <Button onClick={() => setShowForm(!showForm)} className="gap-2">
+        <Button onClick={() => setShowForm(!showForm)} className="gap-2" disabled={profiles.length < 2}>
           <Handshake className="h-4 w-4" /> Request intro
         </Button>
       </div>
@@ -96,7 +96,7 @@ export function IntroductionsView() {
               <div className="space-y-2">
                 <Label>Connector (mutual)</Label>
                 <Select value={connectorId} onChange={(e) => setConnectorId(e.target.value)}>
-                  {SEED_ALUMNI.slice(0, 6).map((a) => (
+                  {profiles.map((a) => (
                     <option key={a.uid} value={a.uid}>{a.displayName}</option>
                   ))}
                 </Select>
@@ -104,7 +104,7 @@ export function IntroductionsView() {
               <div className="space-y-2">
                 <Label>Target alumni</Label>
                 <Select value={targetId} onChange={(e) => setTargetId(e.target.value)}>
-                  {SEED_ALUMNI.map((a) => (
+                  {profiles.filter((a) => a.uid !== connectorId).map((a) => (
                     <option key={a.uid} value={a.uid}>{a.displayName}</option>
                   ))}
                 </Select>
@@ -123,7 +123,7 @@ export function IntroductionsView() {
                 <p className="whitespace-pre-wrap text-sm text-text-secondary">{aiMessage}</p>
               </div>
             )}
-            <Button onClick={handleSubmit} disabled={submitting}>
+            <Button onClick={handleSubmit} disabled={submitting || !connectorId || !targetId}>
               {submitting ? <AuthSpinner className="text-white" /> : "Send request"}
             </Button>
           </CardContent>
@@ -132,6 +132,8 @@ export function IntroductionsView() {
 
       {loading ? (
         <div className="flex justify-center py-12"><AuthSpinner /></div>
+      ) : introductions.length === 0 && profiles.length < 2 ? (
+        <EmptyState icon={Handshake} title="Warm introductions unlock with three members" description="Once two other real alumni join, Orbit can map a connector and a target for trusted introductions." />
       ) : introductions.length === 0 ? (
         <EmptyState icon={Handshake} title="No introductions yet" description="Request a warm introduction through a mutual connection." />
       ) : (

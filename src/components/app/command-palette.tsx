@@ -4,7 +4,6 @@ import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Command, Search, X } from "lucide-react";
 import { APP_NAV, APP_ROUTES, QUICK_ACTIONS } from "@/lib/constants/app";
-import { SEED_ALUMNI } from "@/lib/data/seed-alumni";
 
 interface CommandPaletteProps {
   open: boolean;
@@ -22,6 +21,7 @@ interface CommandItem {
 export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
   const router = useRouter();
   const [query, setQuery] = useState("");
+  const [people, setPeople] = useState<CommandItem[]>([]);
 
   const items: CommandItem[] = [
     ...APP_NAV.map((n) => ({
@@ -36,13 +36,7 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
       href: a.href,
       group: "Quick actions",
     })),
-    ...SEED_ALUMNI.slice(0, 6).map((a) => ({
-      id: a.uid,
-      label: a.displayName,
-      description: a.headline,
-      href: APP_ROUTES.profile(a.uid),
-      group: "People",
-    })),
+    ...people,
   ];
 
   const filtered = query
@@ -65,6 +59,22 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
   );
 
   useEffect(() => {
+    if (open) {
+      fetch("/api/search")
+        .then((response) => response.json())
+        .then((data) => {
+          const results = Array.isArray(data.results) ? data.results : [];
+          setPeople(results.slice(0, 8).map((person: { uid: string; displayName: string; headline?: string }) => ({
+            id: person.uid,
+            label: person.displayName,
+            description: person.headline,
+            href: APP_ROUTES.profile(person.uid),
+            group: "People",
+          })));
+        })
+        .catch(() => setPeople([]));
+    }
+
     if (!open) {
       const timer = setTimeout(() => setQuery(""), 0);
       return () => clearTimeout(timer);

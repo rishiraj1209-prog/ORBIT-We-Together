@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import { NetworkView } from "@/components/network/network-view";
 import { requireOnboardingComplete } from "@/lib/auth/guards";
+import { listDirectoryProfiles } from "@/lib/firebase/profile";
 
 export const metadata: Metadata = { title: "Network" };
 
 export default async function NetworkPage() {
   const user = await requireOnboardingComplete();
-  return <NetworkView user={user} />;
+  const profiles = await listDirectoryProfiles();
+  return <NetworkView user={user} profiles={profiles} />;
 }

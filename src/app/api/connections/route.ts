@@ -3,9 +3,8 @@ import { getCurrentUser } from "@/lib/auth/server";
 import {
   memoryStore,
   generateId,
-  seedInitialConnections,
 } from "@/lib/data/memory-store";
-import { getSeedAlumniById } from "@/lib/data/seed-alumni";
+import { getAdminUserDocument, getAdminUserDocuments } from "@/lib/firebase/admin-users";
 
 export const runtime = "nodejs";
 
@@ -13,12 +12,14 @@ export async function GET() {
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  seedInitialConnections(user.uid);
   const connections = memoryStore.connections.getByUser(user.uid);
+  const profiles = await getAdminUserDocuments(connections.map((connection) =>
+    connection.fromUid === user.uid ? connection.toUid : connection.fromUid
+  ));
 
   const enriched = connections.map((c) => {
     const otherUid = c.fromUid === user.uid ? c.toUid : c.fromUid;
-    const profile = getSeedAlumniById(otherUid);
+    const profile = profiles.get(otherUid);
     return {
       ...c,
       profile: profile
@@ -36,6 +37,11 @@ export async function POST(request: NextRequest) {
 
   const { toUid, message } = (await request.json()) as { toUid?: string; message?: string };
   if (!toUid) return NextResponse.json({ error: "Missing toUid" }, { status: 400 });
+  if (toUid === user.uid) return NextResponse.json({ error: "You cannot connect with yourself" }, { status: 400 });
+  const target = await getAdminUserDocument(toUid);
+  if (!target || target.verificationStatus === "rejected") {
+    return NextResponse.json({ error: "Member not found" }, { status: 404 });
+  }
 
   const conn = {
     id: generateId("conn"),

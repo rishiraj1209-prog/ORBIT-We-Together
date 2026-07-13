@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { ArrowRight, Shuffle, Sparkles, UserPlus, Users } from "lucide-react";
-import { SEED_ALUMNI } from "@/lib/data/seed-alumni";
 import { getSuggestedConnections } from "@/lib/ai/matching";
 import { UserAvatar } from "@/components/ui/user-avatar";
 import { Badge } from "@/components/ui/badge";
@@ -12,12 +11,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { EmptyState } from "@/components/ui/empty-state";
 import { AuthSpinner } from "@/components/auth/auth-spinner";
 import type { AuthUser } from "@/types/auth";
+import type { AlumniProfile } from "@/types/profile";
 
 interface NetworkViewProps {
   user: AuthUser;
+  profiles: AlumniProfile[];
 }
 
-export function NetworkView({ user }: NetworkViewProps) {
+export function NetworkView({ user, profiles }: NetworkViewProps) {
   const [connections, setConnections] = useState<Array<{
     id: string;
     status: string;
@@ -31,7 +32,7 @@ export function NetworkView({ user }: NetworkViewProps) {
   const suggestions = getSuggestedConnections(
     user.skills ?? ["Networking"],
     user.industry,
-    SEED_ALUMNI,
+    profiles,
     user.uid,
     6
   );
@@ -91,7 +92,9 @@ export function NetworkView({ user }: NetworkViewProps) {
         </TabsList>
 
         <TabsContent value="suggested">
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {suggestions.length === 0 ? (
+            <EmptyState icon={Users} title="Your network is ready to grow" description="Invite alumni or return when more real members have completed their profiles." />
+          ) : <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {suggestions.map((s) => (
               <Card key={s.uid} className="transition-all hover:shadow-md">
                 <CardContent className="p-5">
@@ -110,7 +113,7 @@ export function NetworkView({ user }: NetworkViewProps) {
                 </CardContent>
               </Card>
             ))}
-          </div>
+          </div>}
         </TabsContent>
 
         <TabsContent value="pending">

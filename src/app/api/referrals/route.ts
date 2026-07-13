@@ -1,8 +1,8 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { getCurrentUser } from "@/lib/auth/server";
 import { ACHIEVEMENTS } from "@/types/referral";
-import { SEED_ALUMNI } from "@/lib/data/seed-alumni";
 import { isFirebaseAdminConfigured } from "@/lib/firebase/config";
+import type { UserDocument } from "@/types/user";
 
 export const runtime = "nodejs";
 
@@ -17,22 +17,25 @@ export async function GET(request: NextRequest) {
     );
     doc = await getAdminUserDocument(user.uid);
   }
-  const referralCount = doc?.referralCount ?? 2;
+  const referralCount = doc?.referralCount ?? 0;
   const code = doc?.referralCode ?? `ORBIT-${user.uid.slice(0, 6).toUpperCase()}`;
 
-  const leaderboard = [
-    { rank: 1, uid: "seed-011", displayName: "Nina Kowalski", photoURL: null, referralCount: 12, points: 480 },
-    { rank: 2, uid: "seed-001", displayName: "Priya Sharma", photoURL: null, referralCount: 9, points: 360 },
-    { rank: 3, uid: user.uid, displayName: user.displayName ?? "You", photoURL: user.photoURL, referralCount, points: referralCount * 40 },
-    ...SEED_ALUMNI.slice(0, 5).map((a, i) => ({
-      rank: i + 4,
-      uid: a.uid,
-      displayName: a.displayName,
-      photoURL: a.photoURL,
-      referralCount: Math.max(1, 7 - i),
-      points: Math.max(40, (7 - i) * 40),
-    })),
-  ].sort((a, b) => a.rank - b.rank);
+  let users: UserDocument[] = [];
+  if (isFirebaseAdminConfigured()) {
+    const { listAllUsers } = await import("@/lib/firebase/profile");
+    users = await listAllUsers();
+  }
+  const leaderboard = users
+    .map((member) => ({
+      uid: member.uid,
+      displayName: member.displayName ?? "Orbit member",
+      photoURL: member.photoURL,
+      referralCount: member.referralCount ?? 0,
+      points: (member.referralCount ?? 0) * 40,
+    }))
+    .sort((a, b) => b.points - a.points || a.displayName.localeCompare(b.displayName))
+    .map((entry, index) => ({ ...entry, rank: index + 1 }));
+  const userRank = leaderboard.find((entry) => entry.uid === user.uid)?.rank ?? leaderboard.length + 1;
 
   const achievements = ACHIEVEMENTS.map((a) => ({
     ...a,
@@ -50,9 +53,9 @@ export async function GET(request: NextRequest) {
     stats: {
       referralCode: code,
       totalReferrals: referralCount,
-      pendingReferrals: 1,
-      convertedReferrals: referralCount - 1,
-      rank: 3,
+      pendingReferrals: 0,
+      convertedReferrals: referralCount,
+      rank: userRank,
       points: referralCount * 40,
     },
     leaderboard,

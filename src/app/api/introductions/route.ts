@@ -3,10 +3,9 @@ import { getCurrentUser } from "@/lib/auth/server";
 import {
   memoryStore,
   generateId,
-  seedInitialIntroductions,
 } from "@/lib/data/memory-store";
 import { generateIntroductionMessage } from "@/lib/ai/compose";
-import { getSeedAlumniById } from "@/lib/data/seed-alumni";
+import { getAdminUserDocument, getAdminUserDocuments } from "@/lib/firebase/admin-users";
 
 export const runtime = "nodejs";
 
@@ -14,22 +13,26 @@ export async function GET() {
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  seedInitialIntroductions(user.uid);
   const intros = memoryStore.introductions.getByUser(user.uid);
+  const profiles = await getAdminUserDocuments(intros.flatMap((intro) => [
+    intro.requesterId,
+    intro.connectorId,
+    intro.targetId,
+  ]));
 
   const enriched = intros.map((intro) => ({
     ...intro,
     requester: {
-      displayName: intro.requesterId === user.uid ? user.displayName : getSeedAlumniById(intro.requesterId)?.displayName ?? "Member",
-      photoURL: intro.requesterId === user.uid ? user.photoURL : getSeedAlumniById(intro.requesterId)?.photoURL ?? null,
+      displayName: intro.requesterId === user.uid ? user.displayName : profiles.get(intro.requesterId)?.displayName ?? "Member",
+      photoURL: intro.requesterId === user.uid ? user.photoURL : profiles.get(intro.requesterId)?.photoURL ?? null,
     },
     connector: {
-      displayName: getSeedAlumniById(intro.connectorId)?.displayName ?? "Connector",
-      photoURL: getSeedAlumniById(intro.connectorId)?.photoURL ?? null,
+      displayName: profiles.get(intro.connectorId)?.displayName ?? "Connector",
+      photoURL: profiles.get(intro.connectorId)?.photoURL ?? null,
     },
     target: {
-      displayName: getSeedAlumniById(intro.targetId)?.displayName ?? "Member",
-      photoURL: getSeedAlumniById(intro.targetId)?.photoURL ?? null,
+      displayName: profiles.get(intro.targetId)?.displayName ?? "Member",
+      photoURL: profiles.get(intro.targetId)?.photoURL ?? null,
     },
   }));
 
@@ -50,8 +53,16 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Missing fields" }, { status: 400 });
   }
 
-  const connector = getSeedAlumniById(connectorId);
-  const target = getSeedAlumniById(targetId);
+  if (connectorId === targetId || connectorId === user.uid || targetId === user.uid) {
+    return NextResponse.json({ error: "Choose two different alumni" }, { status: 400 });
+  }
+  const [connector, target] = await Promise.all([
+    getAdminUserDocument(connectorId),
+    getAdminUserDocument(targetId),
+  ]);
+  if (!connector || !target) {
+    return NextResponse.json({ error: "Member not found" }, { status: 404 });
+  }
 
   const aiMessage = generateIntroductionMessage({
     requesterName: user.displayName ?? "Member",

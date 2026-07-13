@@ -1,7 +1,5 @@
 import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth/server";
-import { getSeedAlumniById } from "@/lib/data/seed-alumni";
-import { isFirebaseAdminConfigured } from "@/lib/firebase/config";
 
 export const runtime = "nodejs";
 
@@ -14,20 +12,14 @@ export async function GET(
 
   const { id } = await params;
 
-  if (id.startsWith("seed-")) {
-    const profile = getSeedAlumniById(id);
-    if (!profile) return NextResponse.json({ error: "Not found" }, { status: 404 });
-    return NextResponse.json({ profile });
-  }
-
-  if (isFirebaseAdminConfigured()) {
-    const [{ getAdminUserDocument }, { userDocumentToAlumniProfile }] =
-      await Promise.all([
-        import("@/lib/firebase/admin-users"),
-        import("@/lib/firebase/profile"),
-      ]);
-    const doc = await getAdminUserDocument(id);
-    if (doc) return NextResponse.json({ profile: userDocumentToAlumniProfile(doc) });
+  const [{ getAdminUserDocument }, { userDocumentToAlumniProfile }] =
+    await Promise.all([
+      import("@/lib/firebase/admin-users"),
+      import("@/lib/firebase/profile"),
+    ]);
+  const doc = await getAdminUserDocument(id);
+  if (doc && doc.verificationStatus !== "rejected") {
+    return NextResponse.json({ profile: userDocumentToAlumniProfile(doc) });
   }
 
   return NextResponse.json({ error: "Not found" }, { status: 404 });
