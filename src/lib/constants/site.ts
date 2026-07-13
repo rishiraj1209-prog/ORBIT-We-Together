@@ -3,7 +3,9 @@ export const SITE = {
   tagline: "Intelligence for the people who move you forward.",
   description:
     "Orbit is the relationship intelligence platform that turns trusted communities into meaningful introductions, opportunities, and momentum.",
-  url: process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000",
+  url:
+    process.env.NEXT_PUBLIC_APP_URL ??
+    "https://orbit-we-together.vercel.app",
 } as const;
 
 export const MARKETING_NAV = [

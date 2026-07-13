@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
 import { getCurrentUser } from "@/lib/auth/server";
 import { ACHIEVEMENTS } from "@/types/referral";
 import { SEED_ALUMNI } from "@/lib/data/seed-alumni";
@@ -6,7 +6,7 @@ import { isFirebaseAdminConfigured } from "@/lib/firebase/config";
 
 export const runtime = "nodejs";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
@@ -57,6 +57,6 @@ export async function GET() {
     },
     leaderboard,
     achievements,
-    inviteLink: `${process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"}/signup?ref=${code}`,
+    inviteLink: `${request.nextUrl.origin}/signup?ref=${code}`,
   });
 }
