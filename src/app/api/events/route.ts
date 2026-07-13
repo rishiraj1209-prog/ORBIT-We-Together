@@ -1,19 +1,44 @@
-import { NextResponse } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
+import { z } from "zod";
 import { getCurrentUser } from "@/lib/auth/server";
-import { SEED_EVENTS } from "@/lib/data/seed-events";
-import { memoryStore } from "@/lib/data/memory-store";
+import { createEvent, listEventsForUser } from "@/lib/firebase/community";
 
 export const runtime = "nodejs";
+
+const eventSchema = z.object({
+  title: z.string().trim().min(3).max(120),
+  description: z.string().trim().min(10).max(2000),
+  date: z.string().refine((value) => !Number.isNaN(new Date(value).getTime())),
+  endDate: z.string().optional(),
+  location: z.string().trim().min(2).max(160),
+  virtual: z.boolean().optional(),
+  maxAttendees: z.number().int().positive().max(100_000).optional(),
+  tags: z.array(z.string().trim().min(1).max(30)).max(8).optional(),
+});
 
 export async function GET() {
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const rsvps = memoryStore.rsvps.getByUser(user.uid);
-  const events = SEED_EVENTS.map((e) => ({
-    ...e,
-    userRsvp: rsvps.find((r) => r.eventId === e.id)?.status ?? null,
-  }));
-
+  const events = await listEventsForUser(user.uid);
   return NextResponse.json({ events });
+}
+
+export async function POST(request: NextRequest) {
+  const user = await getCurrentUser();
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  try {
+    const input = eventSchema.parse(await request.json());
+    const event = await createEvent(input, {
+      uid: user.uid,
+      displayName: user.displayName ?? "Orbit member",
+    });
+    return NextResponse.json({ event }, { status: 201 });
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return NextResponse.json({ error: "Please complete all required event details." }, { status: 400 });
+    }
+    return NextResponse.json({ error: "Unable to create event." }, { status: 500 });
+  }
 }

@@ -1,22 +1,22 @@
 import type { AlumniProfile } from "@/types/profile";
 import type { MatchRecommendation } from "@/types/social";
 import type { ActivityItem } from "@/types/activity";
-import { SEED_OPPORTUNITIES } from "@/lib/data/seed-opportunities";
-import { SEED_EVENTS } from "@/lib/data/seed-events";
 import { getWelcomeMessage } from "@/lib/data/notifications";
 import { getMatchRecommendations } from "@/lib/ai/matching";
 import { generateSmartInsights } from "@/lib/ai/compose";
 import type { AuthUser } from "@/types/auth";
 import { isFirebaseAdminConfigured } from "@/lib/firebase/config";
 import { memoryStore } from "@/lib/data/memory-store";
+import type { OrbitEvent } from "@/types/event";
+import type { Opportunity } from "@/types/opportunity";
 
 export interface DashboardData {
   welcomeMessage: string;
   matches: MatchRecommendation[];
   trendingAlumni: AlumniProfile[];
   referralProgress: { current: number; goal: number; code: string };
-  upcomingEvents: typeof SEED_EVENTS;
-  opportunities: typeof SEED_OPPORTUNITIES;
+  upcomingEvents: OrbitEvent[];
+  opportunities: Opportunity[];
   activities: ActivityItem[];
   insights: string[];
   stats: {
@@ -30,14 +30,21 @@ export interface DashboardData {
 export async function getDashboardData(user: AuthUser): Promise<DashboardData> {
   let userDoc = null;
   let realProfiles: AlumniProfile[] = [];
+  let realEvents: OrbitEvent[] = [];
+  let realOpportunities: Opportunity[] = [];
   if (isFirebaseAdminConfigured()) {
-    const [{ getAdminUserDocument }, { listDirectoryProfiles }] =
+    const [{ getAdminUserDocument }, { listDirectoryProfiles }, { listEventsForUser, listOpportunities }] =
       await Promise.all([
         import("@/lib/firebase/admin-users"),
         import("@/lib/firebase/profile"),
+        import("@/lib/firebase/community"),
       ]);
     userDoc = await getAdminUserDocument(user.uid);
-    realProfiles = await listDirectoryProfiles();
+    [realProfiles, realEvents, realOpportunities] = await Promise.all([
+      listDirectoryProfiles(),
+      listEventsForUser(user.uid),
+      listOpportunities(),
+    ]);
   }
   const skills = userDoc?.skills ?? user.skills ?? ["Networking"];
   const industry = userDoc?.industry ?? user.industry;
@@ -88,8 +95,8 @@ export async function getDashboardData(user: AuthUser): Promise<DashboardData> {
       goal: 5,
       code: userDoc?.referralCode ?? `ORBIT-${user.uid.slice(0, 6).toUpperCase()}`,
     },
-    upcomingEvents: SEED_EVENTS.slice(0, 3),
-    opportunities: SEED_OPPORTUNITIES.slice(0, 3),
+    upcomingEvents: realEvents.slice(0, 3),
+    opportunities: realOpportunities.slice(0, 3),
     activities,
     insights: generateSmartInsights({
       skills,

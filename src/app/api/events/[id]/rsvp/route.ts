@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { getCurrentUser } from "@/lib/auth/server";
-import { memoryStore } from "@/lib/data/memory-store";
+import { setEventRsvp } from "@/lib/firebase/community";
 import type { RsvpStatus } from "@/types/event";
 
 export const runtime = "nodejs";
@@ -17,13 +17,14 @@ export async function POST(
 
   if (!status) return NextResponse.json({ error: "Missing status" }, { status: 400 });
 
-  const rsvp = {
-    eventId,
-    userId: user.uid,
-    status,
-    createdAt: new Date().toISOString(),
-  };
+  if (!["going", "maybe", "not_going"].includes(status)) {
+    return NextResponse.json({ error: "Invalid status" }, { status: 400 });
+  }
 
-  memoryStore.rsvps.set(rsvp);
-  return NextResponse.json({ rsvp });
+  try {
+    await setEventRsvp(eventId, user.uid, status);
+    return NextResponse.json({ rsvp: { eventId, userId: user.uid, status } });
+  } catch {
+    return NextResponse.json({ error: "Event not found" }, { status: 404 });
+  }
 }
