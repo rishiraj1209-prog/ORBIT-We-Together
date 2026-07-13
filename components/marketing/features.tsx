@@ -15,91 +15,81 @@ const features = [
   {
     icon: BrainCircuit,
     title: "AI Career Copilot",
-    description:
-      "Ask career questions, generate next steps, and get personalized advice.",
+    description: "Ask career questions, generate next steps, and get personalized advice.",
+    tone: "border-indigo-400/12 bg-indigo-500/8 text-indigo-300",
   },
   {
     icon: FileText,
     title: "Smart Resume Analysis",
-    description:
-      "Analyze resume gaps, improve ATS readiness, and sharpen project impact.",
+    description: "Analyze resume gaps, improve ATS readiness, and sharpen project impact.",
+    tone: "border-violet-400/12 bg-violet-500/8 text-violet-300",
   },
   {
     icon: Network,
     title: "Alumni Intelligence",
-    description:
-      "Find the right alumni by company, branch, role, and career path.",
+    description: "Find the right alumni by company, branch, role, and career path.",
+    tone: "border-cyan-400/12 bg-cyan-500/[0.07] text-cyan-300",
   },
   {
     icon: Route,
     title: "Personalized Roadmap",
-    description:
-      "Generate a practical weekly roadmap based on your dream company.",
+    description: "Generate a practical weekly roadmap based on your dream company.",
+    tone: "border-indigo-400/12 bg-indigo-500/8 text-indigo-300",
   },
   {
     icon: Briefcase,
     title: "Opportunity Engine",
-    description:
-      "Discover internships, jobs, referrals, and programs matched to you.",
+    description: "Discover internships, jobs, referrals, and programs matched to you.",
+    tone: "border-violet-400/12 bg-violet-500/8 text-violet-300",
   },
   {
     icon: Bell,
     title: "Real-time Notifications",
-    description:
-      "Track resume, roadmap, AI, referral, and opportunity updates instantly.",
+    description: "Track resume, roadmap, AI, referral, and opportunity updates instantly.",
+    tone: "border-cyan-400/12 bg-cyan-500/[0.07] text-cyan-300",
   },
 ];
 
 export default function Features() {
   return (
-    <section id="features" className="relative px-8 py-36 lg:px-10">
-      <div className="absolute left-20 top-20 h-72 w-72 rounded-full bg-green-500/10 blur-[100px]" />
-
-      <div className="mx-auto max-w-7xl">
-        <div className="mx-auto mb-16 max-w-3xl text-center">
-          <p className="mb-5 inline-flex items-center gap-2 rounded-full border border-green-500/30 bg-green-500/10 px-4 py-2 text-sm text-green-300">
-            <Sparkles size={16} />
+    <section id="features" className="relative overflow-hidden px-4 py-20 sm:px-6 sm:py-28 lg:px-10">
+      <div className="pointer-events-none absolute -left-32 top-24 size-96 rounded-full bg-indigo-600/[0.08] blur-[140px]" />
+      <div className="relative mx-auto max-w-[90rem]">
+        <div className="mx-auto mb-12 max-w-3xl text-center sm:mb-16">
+          <p className="inline-flex items-center gap-2 rounded-full border border-indigo-400/14 bg-indigo-500/8 px-3 py-2 text-xs font-semibold text-indigo-200">
+            <Sparkles size={14} />
             Everything you need
           </p>
-
-          <h2 className="text-4xl font-black tracking-tight md:text-6xl">
-            One platform.{" "}
-            <span className="green-text">Infinite possibilities.</span>
+          <h2 className="mt-6 text-4xl font-bold tracking-[-0.05em] text-white sm:text-5xl lg:text-6xl">
+            One focused career system.
           </h2>
-
-          <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-slate-400">
-            Powerful AI tools and intelligent connections to accelerate your
-            career journey.
+          <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-slate-500">
+            Powerful AI tools and intelligent connections designed to accelerate
+            every important step of your career journey.
           </p>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-3">
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {features.map((feature, index) => {
             const Icon = feature.icon;
-
             return (
-              <motion.div
+              <motion.article
                 key={feature.title}
-                initial={{ opacity: 0, y: 36 }}
+                initial={{ opacity: 0, y: 28 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.06 }}
+                transition={{ delay: index * 0.05 }}
                 viewport={{ once: true }}
-                className="group green-glass relative overflow-hidden rounded-[2rem] p-7 transition-all duration-300 hover:-translate-y-2 hover:border-green-400/40 hover:shadow-[0_0_45px_rgba(34,197,94,0.16)]"
+                className="group relative overflow-hidden rounded-[1.5rem] border border-white/8 bg-white/[0.025] p-6 transition hover:-translate-y-1 hover:border-indigo-400/18 hover:bg-white/[0.035] hover:shadow-[var(--shadow-md)]"
               >
-                <div className="absolute right-0 top-0 h-32 w-32 rounded-full bg-green-500/10 blur-3xl transition group-hover:bg-lime-400/20" />
-
+                <div className="pointer-events-none absolute -right-16 -top-16 size-40 rounded-full bg-indigo-500/[0.07] blur-3xl transition group-hover:bg-violet-500/12" />
                 <div className="relative">
-                  <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-green-400 to-lime-400 shadow-lg shadow-green-500/20">
-                    <Icon size={27} className="text-slate-950" />
-                  </div>
-
-                  <h3 className="text-2xl font-bold">{feature.title}</h3>
-
-                  <p className="mt-4 leading-7 text-slate-400">
-                    {feature.description}
-                  </p>
+                  <span className={"flex size-11 items-center justify-center rounded-2xl border " + feature.tone}>
+                    <Icon size={20} />
+                  </span>
+                  <h3 className="mt-6 text-lg font-semibold tracking-tight text-white">{feature.title}</h3>
+                  <p className="mt-3 text-sm leading-6 text-slate-500">{feature.description}</p>
                 </div>
-              </motion.div>
+              </motion.article>
             );
           })}
         </div>

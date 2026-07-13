@@ -8,13 +8,24 @@ import {
   GraduationCap,
   Save,
   Sparkles,
-  Target,
   User,
 } from "lucide-react";
 
 import { useAuth } from "@/components/providers/auth-provider";
-import { getUserProfile, saveUserProfile } from "@/lib/profile";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import {
+  Field,
+  FieldDescription,
+  FieldLabel,
+  Input,
+  Select,
+  Textarea,
+} from "@/components/ui/field";
+import { PageHeader } from "@/components/ui/page-header";
 import Progress from "@/components/ui/progress";
+import { Skeleton } from "@/components/ui/skeleton";
+import { getUserProfile, saveUserProfile } from "@/lib/profile";
 
 type ProfileForm = {
   name: string;
@@ -29,7 +40,7 @@ type ProfileForm = {
 };
 
 export default function ProfilePage() {
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const [loading, setLoading] = useState(true);
 
   const [profile, setProfile] = useState<ProfileForm>({
@@ -45,10 +56,7 @@ export default function ProfilePage() {
   });
 
   useEffect(() => {
-    if (!user) {
-      setLoading(false);
-      return;
-    }
+    if (!user) return;
 
     async function loadProfile() {
       if (!user) return;
@@ -126,215 +134,333 @@ export default function ProfilePage() {
     toast.success("Profile saved successfully!");
   }
 
-  if (loading) {
-    return (
-      <div className="px-6 py-10">
-        <div className="mx-auto max-w-6xl">
-          <div className="h-10 w-56 animate-pulse rounded-xl bg-white/10" />
-          <div className="mt-8 grid gap-8 lg:grid-cols-[0.8fr_1.2fr]">
-            <div className="h-96 animate-pulse rounded-[2rem] bg-white/5" />
-            <div className="h-96 animate-pulse rounded-[2rem] bg-white/5" />
-          </div>
-        </div>
-      </div>
-    );
+  if (authLoading || (user && loading)) {
+    return <ProfileSkeleton />;
   }
 
+  const initials = (profile.name || "O")
+    .split(" ")
+    .map((item) => item[0])
+    .join("")
+    .slice(0, 2);
+
   return (
-    <div className="px-6 py-10">
-      <div className="mx-auto max-w-6xl space-y-8">
-        <div>
-          <p className="mb-3 inline-flex items-center gap-2 rounded-full border border-green-500/30 bg-green-500/10 px-4 py-2 text-sm text-green-300">
-            <Sparkles size={16} />
-            Orbit Identity
-          </p>
+    <div className="px-4 py-6 sm:px-6 sm:py-8 xl:px-10">
+      <div className="mx-auto max-w-[82rem] space-y-6 lg:space-y-8">
+        <PageHeader
+          eyebrow={
+            <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-indigo-300">
+              <Sparkles size={14} />
+              Orbit Identity
+            </span>
+          }
+          title="Build your career profile."
+          description="Orbit uses this context to personalize AI guidance, alumni matching, career roadmaps, and referral suggestions."
+        />
 
-          <h1 className="text-5xl font-black tracking-tight">
-            Build your career profile.
-          </h1>
-
-          <p className="mt-4 max-w-2xl text-slate-400">
-            Orbit uses your profile to personalize AI guidance, alumni matching,
-            career roadmaps and referral suggestions.
-          </p>
-        </div>
-
-        <div className="grid gap-8 lg:grid-cols-[0.85fr_1.15fr]">
-          <aside className="space-y-6">
-            <section className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-gradient-to-br from-white/10 via-white/5 to-transparent p-7 backdrop-blur-2xl">
-              <div className="absolute right-0 top-0 h-40 w-40 rounded-full bg-lime-500/10 blur-3xl" />
+        <div className="grid items-start gap-6 lg:grid-cols-[minmax(17rem,0.72fr)_minmax(0,1.28fr)] xl:gap-8">
+          <aside className="space-y-5 lg:sticky lg:top-6">
+            <Card className="relative overflow-hidden border-indigo-400/15 bg-gradient-to-br from-indigo-500/13 via-violet-500/[0.05] to-cyan-500/[0.02] p-5 shadow-[var(--shadow-md)] sm:p-6">
+              <div className="pointer-events-none absolute -right-20 -top-20 size-56 rounded-full bg-indigo-500/18 blur-3xl" />
+              <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-indigo-300/50 to-transparent" />
 
               <div className="relative">
-                <div className="flex h-24 w-24 items-center justify-center rounded-[2rem] bg-gradient-to-br from-green-500 to-lime-400 text-4xl font-black shadow-2xl shadow-green-500/20">
-                  {(profile.name || "O")
-                    .split(" ")
-                    .map((item) => item[0])
-                    .join("")
-                    .slice(0, 2)}
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex size-20 items-center justify-center rounded-[1.4rem] bg-gradient-to-br from-indigo-500 via-violet-500 to-cyan-400 text-2xl font-bold text-white shadow-xl shadow-indigo-950/40">
+                    {initials}
+                  </div>
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-cyan-400/15 bg-cyan-500/8 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-cyan-200">
+                    <BadgeCheck size={13} />
+                    Verified
+                  </span>
                 </div>
 
-                <h2 className="mt-6 text-3xl font-black">
+                <h2 className="mt-5 break-words text-2xl font-bold tracking-tight text-white">
                   {profile.name || "Orbit User"}
                 </h2>
+                <p className="mt-1.5 break-all text-sm text-slate-500">
+                  {profile.email || "Email not available"}
+                </p>
 
-                <p className="mt-2 text-slate-400">{profile.email}</p>
-
-                <div className="mt-6 rounded-2xl border border-green-500/20 bg-green-500/10 p-4">
-                  <div className="flex items-center gap-3">
-                    <BadgeCheck className="text-green-300" />
-                    <div>
-                      <p className="font-semibold">Verified Career Profile</p>
-                      <p className="text-sm text-slate-400">
-                        Connected to Firebase and Orbit AI.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="mt-6">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-slate-400">Profile Completion</span>
-                    <span>{completion}%</span>
+                <div className="mt-6 rounded-2xl border border-white/8 bg-slate-950/30 p-4">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="font-medium text-slate-300">Profile completion</span>
+                    <span className="font-semibold text-indigo-200">{completion}%</span>
                   </div>
                   <Progress value={completion} />
+                  <p className="mt-3 text-xs leading-5 text-slate-600">
+                    Complete profiles receive stronger AI and alumni recommendations.
+                  </p>
                 </div>
               </div>
-            </section>
+            </Card>
 
-            <section className="rounded-[2rem] border border-white/10 bg-white/5 p-7 backdrop-blur-2xl">
-              <h3 className="mb-5 text-xl font-bold">Skills</h3>
+            <Card className="p-5 sm:p-6">
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  <h2 className="text-base font-semibold text-white">Skills</h2>
+                  <p className="mt-1 text-xs text-slate-600">{skills.length} detected</p>
+                </div>
+                <span className="flex size-9 items-center justify-center rounded-xl border border-violet-400/12 bg-violet-500/8 text-violet-300">
+                  <Sparkles size={16} />
+                </span>
+              </div>
 
               {skills.length === 0 ? (
-                <p className="text-slate-400">
-                  Add comma-separated skills like React, Firebase, DSA.
-                </p>
+                <div className="mt-5 rounded-2xl border border-dashed border-white/10 bg-white/[0.02] p-5 text-sm leading-6 text-slate-500">
+                  Add comma-separated skills such as React, Firebase, DSA, or Python.
+                </div>
               ) : (
-                <div className="flex flex-wrap gap-2">
+                <div className="mt-5 flex flex-wrap gap-2">
                   {skills.map((skill) => (
                     <span
                       key={skill}
-                      className="rounded-full border border-lime-500/20 bg-lime-500/10 px-3 py-1 text-sm text-lime-200"
+                      className="rounded-full border border-indigo-400/12 bg-indigo-500/8 px-3 py-1.5 text-xs font-medium text-indigo-200"
                     >
                       {skill}
                     </span>
                   ))}
                 </div>
               )}
-            </section>
+            </Card>
 
-            <section className="grid gap-4">
-              <div className="rounded-3xl border border-white/10 bg-white/5 p-5">
-                <GraduationCap className="mb-3 text-green-300" />
-                <p className="text-sm text-slate-400">Education</p>
-                <p className="mt-1 font-semibold">
-                  {profile.branch || "Branch not added"} ·{" "}
-                  {profile.graduationYear || "Year not added"}
-                </p>
-              </div>
-
-              <div className="rounded-3xl border border-white/10 bg-white/5 p-5">
-                <Briefcase className="mb-3 text-lime-300" />
-                <p className="text-sm text-slate-400">Dream Company</p>
-                <p className="mt-1 font-semibold">
-                  {profile.dreamCompany || "Not added"}
-                </p>
-              </div>
-            </section>
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
+              <ProfileSummary
+                icon={GraduationCap}
+                label="Education"
+                value={
+                  (profile.branch || "Branch not added") +
+                  " · " +
+                  (profile.graduationYear || "Year not added")
+                }
+              />
+              <ProfileSummary
+                icon={Briefcase}
+                label="Dream company"
+                value={profile.dreamCompany || "Not added"}
+              />
+            </div>
           </aside>
 
-          <section className="rounded-[2rem] border border-white/10 bg-white/5 p-7 backdrop-blur-2xl">
-            <div className="mb-7 flex items-center gap-3">
-              <div className="rounded-2xl bg-green-500/20 p-3">
-                <User className="text-green-300" />
-              </div>
-
+          <Card className="overflow-hidden">
+            <div className="flex items-start gap-4 border-b border-white/8 px-5 py-5 sm:px-7 sm:py-6">
+              <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl border border-indigo-400/12 bg-indigo-500/10 text-indigo-300">
+                <User size={20} />
+              </span>
               <div>
-                <h2 className="text-2xl font-bold">Profile Details</h2>
-                <p className="text-sm text-slate-400">
-                  Keep this updated for better AI recommendations.
+                <h2 className="text-xl font-semibold tracking-tight text-white">
+                  Profile details
+                </h2>
+                <p className="mt-1 text-sm leading-6 text-slate-500">
+                  Keep this information current for more relevant recommendations.
                 </p>
               </div>
             </div>
 
-            <div className="grid gap-5 md:grid-cols-2">
-              <Input label="Full Name" value={profile.name} onChange={(v) => update("name", v)} />
-              <Input label="Email" value={profile.email} disabled onChange={() => {}} />
-              <Input label="College" value={profile.college} onChange={(v) => update("college", v)} />
-              <Input label="Branch" value={profile.branch} onChange={(v) => update("branch", v)} />
-              <Input label="Graduation Year" value={profile.graduationYear} onChange={(v) => update("graduationYear", v)} />
-              <Input label="Dream Company" value={profile.dreamCompany} onChange={(v) => update("dreamCompany", v)} />
+            <div className="space-y-8 px-5 py-6 sm:px-7 sm:py-7">
+              <fieldset>
+                <legend className="text-sm font-semibold text-slate-200">Identity</legend>
+                <p className="mt-1 text-xs leading-5 text-slate-600">
+                  The basic information shown across your Orbit profile.
+                </p>
 
-              <div>
-                <label className="text-sm text-slate-400">Role</label>
-                <select
-                  className="mt-2 w-full rounded-2xl border border-white/10 bg-black/20 p-4 outline-none"
-                  value={profile.role}
-                  onChange={(e) =>
-                    update("role", e.target.value as "student" | "alumni")
-                  }
-                >
-                  <option value="student">Student</option>
-                  <option value="alumni">Alumni</option>
-                </select>
-              </div>
+                <div className="mt-5 grid gap-5 md:grid-cols-2">
+                  <ProfileInput
+                    id="profile-name"
+                    label="Full name"
+                    value={profile.name}
+                    onChange={(value) => update("name", value)}
+                    autoComplete="name"
+                  />
+                  <ProfileInput
+                    id="profile-email"
+                    label="Email"
+                    value={profile.email}
+                    onChange={() => {}}
+                    disabled
+                    type="email"
+                    autoComplete="email"
+                    description="Managed by your authenticated account."
+                  />
 
-              <div className="md:col-span-2">
-                <label className="text-sm text-slate-400">Skills</label>
-                <textarea
-                  rows={4}
-                  value={profile.skills}
-                  onChange={(e) => update("skills", e.target.value)}
-                  placeholder="React, Firebase, DSA, AI, Python"
-                  className="mt-2 w-full rounded-2xl border border-white/10 bg-black/20 p-4 outline-none"
-                />
-              </div>
+                  <Field className="md:col-span-2">
+                    <FieldLabel htmlFor="profile-role">Role</FieldLabel>
+                    <Select
+                      id="profile-role"
+                      value={profile.role}
+                      onChange={(event) =>
+                        update("role", event.target.value as "student" | "alumni")
+                      }
+                    >
+                      <option className="bg-slate-900" value="student">
+                        Student
+                      </option>
+                      <option className="bg-slate-900" value="alumni">
+                        Alumni
+                      </option>
+                    </Select>
+                  </Field>
+                </div>
+              </fieldset>
 
-              <div className="md:col-span-2">
-                <label className="text-sm text-slate-400">Bio</label>
-                <textarea
-                  rows={5}
-                  value={profile.bio}
-                  onChange={(e) => update("bio", e.target.value)}
-                  placeholder="Tell Orbit AI about your career goals, interests and strengths."
-                  className="mt-2 w-full rounded-2xl border border-white/10 bg-black/20 p-4 outline-none"
-                />
-              </div>
+              <div className="h-px bg-white/8" />
+
+              <fieldset>
+                <legend className="text-sm font-semibold text-slate-200">Education and goals</legend>
+                <p className="mt-1 text-xs leading-5 text-slate-600">
+                  Used to tailor roadmaps, opportunities, and alumni matches.
+                </p>
+
+                <div className="mt-5 grid gap-5 md:grid-cols-2">
+                  <ProfileInput
+                    id="profile-college"
+                    label="College"
+                    value={profile.college}
+                    onChange={(value) => update("college", value)}
+                    autoComplete="organization"
+                  />
+                  <ProfileInput
+                    id="profile-branch"
+                    label="Branch"
+                    value={profile.branch}
+                    onChange={(value) => update("branch", value)}
+                  />
+                  <ProfileInput
+                    id="profile-graduation-year"
+                    label="Graduation year"
+                    value={profile.graduationYear}
+                    onChange={(value) => update("graduationYear", value)}
+                    inputMode="numeric"
+                  />
+                  <ProfileInput
+                    id="profile-dream-company"
+                    label="Dream company"
+                    value={profile.dreamCompany}
+                    onChange={(value) => update("dreamCompany", value)}
+                  />
+                </div>
+              </fieldset>
+
+              <div className="h-px bg-white/8" />
+
+              <fieldset>
+                <legend className="text-sm font-semibold text-slate-200">Career context</legend>
+                <p className="mt-1 text-xs leading-5 text-slate-600">
+                  Give Orbit AI more context about your strengths and ambitions.
+                </p>
+
+                <div className="mt-5 grid gap-5">
+                  <Field>
+                    <FieldLabel htmlFor="profile-skills">Skills</FieldLabel>
+                    <Textarea
+                      id="profile-skills"
+                      rows={4}
+                      value={profile.skills}
+                      onChange={(event) => update("skills", event.target.value)}
+                      placeholder="React, Firebase, DSA, AI, Python"
+                    />
+                    <FieldDescription>Separate each skill with a comma.</FieldDescription>
+                  </Field>
+
+                  <Field>
+                    <FieldLabel htmlFor="profile-bio">Bio</FieldLabel>
+                    <Textarea
+                      id="profile-bio"
+                      rows={5}
+                      value={profile.bio}
+                      onChange={(event) => update("bio", event.target.value)}
+                      placeholder="Tell Orbit AI about your career goals, interests, and strengths."
+                    />
+                  </Field>
+                </div>
+              </fieldset>
             </div>
 
-            <button
-              onClick={save}
-              className="mt-7 flex items-center gap-2 rounded-2xl bg-green-600 px-6 py-4 font-semibold transition hover:scale-105 hover:bg-green-500"
-            >
-              <Save size={18} />
-              Save Profile
-            </button>
-          </section>
+            <div className="flex flex-col gap-3 border-t border-white/8 bg-white/[0.015] px-5 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-7">
+              <p className="text-xs leading-5 text-slate-600">
+                Changes improve recommendations across your workspace.
+              </p>
+              <Button variant="gradient" size="lg" onClick={save}>
+                <Save />
+                Save profile
+              </Button>
+            </div>
+          </Card>
         </div>
       </div>
     </div>
   );
 }
 
-function Input({
+function ProfileInput({
+  id,
   label,
   value,
   onChange,
-  disabled,
+  description,
+  ...props
 }: {
+  id: string;
   label: string;
   value: string;
   onChange: (value: string) => void;
-  disabled?: boolean;
+  description?: string;
+} & Omit<React.ComponentProps<"input">, "id" | "value" | "onChange">) {
+  return (
+    <Field>
+      <FieldLabel htmlFor={id}>{label}</FieldLabel>
+      <Input
+        id={id}
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+        {...props}
+      />
+      {description && <FieldDescription>{description}</FieldDescription>}
+    </Field>
+  );
+}
+
+function ProfileSummary({
+  icon: Icon,
+  label,
+  value,
+}: {
+  icon: typeof Briefcase;
+  label: string;
+  value: string;
 }) {
   return (
-    <div>
-      <label className="text-sm text-slate-400">{label}</label>
-      <input
-        value={value}
-        disabled={disabled}
-        onChange={(e) => onChange(e.target.value)}
-        className="mt-2 w-full rounded-2xl border border-white/10 bg-black/20 p-4 outline-none disabled:cursor-not-allowed disabled:opacity-60"
-      />
+    <Card className="flex gap-3 p-4">
+      <span className="flex size-9 shrink-0 items-center justify-center rounded-xl border border-cyan-400/10 bg-cyan-500/[0.07] text-cyan-300">
+        <Icon size={17} />
+      </span>
+      <div className="min-w-0">
+        <p className="text-xs font-medium uppercase tracking-[0.12em] text-slate-600">{label}</p>
+        <p className="mt-1.5 break-words text-sm font-medium leading-6 text-slate-300">{value}</p>
+      </div>
+    </Card>
+  );
+}
+
+function ProfileSkeleton() {
+  return (
+    <div role="status" aria-label="Loading profile" className="px-4 py-6 sm:px-6 sm:py-8 xl:px-10">
+      <div className="mx-auto max-w-[82rem] space-y-8">
+        <div className="space-y-3">
+          <Skeleton className="h-3 w-32" />
+          <Skeleton className="h-11 w-80 max-w-[80vw]" />
+          <Skeleton className="h-5 w-[34rem] max-w-[85vw]" />
+        </div>
+
+        <div className="grid gap-6 lg:grid-cols-[0.72fr_1.28fr]">
+          <div className="space-y-5">
+            <Skeleton className="h-80 rounded-[var(--radius-card)]" />
+            <Skeleton className="h-44 rounded-[var(--radius-card)]" />
+          </div>
+          <Skeleton className="h-[48rem] rounded-[var(--radius-card)]" />
+        </div>
+      </div>
+      <span className="sr-only">Loading your career profile.</span>
     </div>
   );
 }

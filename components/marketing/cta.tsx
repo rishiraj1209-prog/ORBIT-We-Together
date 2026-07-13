@@ -6,46 +6,40 @@ import { ArrowRight, Sparkles } from "lucide-react";
 
 export default function CTA() {
   return (
-    <section id="contact" className="relative overflow-hidden px-8 py-36 lg:px-10">
-      <div className="absolute left-1/2 top-24 h-96 w-96 -translate-x-1/2 rounded-full bg-green-500/15 blur-[120px]" />
-
+    <section id="contact" className="relative overflow-hidden px-4 py-20 sm:px-6 sm:py-28 lg:px-10">
+      <div className="pointer-events-none absolute left-1/2 top-1/2 size-[34rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-indigo-600/12 blur-[150px]" />
       <motion.div
-        initial={{ opacity: 0, y: 35 }}
+        initial={{ opacity: 0, y: 28 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        className="green-glass relative mx-auto max-w-6xl overflow-hidden rounded-[2.7rem] p-10 text-center shadow-2xl shadow-green-950/40 md:p-16"
+        className="relative mx-auto max-w-[82rem] overflow-hidden rounded-[2rem] border border-indigo-400/14 bg-gradient-to-br from-indigo-500/12 via-violet-500/[0.055] to-cyan-500/[0.025] px-5 py-12 text-center shadow-[var(--shadow-lg)] sm:px-10 sm:py-16"
       >
-        <div className="absolute inset-x-0 top-0 mx-auto h-px w-2/3 bg-gradient-to-r from-transparent via-green-400 to-transparent" />
-
+        <div className="absolute inset-x-0 top-0 mx-auto h-px w-2/3 bg-gradient-to-r from-transparent via-indigo-300/60 to-transparent" />
+        <div className="pointer-events-none absolute -right-24 -top-24 size-72 rounded-full bg-violet-500/16 blur-3xl" />
         <div className="relative">
-          <div className="mx-auto mb-7 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-green-400 to-lime-400 shadow-lg shadow-green-500/20">
-            <Sparkles className="text-slate-950" />
-          </div>
-
-          <h2 className="mx-auto max-w-4xl text-4xl font-black tracking-tight md:text-6xl">
-            Start building your{" "}
-            <span className="green-text">career orbit</span> today.
+          <span className="mx-auto flex size-12 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 via-violet-500 to-cyan-400 text-white shadow-xl shadow-indigo-950/40">
+            <Sparkles size={20} />
+          </span>
+          <h2 className="mx-auto mt-7 max-w-4xl text-4xl font-bold tracking-[-0.05em] text-white sm:text-5xl lg:text-6xl">
+            Start building your career orbit today.
           </h2>
-
-          <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-slate-300">
-            Create your profile, generate your roadmap, analyze your resume and
+          <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-slate-400">
+            Create your profile, generate your roadmap, analyze your resume, and
             move toward alumni-backed opportunities with clarity.
           </p>
-
-          <div className="mt-10 flex flex-wrap justify-center gap-4">
+          <div className="mt-8 flex flex-wrap justify-center gap-3">
             <Link
-              href="/login"
-              className="green-button inline-flex items-center gap-2 rounded-2xl px-7 py-4"
+              href="/signup"
+              className="inline-flex h-12 items-center gap-2 rounded-2xl bg-gradient-to-r from-indigo-500 via-violet-500 to-cyan-400 px-6 text-sm font-semibold text-white shadow-lg shadow-indigo-950/40 transition hover:-translate-y-0.5 hover:saturate-125"
             >
               Launch Orbit
-              <ArrowRight size={18} />
+              <ArrowRight size={17} />
             </Link>
-
             <Link
               href="/dashboard"
-              className="rounded-2xl border border-white/15 bg-white/5 px-7 py-4 font-semibold text-white transition hover:border-green-400/40 hover:bg-white/10"
+              className="inline-flex h-12 items-center rounded-2xl border border-white/10 bg-white/[0.035] px-6 text-sm font-semibold text-white transition hover:border-white/18 hover:bg-white/[0.07]"
             >
-              View Dashboard
+              View dashboard
             </Link>
           </div>
         </div>

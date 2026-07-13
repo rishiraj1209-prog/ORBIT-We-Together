@@ -4,16 +4,17 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   Bell,
+  BellOff,
   BrainCircuit,
   Briefcase,
+  ChevronRight,
   FileText,
-  Gift,
+  GraduationCap,
   LogOut,
   Network,
   Route,
   Sparkles,
   Target,
-  Users,
 } from "lucide-react";
 import { signOut } from "firebase/auth";
 
@@ -22,13 +23,39 @@ import { useAuth } from "@/components/providers/auth-provider";
 import { getUserProfile, UserProfile } from "@/lib/profile";
 import { getDashboardStats } from "@/lib/dashboard";
 import { getNotifications, Notification } from "@/lib/notifications";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { EmptyState } from "@/components/ui/empty-state";
+import { PageHeader } from "@/components/ui/page-header";
 import Progress from "@/components/ui/progress";
+import { Skeleton } from "@/components/ui/skeleton";
+import { cn } from "@/lib/utils";
 
 const quickActions = [
-  { label: "Analyze Resume", path: "/resume", icon: FileText },
-  { label: "Ask AI", path: "/ai", icon: BrainCircuit },
-  { label: "Generate Roadmap", path: "/roadmap", icon: Route },
-  { label: "Find Alumni", path: "/alumni", icon: Network },
+  {
+    label: "Analyze Resume",
+    description: "Get ATS-style feedback",
+    path: "/resume",
+    icon: FileText,
+  },
+  {
+    label: "Ask AI",
+    description: "Get personalized guidance",
+    path: "/ai",
+    icon: BrainCircuit,
+  },
+  {
+    label: "Generate Roadmap",
+    description: "Plan your next milestones",
+    path: "/roadmap",
+    icon: Route,
+  },
+  {
+    label: "Find Alumni",
+    description: "Grow your career network",
+    path: "/alumni",
+    icon: Network,
+  },
 ];
 
 export default function DashboardPage() {
@@ -67,32 +94,7 @@ export default function DashboardPage() {
   }
 
   if (loading || profileLoading) {
-    return (
-      <div className="px-6 py-8">
-        <div className="mx-auto max-w-7xl">
-          <div className="mb-8 h-10 w-44 animate-pulse rounded-xl bg-white/10" />
-
-          <div className="rounded-[2rem] border border-white/10 bg-white/5 p-8">
-            <div className="h-6 w-52 animate-pulse rounded-full bg-white/10" />
-            <div className="mt-6 h-16 max-w-3xl animate-pulse rounded-2xl bg-white/10" />
-            <div className="mt-5 h-6 max-w-xl animate-pulse rounded-xl bg-white/10" />
-          </div>
-
-          <div className="mt-8 grid gap-6 md:grid-cols-3">
-            {[1, 2, 3].map((item) => (
-              <div
-                key={item}
-                className="rounded-3xl border border-white/10 bg-white/5 p-6"
-              >
-                <div className="h-14 w-14 animate-pulse rounded-2xl bg-white/10" />
-                <div className="mt-6 h-5 w-32 animate-pulse rounded-xl bg-white/10" />
-                <div className="mt-4 h-10 w-24 animate-pulse rounded-xl bg-white/10" />
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    );
+    return <DashboardSkeleton />;
   }
 
   const stats = getDashboardStats(profile);
@@ -104,20 +106,24 @@ export default function DashboardPage() {
   const cards = [
     {
       title: "Profile Completion",
-      value: `${stats.profileCompletion}%`,
+      value: stats.profileCompletion + "%",
       icon: Target,
       progress: stats.profileCompletion,
       text:
         stats.profileCompletion === 100
           ? "Your profile is complete and ready for stronger AI matching."
           : "Complete your profile to unlock stronger recommendations.",
+      tone: "from-indigo-500/16 to-indigo-500/[0.025]",
+      iconTone: "border-indigo-400/15 bg-indigo-500/12 text-indigo-300",
     },
     {
       title: "AI Readiness",
-      value: `${stats.aiReadiness}%`,
+      value: stats.aiReadiness + "%",
       icon: BrainCircuit,
       progress: stats.aiReadiness,
-      text: `${stats.skillsCount} skills detected in your profile.`,
+      text: stats.skillsCount + " skills detected in your profile.",
+      tone: "from-violet-500/16 to-violet-500/[0.025]",
+      iconTone: "border-violet-400/15 bg-violet-500/12 text-violet-300",
     },
     {
       title: "Career Goal",
@@ -128,150 +134,205 @@ export default function DashboardPage() {
         stats.careerGoal === "Not Set"
           ? "Add your dream company to personalize Orbit AI."
           : "Orbit is optimizing your roadmap around this goal.",
+      tone: "from-cyan-500/14 to-cyan-500/[0.02]",
+      iconTone: "border-cyan-400/15 bg-cyan-500/10 text-cyan-300",
     },
   ];
 
   return (
-    <div className="px-6 py-8">
-      <div className="mx-auto max-w-7xl space-y-8">
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-          <div>
-            <p className="text-sm text-slate-400">Career Mission Control</p>
-            <h1 className="mt-2 text-5xl font-black tracking-tight md:text-7xl">
+    <div className="px-4 py-6 sm:px-6 sm:py-8 xl:px-10">
+      <div className="mx-auto max-w-[90rem] space-y-6 lg:space-y-8">
+        <PageHeader
+          eyebrow={
+            <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-indigo-300">
+              <span className="size-1.5 rounded-full bg-cyan-400 shadow-[0_0_10px_rgba(34,211,238,0.8)]" />
+              Career Mission Control
+            </span>
+          }
+          title={
+            <>
               Welcome back,{" "}
-              <span className="bg-gradient-to-r from-lime-300 via-green-300 to- emerald-400 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-indigo-300 via-violet-300 to-cyan-300 bg-clip-text text-transparent">
                 {name}
               </span>
-            </h1>
-          </div>
+            </>
+          }
+          description="Your personalized view of career readiness, recent progress, and the next best actions to take."
+          actions={
+            <>
+              <Button variant="outline" onClick={() => router.push("/notifications")}>
+                <Bell />
+                Alerts
+              </Button>
+              <Button variant="destructive" onClick={logout}>
+                <LogOut />
+                Logout
+              </Button>
+            </>
+          }
+        />
 
-          <div className="flex gap-3">
-            <button
-              onClick={() => router.push("/notifications")}
-              className="flex items-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-5 py-3 text-sm hover:bg-green-500/10 hover:border-green-400/40 hover:-translate-y-1"
-            >
-              <Bell size={18} />
-              Alerts
-            </button>
+        <Card className="relative overflow-hidden border-indigo-400/15 bg-gradient-to-br from-indigo-500/14 via-violet-500/[0.055] to-cyan-500/[0.025] p-6 shadow-[var(--shadow-md)] sm:p-8 lg:p-10">
+          <div className="pointer-events-none absolute -right-24 -top-28 size-80 rounded-full bg-indigo-500/18 blur-3xl" />
+          <div className="pointer-events-none absolute -bottom-40 left-1/3 size-80 rounded-full bg-cyan-500/10 blur-3xl" />
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-indigo-300/50 to-transparent" />
 
-            <button
-              onClick={logout}
-              className="flex items-center gap-2 rounded-2xl border border-red-500/20 bg-red-500/10 px-5 py-3 text-sm text-red-200 hover:bg-red-500/20"
-            >
-              <LogOut size={18} />
-              Logout
-            </button>
-          </div>
-        </div>
-
-        <section className="relative overflow-hidden rounded-[2.2rem] border border-white/10 bg-gradient-to-br from-green-500/10 via-white/5 to-black/20 p-8 shadow-2xl shadow-green-950/40 backdrop-blur-2xl">
-          <div className="absolute right-0 top-0 h-72 w-72 rounded-full bg-lime-500/10 blur-3xl" />
-          <div className="absolute bottom-0 left-0 h-72 w-72 rounded-full bg-green-500/10 blur-3xl" />
-
-          <div className="relative grid gap-8 lg:grid-cols-[1.4fr_0.8fr] lg:items-center">
+          <div className="relative grid gap-8 lg:grid-cols-[minmax(0,1.35fr)_minmax(16rem,0.65fr)] lg:items-center lg:gap-12">
             <div>
-              <p className="mb-5 inline-flex items-center gap-2 rounded-full border border-green-400/20 bg-green-500/10 px-4 py-2 text-sm text-green-200">
-                <Sparkles size={16} />
+              <p className="inline-flex items-center gap-2 rounded-full border border-indigo-400/15 bg-indigo-500/10 px-3.5 py-2 text-xs font-semibold text-indigo-200 shadow-sm shadow-indigo-950/20">
+                <Sparkles size={14} />
                 Orbit AI Insight
               </p>
 
-              <h2 className="text-3xl font-black leading-tight md:text-5xl">
+              <h2 className="mt-6 max-w-3xl text-3xl font-bold tracking-[-0.035em] text-white sm:text-4xl lg:text-5xl">
                 You are {stats.aiReadiness}% career-ready.
               </h2>
 
-              <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-300">
-                Orbit is building your personalized career graph using your
-                profile, skills, resume, roadmap, alumni network and referral
-                opportunities.
+              <p className="mt-5 max-w-2xl text-base leading-7 text-slate-300 sm:text-lg sm:leading-8">
+                Orbit is building your personalized career graph using your profile,
+                skills, resume, roadmap, alumni network, and referral opportunities.
               </p>
 
               <div className="mt-7 flex flex-wrap gap-3">
-                <button
-                  onClick={() => router.push("/profile")}
-                  className="rounded-2xl bg-white px-5 py-3 font-semibold text-slate-950 transition hover:scale-105"
-                >
+                <Button variant="gradient" size="lg" onClick={() => router.push("/profile")}>
                   Complete Profile
-                </button>
-
-                <button
-                  onClick={() => router.push("/roadmap")}
-                  className="rounded-2xl border border-white/10 bg-white/5 px-5 py-3 font-semibold text-white transition hover:bg-green-500/10 hover:border-green-400/40 hover:-translate-y-1"
-                >
+                  <ChevronRight />
+                </Button>
+                <Button variant="outline" size="lg" onClick={() => router.push("/roadmap")}>
+                  <Route />
                   Generate Roadmap
-                </button>
+                </Button>
               </div>
             </div>
 
-            <div className="rounded-[2rem] border border-green-400/20 bg-gradient-to-br from-green-500/15 to-lime-500/5 p-7 text-center">
-              <BrainCircuit className="mx-auto mb-4 text-lime-300" size={42} />
-              <p className="text-sm text-slate-300">AI Readiness Score</p>
-              <p className="mt-2 text-6xl font-black">{stats.aiReadiness}%</p>
+            <div className="relative rounded-[1.75rem] border border-white/10 bg-slate-950/45 p-6 shadow-inner shadow-black/25 backdrop-blur-xl sm:p-7">
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">
+                    AI Readiness
+                  </p>
+                  <p className="mt-3 text-5xl font-bold tracking-[-0.05em] text-white sm:text-6xl">
+                    {stats.aiReadiness}
+                    <span className="ml-1 text-2xl font-medium text-slate-500">%</span>
+                  </p>
+                </div>
+                <span className="flex size-11 items-center justify-center rounded-2xl border border-violet-400/15 bg-violet-500/12 text-violet-300 shadow-lg shadow-violet-950/20">
+                  <BrainCircuit size={22} />
+                </span>
+              </div>
+
               <Progress value={stats.aiReadiness} />
+
+              <div className="mt-6 grid grid-cols-2 gap-3 border-t border-white/8 pt-5">
+                <div>
+                  <p className="text-xs text-slate-500">Skills detected</p>
+                  <p className="mt-1 text-lg font-semibold text-slate-200">{stats.skillsCount}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-slate-500">Profile</p>
+                  <p className="mt-1 text-lg font-semibold text-slate-200">
+                    {stats.profileCompletion}%
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
-        </section>
+        </Card>
 
-        <section className="grid gap-6 md:grid-cols-3">
-          {cards.map((card) => {
-            const Icon = card.icon;
+        <section aria-labelledby="overview-title">
+          <div className="mb-4 flex items-center justify-between">
+            <h2 id="overview-title" className="text-lg font-semibold tracking-tight text-white">
+              Career overview
+            </h2>
+            <span className="text-xs text-slate-500">Updated from your profile</span>
+          </div>
 
-            return (
-              <div
-                key={card.title}
-                className="group relative overflow-hidden rounded-[28px] border border-white/10 bg-gradient-to-br from-green-500/10 via-white/5 to-black/20 p-7 backdrop-blur-2xl transition-all duration-300 hover:-translate-y-2 hover:border-lime-400/30 hover:shadow-[0_0_55px_rgba(34,197,94,0.25)]"
-              >
-                <div className="absolute right-0 top-0 h-32 w-32 rounded-full bg-lime-500/10 blur-3xl transition-all duration-300 group-hover:bg-lime-400/20" />
+          <div className="grid gap-4 md:grid-cols-3">
+            {cards.map((card) => {
+              const Icon = card.icon;
 
-                <div className="relative">
-                  <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-green-500/30 to-lime-500/30 shadow-lg shadow-lime-500/20">
-                    <Icon />
+              return (
+                <Card
+                  key={card.title}
+                  className={cn(
+                    "group relative overflow-hidden bg-gradient-to-br p-5 transition-[border-color,box-shadow,transform] duration-300 hover:-translate-y-1 hover:border-white/16 hover:shadow-[var(--shadow-md)] sm:p-6",
+                    card.tone
+                  )}
+                >
+                  <div className="flex items-start justify-between gap-4">
+                    <div className={cn("flex size-10 items-center justify-center rounded-xl border", card.iconTone)}>
+                      <Icon size={19} />
+                    </div>
+                    <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-600">
+                      Overview
+                    </span>
                   </div>
 
-                  <p className="text-slate-400">{card.title}</p>
-
-                  <h3 className="mt-3 bg-gradient-to-r from-white to-lime-200 bg-clip-text text-4xl font-black text-transparent">
+                  <p className="mt-6 text-sm font-medium text-slate-400">{card.title}</p>
+                  <h3 className="mt-2 break-words text-3xl font-bold tracking-[-0.035em] text-white">
                     {card.value}
                   </h3>
 
                   {card.progress !== null && <Progress value={card.progress} />}
 
-                  <p className="mt-4 leading-7 text-slate-400">{card.text}</p>
-                </div>
-              </div>
-            );
-          })}
+                  <p className="mt-4 text-sm leading-6 text-slate-500">{card.text}</p>
+                </Card>
+              );
+            })}
+          </div>
         </section>
 
-        <section className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-          <div className="rounded-[2rem] border border-white/10 bg-white/5 p-7 backdrop-blur-2xl">
-            <h3 className="mb-6 text-2xl font-bold">Recent Activity</h3>
-
-            {notifications.length === 0 ? (
-              <div className="rounded-3xl border border-white/10 bg-gradient-to-r from-black/30 to-green-500/5 p-8 text-slate-400">
-                No recent activity yet. Analyze your resume or generate a
-                roadmap to start building your Orbit history.
+        <section className="grid gap-6 xl:grid-cols-[minmax(0,1.25fr)_minmax(20rem,0.75fr)]">
+          <Card className="p-5 sm:p-6">
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <h2 className="text-lg font-semibold tracking-tight text-white">Recent activity</h2>
+                <p className="mt-1 text-sm text-slate-500">Your latest updates across Orbit.</p>
               </div>
-            ) : (
-              <div className="space-y-4">
-                {notifications.map((item) => (
-                  <div
-                    key={item.id}
-                    className="rounded-2xl border border-white/10 bg-gradient-to-r from-black/30 to-green-500/5 p-5"
-                  >
-                    <p className="font-semibold">{item.title}</p>
-                    <p className="mt-1 text-sm text-slate-400">
-                      {item.message}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => router.push("/notifications")}
+                className="hidden sm:inline-flex"
+              >
+                View all
+                <ChevronRight />
+              </Button>
+            </div>
 
-          <div className="rounded-[2rem] border border-white/10 bg-white/5 p-7 backdrop-blur-2xl">
-            <h3 className="mb-6 text-2xl font-bold">Quick Actions</h3>
+            <div className="mt-6">
+              {notifications.length === 0 ? (
+                <EmptyState
+                  icon={<BellOff size={20} />}
+                  title="No recent activity"
+                  description="Analyze your resume or generate a roadmap to start building your Orbit history."
+                  className="min-h-56"
+                />
+              ) : (
+                <div className="divide-y divide-white/8">
+                  {notifications.map((item) => (
+                    <div key={item.id} className="group flex gap-4 py-4 first:pt-0 last:pb-0">
+                      <span className="mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-xl border border-indigo-400/12 bg-indigo-500/8 text-indigo-300">
+                        <Bell size={16} />
+                      </span>
+                      <div className="min-w-0">
+                        <p className="font-medium text-slate-200">{item.title}</p>
+                        <p className="mt-1 text-sm leading-6 text-slate-500">{item.message}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </Card>
 
-            <div className="grid gap-3">
+          <Card className="p-5 sm:p-6">
+            <div>
+              <h2 className="text-lg font-semibold tracking-tight text-white">Quick actions</h2>
+              <p className="mt-1 text-sm text-slate-500">Continue your highest-value workflows.</p>
+            </div>
+
+            <div className="mt-5 grid gap-2">
               {quickActions.map((item) => {
                 const Icon = item.icon;
 
@@ -279,41 +340,101 @@ export default function DashboardPage() {
                   <button
                     key={item.path}
                     onClick={() => router.push(item.path)}
-                    className="flex items-center gap-4 rounded-2xl border border-white/10 bg-gradient-to-r from-black/30 to-green-500/5 p-4 text-left transition hover:bg-green-500/10 hover:border-green-400/40 hover:-translate-y-1"
+                    className="group flex w-full items-center gap-3 rounded-2xl border border-transparent p-3 text-left transition hover:border-white/8 hover:bg-white/[0.035]"
                   >
-                    <div className="rounded-xl bg-green-500/20 p-3">
-                      <Icon className="text-green-300" size={20} />
-                    </div>
-
-                    <span className="font-semibold">{item.label}</span>
+                    <span className="flex size-10 shrink-0 items-center justify-center rounded-xl border border-white/8 bg-white/[0.04] text-slate-400 transition group-hover:border-indigo-400/15 group-hover:bg-indigo-500/10 group-hover:text-indigo-300">
+                      <Icon size={18} />
+                    </span>
+                    <span className="min-w-0 flex-1">
+                      <span className="block text-sm font-medium text-slate-200">{item.label}</span>
+                      <span className="mt-0.5 block truncate text-xs text-slate-600">
+                        {item.description}
+                      </span>
+                    </span>
+                    <ChevronRight className="text-slate-700 transition group-hover:translate-x-0.5 group-hover:text-slate-400" size={16} />
                   </button>
                 );
               })}
             </div>
-          </div>
+          </Card>
         </section>
 
-        <section className="rounded-[2rem] border border-white/10 bg-white/5 p-7 backdrop-blur-2xl">
-          <h3 className="mb-5 text-2xl font-bold">Career Snapshot</h3>
-
-          <div className="grid gap-4 md:grid-cols-3">
-            <div className="rounded-2xl bg-gradient-to-r from-black/30 to-green-500/5 p-5">
-              <p className="text-sm text-slate-400">Branch</p>
-              <p className="mt-2 font-semibold">{branch}</p>
-            </div>
-
-            <div className="rounded-2xl bg-gradient-to-r from-black/30 to-green-500/5 p-5">
-              <p className="text-sm text-slate-400">Skills</p>
-              <p className="mt-2 font-semibold">{skills}</p>
-            </div>
-
-            <div className="rounded-2xl bg-gradient-to-r from-black/30 to-green-500/5 p-5">
-              <p className="text-sm text-slate-400">Next Milestone</p>
-              <p className="mt-2 font-semibold">Improve resume + roadmap</p>
-            </div>
+        <Card className="overflow-hidden">
+          <div className="flex flex-col gap-2 border-b border-white/8 px-5 py-5 sm:px-6">
+            <h2 className="text-lg font-semibold tracking-tight text-white">Career snapshot</h2>
+            <p className="text-sm text-slate-500">The profile context powering your recommendations.</p>
           </div>
-        </section>
+
+          <div className="grid divide-y divide-white/8 md:grid-cols-3 md:divide-x md:divide-y-0">
+            <SnapshotItem icon={GraduationCap} label="Branch" value={branch} />
+            <SnapshotItem icon={Sparkles} label="Skills" value={skills} />
+            <SnapshotItem icon={Target} label="Next milestone" value="Improve resume + roadmap" />
+          </div>
+        </Card>
       </div>
+    </div>
+  );
+}
+
+function SnapshotItem({
+  icon: Icon,
+  label,
+  value,
+}: {
+  icon: typeof Target;
+  label: string;
+  value: string;
+}) {
+  return (
+    <div className="flex min-w-0 gap-3 px-5 py-5 sm:px-6">
+      <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-white/[0.045] text-slate-400">
+        <Icon size={17} />
+      </span>
+      <div className="min-w-0">
+        <p className="text-xs font-medium uppercase tracking-[0.12em] text-slate-600">{label}</p>
+        <p className="mt-1.5 break-words text-sm font-medium leading-6 text-slate-300">{value}</p>
+      </div>
+    </div>
+  );
+}
+
+function DashboardSkeleton() {
+  return (
+    <div role="status" aria-label="Loading dashboard" className="px-4 py-6 sm:px-6 sm:py-8 xl:px-10">
+      <div className="mx-auto max-w-[90rem] space-y-6 lg:space-y-8">
+        <div className="flex items-end justify-between gap-6">
+          <div className="space-y-3">
+            <Skeleton className="h-3 w-40" />
+            <Skeleton className="h-11 w-72 max-w-[75vw]" />
+            <Skeleton className="h-5 w-[30rem] max-w-[80vw]" />
+          </div>
+          <Skeleton className="hidden h-10 w-48 sm:block" />
+        </div>
+
+        <Card className="p-6 sm:p-8 lg:p-10">
+          <div className="grid gap-8 lg:grid-cols-[1.35fr_0.65fr]">
+            <div className="space-y-5">
+              <Skeleton className="h-8 w-36 rounded-full" />
+              <Skeleton className="h-12 w-3/4" />
+              <Skeleton className="h-20 w-full max-w-2xl" />
+              <Skeleton className="h-12 w-72" />
+            </div>
+            <Skeleton className="h-60 rounded-[1.75rem]" />
+          </div>
+        </Card>
+
+        <div className="grid gap-4 md:grid-cols-3">
+          {[1, 2, 3].map((item) => (
+            <Skeleton key={item} className="h-60 rounded-[var(--radius-card)]" />
+          ))}
+        </div>
+
+        <div className="grid gap-6 xl:grid-cols-[1.25fr_0.75fr]">
+          <Skeleton className="h-80 rounded-[var(--radius-card)]" />
+          <Skeleton className="h-80 rounded-[var(--radius-card)]" />
+        </div>
+      </div>
+      <span className="sr-only">Loading your career dashboard.</span>
     </div>
   );
 }

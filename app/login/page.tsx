@@ -1,4 +1,4 @@
- "use client";
+"use client";
 
 import Link from "next/link";
 import { useState } from "react";
@@ -7,8 +7,11 @@ import {
   signInWithEmailAndPassword,
   signInWithPopup,
 } from "firebase/auth";
-import { ArrowRight, BrainCircuit, Sparkles } from "lucide-react";
+import { ArrowRight, BrainCircuit } from "lucide-react";
 
+import { AuthShell } from "@/components/layout/auth-shell";
+import { Button } from "@/components/ui/button";
+import { Field, FieldLabel, Input } from "@/components/ui/field";
 import { auth, googleProvider } from "@/lib/firebase";
 
 export default function LoginPage() {
@@ -49,101 +52,92 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#020617] px-6 py-12 text-white">
-      <div className="absolute left-1/2 top-10 h-96 w-96 -translate-x-1/2 rounded-full bg-green-500/20 blur-[120px]" />
-      <div className="absolute bottom-0 right-0 h-80 w-80 rounded-full bg-lime-400/10 blur-[110px]" />
+    <AuthShell
+      badge="AI Career Intelligence"
+      marketingTitle={
+        <>
+          Return to your{" "}
+          <span className="bg-gradient-to-r from-indigo-300 via-violet-300 to-cyan-300 bg-clip-text text-transparent">
+            career mission control.
+          </span>
+        </>
+      }
+      marketingDescription="Continue building your profile, roadmap, resume feedback, and alumni-powered career strategy."
+      formIcon={<BrainCircuit size={22} />}
+      formTitle="Welcome back"
+      formDescription="Sign in to continue your Orbit career journey."
+    >
+      {error && (
+        <div role="alert" className="mb-5 rounded-2xl border border-red-500/18 bg-red-500/[0.07] p-4 text-sm text-red-200">
+          {error}
+        </div>
+      )}
 
-      <div className="relative grid w-full max-w-6xl overflow-hidden rounded-[2.5rem] border border-white/10 bg-white/[0.04] shadow-2xl shadow-green-950/40 backdrop-blur-2xl lg:grid-cols-[1fr_0.9fr]">
-        <section className="hidden border-r border-white/10 p-10 lg:block">
-          <Link href="/" className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-green-400 to-lime-400">
-              <Sparkles className="text-slate-950" size={20} />
-            </div>
+      <form
+        className="space-y-4"
+        onSubmit={(event) => {
+          event.preventDefault();
+          loginWithEmail();
+        }}
+      >
+        <Field>
+          <FieldLabel htmlFor="login-email">Email address</FieldLabel>
+          <Input
+            id="login-email"
+            type="email"
+            autoComplete="email"
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+            placeholder="you@example.com"
+          />
+        </Field>
 
-            <span className="text-3xl font-black">Orbit</span>
-          </Link>
+        <Field>
+          <FieldLabel htmlFor="login-password">Password</FieldLabel>
+          <Input
+            id="login-password"
+            type="password"
+            autoComplete="current-password"
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+            placeholder="Enter your password"
+          />
+        </Field>
 
-          <div className="mt-24">
-            <p className="mb-5 inline-flex rounded-full border border-green-500/30 bg-green-500/10 px-4 py-2 text-sm text-green-300">
-              AI Career Intelligence
-            </p>
+        <Button type="submit" variant="gradient" size="lg" disabled={loading} className="w-full">
+          {loading ? "Signing in..." : "Sign in"}
+          <ArrowRight />
+        </Button>
 
-            <h1 className="text-5xl font-black leading-tight">
-              Welcome back to your{" "}
-              <span className="green-text">career mission control.</span>
-            </h1>
+        <div className="flex items-center gap-3 py-1">
+          <span className="h-px flex-1 bg-white/8" />
+          <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-700">
+            or
+          </span>
+          <span className="h-px flex-1 bg-white/8" />
+        </div>
 
-            <p className="mt-6 max-w-md leading-8 text-slate-400">
-              Continue building your profile, roadmap, resume feedback and
-              alumni-powered career strategy.
-            </p>
-          </div>
-        </section>
+        <Button
+          type="button"
+          variant="outline"
+          size="lg"
+          onClick={loginWithGoogle}
+          disabled={loading}
+          className="w-full"
+        >
+          <span className="flex size-5 items-center justify-center rounded-full bg-white text-[10px] font-bold text-slate-950">
+            G
+          </span>
+          Continue with Google
+        </Button>
+      </form>
 
-        <section className="p-8 md:p-12">
-          <div className="mx-auto max-w-md">
-            <div className="mb-8 text-center">
-              <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-green-400 to-lime-400 shadow-lg shadow-green-500/25">
-                <BrainCircuit className="text-slate-950" />
-              </div>
-
-              <h2 className="text-4xl font-black">Sign in</h2>
-
-              <p className="mt-3 text-slate-400">
-                Continue your Orbit career journey.
-              </p>
-            </div>
-
-            {error && (
-              <div className="mb-5 rounded-2xl border border-red-500/20 bg-red-500/10 p-4 text-sm text-red-300">
-                {error}
-              </div>
-            )}
-
-            <div className="space-y-4">
-              <input
-                type="email"
-                placeholder="Email address"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full rounded-2xl border border-white/10 bg-black/30 px-5 py-4 outline-none transition focus:border-green-400/50"
-              />
-
-              <input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full rounded-2xl border border-white/10 bg-black/30 px-5 py-4 outline-none transition focus:border-green-400/50"
-              />
-
-              <button
-                onClick={loginWithEmail}
-                disabled={loading}
-                className="green-button flex w-full items-center justify-center gap-2 rounded-2xl px-5 py-4 disabled:opacity-60"
-              >
-                {loading ? "Signing in..." : "Sign in"}
-                <ArrowRight size={18} />
-              </button>
-
-              <button
-                onClick={loginWithGoogle}
-                disabled={loading}
-                className="w-full rounded-2xl border border-white/10 bg-white/5 px-5 py-4 font-semibold transition hover:border-green-400/40 hover:bg-green-500/10 disabled:opacity-60"
-              >
-                Continue with Google
-              </button>
-            </div>
-
-            <p className="mt-8 text-center text-sm text-slate-400">
-              New to Orbit?{" "}
-              <Link href="/signup" className="text-green-300 hover:text-green-200">
-                Create account
-              </Link>
-            </p>
-          </div>
-        </section>
-      </div>
-    </main>
+      <p className="mt-7 text-center text-sm text-slate-500">
+        New to Orbit?{" "}
+        <Link href="/signup" className="font-medium text-indigo-300 transition hover:text-indigo-200">
+          Create account
+        </Link>
+      </p>
+    </AuthShell>
   );
 }

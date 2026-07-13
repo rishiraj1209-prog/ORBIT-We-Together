@@ -1,17 +1,25 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { createNotification } from "@/lib/notifications";
-import { useAuth } from "@/components/providers/auth-provider";
-import { loadRoadmap, saveRoadmap } from "@/lib/roadmap-firestore";
 import {
   CalendarDays,
+  CheckCircle2,
   Loader2,
   Map,
   Route,
   Sparkles,
   Target,
 } from "lucide-react";
+
+import { useAuth } from "@/components/providers/auth-provider";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { EmptyState } from "@/components/ui/empty-state";
+import { Field, FieldDescription, FieldLabel, Input } from "@/components/ui/field";
+import { PageHeader } from "@/components/ui/page-header";
+import { Skeleton } from "@/components/ui/skeleton";
+import { createNotification } from "@/lib/notifications";
+import { loadRoadmap, saveRoadmap } from "@/lib/roadmap-firestore";
 
 export default function RoadmapPage() {
   const [goal, setGoal] = useState("AI Engineer at Google");
@@ -46,7 +54,7 @@ export default function RoadmapPage() {
       },
       body: JSON.stringify({
         type: "career_roadmap",
-        message: `Create a detailed 90-day career roadmap for this goal: ${goal}`,
+        message: "Create a detailed 90-day career roadmap for this goal: " + goal,
       }),
     });
 
@@ -69,139 +77,178 @@ export default function RoadmapPage() {
   }
 
   return (
-    <div className="px-6 py-10">
-      <div className="mx-auto max-w-7xl space-y-8">
-        <div>
-          <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-green-500/30 bg-green-500/10 px-4 py-2 text-sm text-green-300">
-            <Sparkles size={16} />
-            AI Career Roadmap
-          </p>
+    <div className="px-4 py-6 sm:px-6 sm:py-8 xl:px-10">
+      <div className="mx-auto max-w-[90rem] space-y-6 lg:space-y-8">
+        <PageHeader
+          eyebrow={
+            <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-indigo-300">
+              <Sparkles size={14} />
+              AI Career Roadmap
+            </span>
+          }
+          title="Build your 90-day career plan."
+          description="Choose a target and Orbit AI will create a focused roadmap across skills, projects, alumni outreach, and internship actions."
+          actions={
+            <span className="inline-flex items-center gap-2 rounded-full border border-violet-400/12 bg-violet-500/[0.06] px-3 py-2 text-xs font-medium text-violet-200">
+              <CalendarDays size={14} />
+              90-day sprint
+            </span>
+          }
+        />
 
-          <h1 className="text-4xl font-black tracking-tight md:text-6xl">
-            Build your 90-day career plan.
-          </h1>
-
-          <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-400">
-            Enter a career goal and Orbit AI will generate a focused roadmap
-            across skills, projects, alumni outreach and internship actions.
-          </p>
-        </div>
-
-        <section className="green-glass relative overflow-hidden rounded-[2.5rem] p-7">
-          <div className="absolute right-0 top-0 h-52 w-52 rounded-full bg-green-500/10 blur-3xl" />
-
-          <div className="relative grid gap-6 lg:grid-cols-[1fr_0.45fr] lg:items-end">
-            <div>
-              <label className="text-sm text-slate-400">Career Goal</label>
-
-              <input
+        <Card className="relative overflow-hidden border-indigo-400/12 bg-gradient-to-br from-indigo-500/10 via-violet-500/[0.035] to-transparent p-5 shadow-[var(--shadow-md)] sm:p-6">
+          <div className="pointer-events-none absolute -right-20 -top-20 size-56 rounded-full bg-indigo-500/14 blur-3xl" />
+          <div className="relative grid gap-5 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
+            <Field>
+              <FieldLabel htmlFor="career-goal">Career goal</FieldLabel>
+              <Input
+                id="career-goal"
                 value={goal}
-                onChange={(e) => setGoal(e.target.value)}
+                onChange={(event) => setGoal(event.target.value)}
                 placeholder="Example: AI Engineer at Google"
-                className="mt-3 w-full rounded-2xl border border-white/10 bg-black/30 px-5 py-4 outline-none transition focus:border-green-400/50"
+                className="h-12 bg-slate-950/35 text-base"
               />
-            </div>
+              <FieldDescription>
+                Be specific about the role, domain, or company you want to target.
+              </FieldDescription>
+            </Field>
 
-            <button
+            <Button
+              variant="gradient"
+              size="lg"
               onClick={generateRoadmap}
               disabled={loading || !goal.trim()}
-              className="green-button flex items-center justify-center gap-2 rounded-2xl px-6 py-4 disabled:cursor-not-allowed disabled:opacity-50"
+              className="w-full lg:w-auto"
             >
               {loading ? (
                 <>
-                  <Loader2 className="animate-spin" size={18} />
+                  <Loader2 className="animate-spin motion-reduce:animate-none" />
                   Generating...
                 </>
               ) : (
                 <>
-                  <Route size={18} />
-                  Generate Roadmap
+                  <Route />
+                  Generate roadmap
                 </>
               )}
-            </button>
+            </Button>
           </div>
-        </section>
+        </Card>
 
-        <section className="grid gap-8 lg:grid-cols-[0.75fr_1.25fr]">
-          <aside className="space-y-6">
-            <div className="green-glass rounded-[2rem] p-6">
-              <Target className="mb-4 text-green-300" />
-              <p className="text-sm text-slate-400">Current Goal</p>
-              <h2 className="mt-2 text-2xl font-bold">{goal}</h2>
-            </div>
-
-            <div className="green-glass rounded-[2rem] p-6">
-              <CalendarDays className="mb-4 text-green-300" />
-              <p className="text-sm text-slate-400">Roadmap Type</p>
-              <h2 className="mt-2 text-2xl font-bold">90-Day Sprint</h2>
-              <p className="mt-3 leading-7 text-slate-400">
-                Designed around skills, projects, networking and applications.
-              </p>
-            </div>
-
-            <div className="green-glass rounded-[2rem] p-6">
-              <Map className="mb-4 text-green-300" />
-              <p className="text-sm text-slate-400">Saved Progress</p>
-              <h2 className="mt-2 text-2xl font-bold">
-                {roadmap ? "Roadmap saved" : "No roadmap yet"}
-              </h2>
-              <p className="mt-3 leading-7 text-slate-400">
-                Your latest generated roadmap is stored automatically.
-              </p>
-            </div>
+        <section className="grid items-start gap-6 xl:grid-cols-[minmax(17rem,0.52fr)_minmax(0,1.48fr)]">
+          <aside className="grid gap-4 sm:grid-cols-3 xl:sticky xl:top-6 xl:grid-cols-1">
+            <RoadmapFact
+              icon={Target}
+              label="Current goal"
+              value={goal}
+              description="The target guiding this roadmap."
+              tone="border-indigo-400/12 bg-indigo-500/8 text-indigo-300"
+            />
+            <RoadmapFact
+              icon={CalendarDays}
+              label="Roadmap type"
+              value="90-Day Sprint"
+              description="Skills, projects, networking, and applications."
+              tone="border-violet-400/12 bg-violet-500/8 text-violet-300"
+            />
+            <RoadmapFact
+              icon={Map}
+              label="Saved progress"
+              value={roadmap ? "Roadmap saved" : "No roadmap yet"}
+              description="Your latest generated roadmap is stored automatically."
+              tone="border-cyan-400/12 bg-cyan-500/[0.07] text-cyan-300"
+            />
           </aside>
 
-          <div className="green-glass rounded-[2.5rem] p-7">
-            <div className="mb-6 flex items-center gap-4">
-              <div className="rounded-2xl bg-gradient-to-br from-green-400 to-lime-400 p-4">
-                <Route className="text-slate-950" />
-              </div>
-
-              <div>
-                <h2 className="text-2xl font-bold">AI Roadmap</h2>
-                <p className="text-sm text-slate-400">
-                  Personalized action plan generated by Orbit AI.
-                </p>
-              </div>
-            </div>
-
-            {!roadmap && !loading ? (
-              <div className="flex min-h-[520px] items-center justify-center rounded-[2rem] border border-dashed border-white/10 bg-black/20 p-8 text-center">
+          <Card className="relative overflow-hidden border-violet-400/10 shadow-[var(--shadow-md)]">
+            <div className="flex items-start justify-between gap-4 border-b border-white/8 bg-gradient-to-r from-violet-500/[0.055] to-transparent px-5 py-5 sm:px-6">
+              <div className="flex items-start gap-4">
+                <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 via-violet-500 to-cyan-400 text-white shadow-lg shadow-indigo-950/35">
+                  <Route size={20} />
+                </span>
                 <div>
-                  <Route className="mx-auto mb-5 text-green-300" size={44} />
-                  <h3 className="text-2xl font-bold">No roadmap generated</h3>
-                  <p className="mt-3 max-w-md text-slate-400">
-                    Add a target goal and generate your first AI-powered career
-                    roadmap.
+                  <h2 className="text-lg font-semibold tracking-tight text-white">AI roadmap</h2>
+                  <p className="mt-1 text-sm leading-6 text-slate-500">
+                    Personalized action plan generated by Orbit AI.
                   </p>
                 </div>
               </div>
-            ) : loading ? (
-              <div className="min-h-[520px] rounded-[2rem] border border-white/10 bg-black/20 p-6">
-                <div className="space-y-4">
-                  {[1, 2, 3, 4, 5, 6].map((item) => (
-                    <div
-                      key={item}
-                      className="h-5 animate-pulse rounded-full bg-white/10"
-                    />
-                  ))}
-                </div>
+              {roadmap && !loading && (
+                <span className="hidden items-center gap-1.5 rounded-full border border-cyan-400/12 bg-cyan-500/[0.06] px-2.5 py-1.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-cyan-200 sm:inline-flex">
+                  <CheckCircle2 size={13} />
+                  Saved
+                </span>
+              )}
+            </div>
 
-                <p className="mt-8 text-green-300">
-                  Orbit AI is building your roadmap...
-                </p>
-              </div>
-            ) : (
-              <div className="max-h-[680px] overflow-y-auto rounded-[2rem] border border-white/10 bg-black/20 p-6">
-                <div className="whitespace-pre-wrap leading-8 text-slate-300">
-                  {roadmap}
+            <div className="p-4 sm:p-6">
+              {!roadmap && !loading ? (
+                <EmptyState
+                  icon={<Route size={20} />}
+                  title="No roadmap generated"
+                  description="Confirm your target goal and generate your first AI-powered career roadmap."
+                  className="min-h-[35rem]"
+                />
+              ) : loading ? (
+                <div
+                  role="status"
+                  aria-label="Generating roadmap"
+                  className="min-h-[35rem] rounded-[var(--radius-card)] border border-white/8 bg-slate-950/30 p-5 sm:p-7"
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="flex size-9 items-center justify-center rounded-xl border border-indigo-400/12 bg-indigo-500/10 text-indigo-300">
+                      <Loader2 className="animate-spin motion-reduce:animate-none" size={17} />
+                    </span>
+                    <div>
+                      <p className="text-sm font-medium text-slate-200">Building your roadmap</p>
+                      <p className="mt-0.5 text-xs text-slate-600">Structuring your next 90 days.</p>
+                    </div>
+                  </div>
+                  <div className="mt-8 space-y-5">
+                    {[72, 100, 92, 64, 100, 86, 70].map((width, index) => (
+                      <Skeleton key={index} className="h-4" style={{ width: width + "%" }} />
+                    ))}
+                  </div>
+                  <span className="sr-only">Orbit AI is building your roadmap.</span>
                 </div>
-              </div>
-            )}
-          </div>
+              ) : (
+                <div className="max-h-[46rem] min-h-[35rem] overflow-y-auto rounded-[var(--radius-card)] border border-white/8 bg-slate-950/30 p-5 [scrollbar-color:rgba(148,163,184,0.22)_transparent] sm:p-7">
+                  <div className="whitespace-pre-wrap text-sm leading-7 text-slate-300 sm:text-[0.9375rem] sm:leading-8">
+                    {roadmap}
+                  </div>
+                </div>
+              )}
+            </div>
+          </Card>
         </section>
       </div>
     </div>
   );
 }
-   
+
+function RoadmapFact({
+  icon: Icon,
+  label,
+  value,
+  description,
+  tone,
+}: {
+  icon: typeof Target;
+  label: string;
+  value: string;
+  description: string;
+  tone: string;
+}) {
+  return (
+    <Card className="p-5">
+      <span className={"flex size-9 items-center justify-center rounded-xl border " + tone}>
+        <Icon size={17} />
+      </span>
+      <p className="mt-5 text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-600">
+        {label}
+      </p>
+      <h2 className="mt-2 break-words text-lg font-semibold leading-7 text-slate-200">{value}</h2>
+      <p className="mt-2 text-xs leading-5 text-slate-600">{description}</p>
+    </Card>
+  );
+}
