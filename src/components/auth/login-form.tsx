@@ -43,6 +43,14 @@ export function LoginForm() {
     setLoading(true);
     try {
       const response = await fetch("/api/auth/demo", { method: "POST" });
+      const contentType = response.headers.get("content-type") ?? "";
+      if (!contentType.includes("application/json")) {
+        throw new Error(
+          response.redirected
+            ? "Your session changed while signing in. Refresh the page and try again."
+            : `The authentication endpoint returned an unexpected response (${response.status}).`
+        );
+      }
       const data = await response.json() as { error?: string; redirectTo?: string };
       if (!response.ok) throw new Error(data.error ?? "Unable to open demo workspace.");
       router.push(data.redirectTo ?? PROTECTED_ROUTE_PREFIX);

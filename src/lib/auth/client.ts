@@ -24,6 +24,10 @@ async function establishSession(idToken: string): Promise<void> {
   });
 
   if (!response.ok) {
+    const contentType = response.headers.get("content-type") ?? "";
+    if (!contentType.includes("application/json")) {
+      throw new Error(`Authentication service returned an unexpected response (${response.status}).`);
+    }
     const data = (await response.json()) as { error?: string };
     throw new Error(data.error ?? "Failed to establish session.");
   }

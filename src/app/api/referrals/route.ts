@@ -3,6 +3,7 @@ import { getCurrentUser } from "@/lib/auth/server";
 import { getAdminUserDocument } from "@/lib/firebase/admin-users";
 import { ACHIEVEMENTS } from "@/types/referral";
 import { SEED_ALUMNI } from "@/lib/data/seed-alumni";
+import { isFirebaseAdminConfigured } from "@/lib/firebase/config";
 
 export const runtime = "nodejs";
 
@@ -10,7 +11,9 @@ export async function GET() {
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const doc = await getAdminUserDocument(user.uid);
+  const doc = isFirebaseAdminConfigured()
+    ? await getAdminUserDocument(user.uid)
+    : null;
   const referralCount = doc?.referralCount ?? 2;
   const code = doc?.referralCode ?? `ORBIT-${user.uid.slice(0, 6).toUpperCase()}`;
 
