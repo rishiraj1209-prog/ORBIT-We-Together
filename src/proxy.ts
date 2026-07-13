@@ -1,11 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { AUTH_ROUTES, PROTECTED_ROUTE_PREFIX, PUBLIC_AUTH_PATHS, SESSION_COOKIE_NAME } from "@/lib/constants/auth";
-
-function isPublicAuthPath(pathname: string): boolean {
-  return PUBLIC_AUTH_PATHS.some(
-    (path) => pathname === path || pathname.startsWith(`${path}/`)
-  );
-}
+import { AUTH_ROUTES, PROTECTED_ROUTE_PREFIX, SESSION_COOKIE_NAME } from "@/lib/constants/auth";
 
 function isProtectedPath(pathname: string): boolean {
   return (
@@ -36,10 +30,6 @@ export function proxy(request: NextRequest) {
 
   if (isVerifyEmailPath(pathname) && !isAuthenticated) {
     return NextResponse.redirect(new URL(AUTH_ROUTES.login, request.url));
-  }
-
-  if (isPublicAuthPath(pathname) && isAuthenticated) {
-    return NextResponse.redirect(new URL(PROTECTED_ROUTE_PREFIX, request.url));
   }
 
   return NextResponse.next();
