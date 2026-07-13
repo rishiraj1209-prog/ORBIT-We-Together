@@ -1,6 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { getCurrentUser } from "@/lib/auth/server";
-import { completeOnboarding } from "@/lib/firebase/profile";
 import { getSessionCookieOptions } from "@/lib/auth/session";
 import { isFirebaseAdminConfigured } from "@/lib/firebase/config";
 import { z } from "zod";
@@ -57,6 +56,7 @@ export async function POST(request: NextRequest) {
     const body = bodySchema.parse(await request.json());
 
     if (isFirebaseAdminConfigured()) {
+      const { completeOnboarding } = await import("@/lib/firebase/profile");
       const updated = await completeOnboarding(user.uid, body);
       const response = NextResponse.json({ success: true, user: updated });
       response.cookies.set(ONBOARDING_COOKIE, user.uid, {

@@ -9,8 +9,6 @@ import { getWelcomeMessage } from "@/lib/data/notifications";
 import { getMatchRecommendations } from "@/lib/ai/matching";
 import { generateSmartInsights } from "@/lib/ai/compose";
 import type { AuthUser } from "@/types/auth";
-import { getAdminUserDocument } from "@/lib/firebase/admin-users";
-import { userDocumentToAlumniProfile } from "@/lib/firebase/profile";
 import { isFirebaseAdminConfigured } from "@/lib/firebase/config";
 
 export interface DashboardData {
@@ -31,16 +29,26 @@ export interface DashboardData {
 }
 
 export async function getDashboardData(user: AuthUser): Promise<DashboardData> {
-  const userDoc = isFirebaseAdminConfigured()
-    ? await getAdminUserDocument(user.uid)
-    : null;
+  let userDoc = null;
+  let currentUserProfile: AlumniProfile | null = null;
+  if (isFirebaseAdminConfigured()) {
+    const [{ getAdminUserDocument }, { userDocumentToAlumniProfile }] =
+      await Promise.all([
+        import("@/lib/firebase/admin-users"),
+        import("@/lib/firebase/profile"),
+      ]);
+    userDoc = await getAdminUserDocument(user.uid);
+    currentUserProfile = userDoc
+      ? userDocumentToAlumniProfile(userDoc)
+      : null;
+  }
   const skills = userDoc?.skills ?? user.skills ?? ["Networking"];
   const industry = userDoc?.industry ?? user.industry;
   const displayName = user.displayName ?? userDoc?.displayName ?? "Member";
 
   const allAlumni = [...SEED_ALUMNI];
-  if (userDoc) {
-    allAlumni.unshift(userDocumentToAlumniProfile(userDoc));
+  if (currentUserProfile) {
+    allAlumni.unshift(currentUserProfile);
   }
 
   const matches = getMatchRecommendations(

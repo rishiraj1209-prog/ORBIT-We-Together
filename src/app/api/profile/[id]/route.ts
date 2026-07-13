@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth/server";
 import { getSeedAlumniById } from "@/lib/data/seed-alumni";
-import { getAdminUserDocument } from "@/lib/firebase/admin-users";
-import { userDocumentToAlumniProfile } from "@/lib/firebase/profile";
 import { isFirebaseAdminConfigured } from "@/lib/firebase/config";
 
 export const runtime = "nodejs";
@@ -23,6 +21,11 @@ export async function GET(
   }
 
   if (isFirebaseAdminConfigured()) {
+    const [{ getAdminUserDocument }, { userDocumentToAlumniProfile }] =
+      await Promise.all([
+        import("@/lib/firebase/admin-users"),
+        import("@/lib/firebase/profile"),
+      ]);
     const doc = await getAdminUserDocument(id);
     if (doc) return NextResponse.json({ profile: userDocumentToAlumniProfile(doc) });
   }

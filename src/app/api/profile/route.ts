@@ -1,7 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { getCurrentUser } from "@/lib/auth/server";
-import { getAdminUserDocument } from "@/lib/firebase/admin-users";
-import { updateUserProfile, userDocumentToAlumniProfile } from "@/lib/firebase/profile";
 import { isFirebaseAdminConfigured } from "@/lib/firebase/config";
 
 export const runtime = "nodejs";
@@ -11,6 +9,11 @@ export async function GET() {
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   if (isFirebaseAdminConfigured()) {
+    const [{ getAdminUserDocument }, { userDocumentToAlumniProfile }] =
+      await Promise.all([
+        import("@/lib/firebase/admin-users"),
+        import("@/lib/firebase/profile"),
+      ]);
     const doc = await getAdminUserDocument(user.uid);
     if (doc) return NextResponse.json({ profile: userDocumentToAlumniProfile(doc) });
   }
@@ -34,6 +37,9 @@ export async function PATCH(request: NextRequest) {
   }
 
   const body = await request.json();
+  const { updateUserProfile, userDocumentToAlumniProfile } = await import(
+    "@/lib/firebase/profile"
+  );
   const updated = await updateUserProfile(user.uid, body);
   return NextResponse.json({ profile: userDocumentToAlumniProfile(updated) });
 }

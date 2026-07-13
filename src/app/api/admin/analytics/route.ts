@@ -1,6 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { getCurrentUser } from "@/lib/auth/server";
-import { listAllUsers, updateUserVerification } from "@/lib/firebase/profile";
 import { isFirebaseAdminConfigured } from "@/lib/firebase/config";
 import { SEED_ALUMNI } from "@/lib/data/seed-alumni";
 import type { UserDocument } from "@/types/user";
@@ -15,6 +14,7 @@ export async function GET() {
 
   let users: UserDocument[] = [];
   if (isFirebaseAdminConfigured()) {
+    const { listAllUsers } = await import("@/lib/firebase/profile");
     users = await listAllUsers();
   }
 
@@ -56,6 +56,9 @@ export async function PATCH(request: NextRequest) {
   if (!uid || !status) return NextResponse.json({ error: "Missing fields" }, { status: 400 });
 
   if (isFirebaseAdminConfigured()) {
+    const { updateUserVerification } = await import(
+      "@/lib/firebase/profile"
+    );
     await updateUserVerification(uid, status);
   }
 

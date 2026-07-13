@@ -1,6 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { getCurrentUser } from "@/lib/auth/server";
-import { updateUserProfile } from "@/lib/firebase/profile";
 import { isFirebaseAdminConfigured } from "@/lib/firebase/config";
 
 export const runtime = "nodejs";
@@ -18,6 +17,7 @@ export async function POST(request: NextRequest) {
   const photoURL = `data:${file.type};base64,${base64}`;
 
   if (isFirebaseAdminConfigured()) {
+    const { updateUserProfile } = await import("@/lib/firebase/profile");
     await updateUserProfile(user.uid, { photoURL });
   }
 
