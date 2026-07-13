@@ -1,5 +1,4 @@
 import { cookies } from "next/headers";
-import { getAdminUserDocument } from "@/lib/firebase/admin-users";
 import { isCollegeEmail } from "@/lib/constants/auth";
 import { isFirebaseAdminConfigured } from "@/lib/firebase/config";
 import {
@@ -51,6 +50,7 @@ export async function getCurrentUser(): Promise<AuthUser | null> {
       return null;
     }
 
+    const { getAdminUserDocument } = await import("@/lib/firebase/admin-users");
     const userDoc = await getAdminUserDocument(decoded.uid);
     const cookieStore = await cookies();
     const onboardedUid = cookieStore.get(ONBOARDING_COOKIE)?.value;

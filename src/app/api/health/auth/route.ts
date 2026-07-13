@@ -13,6 +13,21 @@ export async function GET() {
     adminPrivateKey: Boolean(process.env.FIREBASE_PRIVATE_KEY),
   };
 
+  for (const [label, loader] of [
+    ["sessionModule", () => import("@/lib/auth/session")],
+    ["demoModule", () => import("@/lib/auth/demo")],
+    ["adminUsersModule", () => import("@/lib/firebase/admin-users")],
+  ] as const) {
+    try {
+      await loader();
+      checks[label] = "loaded";
+    } catch (error) {
+      checks[label] = error instanceof Error
+        ? `${error.name}: ${error.message}`.slice(0, 240)
+        : "failed";
+    }
+  }
+
   try {
     const serverAuth = await import("@/lib/auth/server");
     checks.serverModule = "loaded";
@@ -23,7 +38,9 @@ export async function GET() {
       checks.currentUser = error instanceof Error ? error.name : "failed";
     }
   } catch (error) {
-    checks.serverModule = error instanceof Error ? error.name : "failed";
+    checks.serverModule = error instanceof Error
+      ? `${error.name}: ${error.message}`.slice(0, 240)
+      : "failed";
   }
 
   return NextResponse.json(checks, {

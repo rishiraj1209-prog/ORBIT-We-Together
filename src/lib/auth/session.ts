@@ -1,13 +1,21 @@
 import { cookies } from "next/headers";
-import type { DecodedIdToken } from "firebase-admin/auth";
-import { getAdminAuth } from "@/lib/firebase/admin";
 import { decodeProtectedHeader, importX509, jwtVerify } from "jose";
 import {
   SESSION_COOKIE_NAME,
   SESSION_MAX_AGE_MS,
 } from "@/lib/constants/auth";
 
+export type VerifiedFirebaseToken = {
+  uid: string;
+  email?: string;
+  email_verified?: boolean;
+  name?: string;
+  picture?: string;
+  [claim: string]: unknown;
+};
+
 export async function createSessionCookie(idToken: string): Promise<string> {
+  const { getAdminAuth } = await import("@/lib/firebase/admin");
   return getAdminAuth().createSessionCookie(idToken, {
     expiresIn: SESSION_MAX_AGE_MS,
   });
@@ -15,11 +23,15 @@ export async function createSessionCookie(idToken: string): Promise<string> {
 
 export async function verifySessionCookie(
   sessionCookie: string
-): Promise<DecodedIdToken> {
+): Promise<VerifiedFirebaseToken> {
+  const { getAdminAuth } = await import("@/lib/firebase/admin");
   return getAdminAuth().verifySessionCookie(sessionCookie, true);
 }
 
-export async function verifyIdToken(idToken: string): Promise<DecodedIdToken> {
+export async function verifyIdToken(
+  idToken: string
+): Promise<VerifiedFirebaseToken> {
+  const { getAdminAuth } = await import("@/lib/firebase/admin");
   return getAdminAuth().verifyIdToken(idToken);
 }
 
@@ -34,7 +46,7 @@ const certCache = new Map<string, { cert: string; expiresAt: number }>();
  */
 export async function verifyFirebasePublicIdToken(
   idToken: string
-): Promise<DecodedIdToken> {
+): Promise<VerifiedFirebaseToken> {
   const projectId =
     process.env.FIREBASE_PROJECT_ID ??
     process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID;
@@ -75,10 +87,11 @@ export async function verifyFirebasePublicIdToken(
     email_verified: payload.email_verified === true,
     name: typeof payload.name === "string" ? payload.name : undefined,
     picture: typeof payload.picture === "string" ? payload.picture : undefined,
-  } as unknown as DecodedIdToken;
+  } as VerifiedFirebaseToken;
 }
 
 export async function revokeUserSessions(uid: string): Promise<void> {
+  const { getAdminAuth } = await import("@/lib/firebase/admin");
   await getAdminAuth().revokeRefreshTokens(uid);
 }
 

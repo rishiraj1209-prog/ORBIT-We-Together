@@ -1,6 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
-import { upsertAdminUserDocument } from "@/lib/firebase/admin-users";
 import { isCollegeEmail } from "@/lib/constants/auth";
 import {
   checkRateLimit,
@@ -54,6 +53,9 @@ export async function POST(request: NextRequest) {
     }
 
     if (hasAdmin) {
+      const { upsertAdminUserDocument } = await import(
+        "@/lib/firebase/admin-users"
+      );
       await upsertAdminUserDocument({
         uid: decoded.uid,
         email,
