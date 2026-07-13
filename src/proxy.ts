@@ -1,5 +1,9 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { AUTH_ROUTES, PROTECTED_ROUTE_PREFIX, SESSION_COOKIE_NAME } from "@/lib/constants/auth";
+import {
+  AUTH_ROUTES,
+  PROTECTED_ROUTE_PREFIX,
+  SESSION_COOKIE_NAME,
+} from "@/lib/constants/auth";
 
 function isProtectedPath(pathname: string): boolean {
   return (
@@ -12,24 +16,40 @@ function isVerifyEmailPath(pathname: string): boolean {
   return pathname === AUTH_ROUTES.verifyEmail;
 }
 
-// ✅ SIMPLE SAFE CHECK (no Node.js code)
-function hasValidSessionCookie(request: NextRequest): boolean {
+function hasUsableSessionCookie(request: NextRequest): boolean {
   const session = request.cookies.get(SESSION_COOKIE_NAME)?.value;
-  return !!session; // only checks if cookie exists
+  if (!session) return false;
+
+  try {
+    const parts = session.split(".");
+    if (parts.length !== 3) return false;
+    const payload = JSON.parse(
+      Buffer.from(parts[1]!, "base64url").toString("utf8")
+    ) as { exp?: number };
+    return typeof payload.exp === "number" && payload.exp * 1000 > Date.now();
+  } catch {
+    return false;
+  }
+}
+
+function redirectToLogin(request: NextRequest, includeReturnPath: boolean) {
+  const loginUrl = new URL(AUTH_ROUTES.login, request.url);
+  if (includeReturnPath) loginUrl.searchParams.set("redirect", request.nextUrl.pathname);
+  const response = NextResponse.redirect(loginUrl);
+  response.cookies.delete(SESSION_COOKIE_NAME);
+  return response;
 }
 
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const isAuthenticated = hasValidSessionCookie(request);
+  const hasSession = hasUsableSessionCookie(request);
 
-  if (isProtectedPath(pathname) && !isAuthenticated) {
-    const loginUrl = new URL(AUTH_ROUTES.login, request.url);
-    loginUrl.searchParams.set("redirect", pathname);
-    return NextResponse.redirect(loginUrl);
+  if (isProtectedPath(pathname) && !hasSession) {
+    return redirectToLogin(request, true);
   }
 
-  if (isVerifyEmailPath(pathname) && !isAuthenticated) {
-    return NextResponse.redirect(new URL(AUTH_ROUTES.login, request.url));
+  if (isVerifyEmailPath(pathname) && !hasSession) {
+    return redirectToLogin(request, false);
   }
 
   return NextResponse.next();
