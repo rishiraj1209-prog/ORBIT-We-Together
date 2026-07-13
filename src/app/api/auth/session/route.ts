@@ -12,6 +12,7 @@ import {
   revokeUserSessions,
   SESSION_COOKIE_NAME,
   verifyIdToken,
+  verifyFirebasePublicIdToken,
 } from "@/lib/auth/session";
 import { isFirebaseAdminConfigured } from "@/lib/firebase/config";
 
@@ -22,13 +23,6 @@ const sessionBodySchema = z.object({
 });
 
 export async function POST(request: NextRequest) {
-  if (!isFirebaseAdminConfigured()) {
-    return NextResponse.json(
-      { error: "Authentication service is not configured." },
-      { status: 503 }
-    );
-  }
-
   const rateLimit = checkRateLimit(request, "auth-session-post");
   if (!rateLimit.allowed) {
     return NextResponse.json(
@@ -39,7 +33,10 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = sessionBodySchema.parse(await request.json());
-    const decoded = await verifyIdToken(body.idToken);
+    const hasAdmin = isFirebaseAdminConfigured();
+    const decoded = hasAdmin
+      ? await verifyIdToken(body.idToken)
+      : await verifyFirebasePublicIdToken(body.idToken);
     const email = decoded.email;
 
     if (!email) {
@@ -56,15 +53,19 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    await upsertAdminUserDocument({
-      uid: decoded.uid,
-      email,
-      displayName: decoded.name ?? null,
-      photoURL: decoded.picture ?? null,
-      emailVerified: decoded.email_verified ?? false,
-    });
+    if (hasAdmin) {
+      await upsertAdminUserDocument({
+        uid: decoded.uid,
+        email,
+        displayName: decoded.name ?? null,
+        photoURL: decoded.picture ?? null,
+        emailVerified: decoded.email_verified ?? false,
+      });
+    }
 
-    const sessionCookie = await createSessionCookie(body.idToken);
+    const sessionCookie = hasAdmin
+      ? await createSessionCookie(body.idToken)
+      : body.idToken;
     const response = NextResponse.json(
       {
         success: true,
@@ -76,7 +77,7 @@ export async function POST(request: NextRequest) {
     response.cookies.set(
       SESSION_COOKIE_NAME,
       sessionCookie,
-      getSessionCookieOptions()
+      getSessionCookieOptions(hasAdmin ? undefined : 55 * 60 * 1000)
     );
     return response;
   } catch (error) {

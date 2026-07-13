@@ -5,6 +5,7 @@ import { isFirebaseAdminConfigured } from "@/lib/firebase/config";
 import {
   getSessionCookieFromRequest,
   SESSION_COOKIE_NAME,
+  verifyFirebasePublicIdToken,
   verifySessionCookie,
 } from "@/lib/auth/session";
 import type { AuthUser } from "@/types/auth";
@@ -16,7 +17,27 @@ export async function getCurrentUser(): Promise<AuthUser | null> {
   if (!isFirebaseAdminConfigured()) {
     const sessionCookie = await getSessionCookieFromRequest();
     if (!sessionCookie) return null;
-    return verifyDemoSession(sessionCookie);
+    const demoUser = await verifyDemoSession(sessionCookie);
+    if (demoUser) return demoUser;
+    try {
+      const decoded = await verifyFirebasePublicIdToken(sessionCookie);
+      const email = decoded.email;
+      if (!email || !isCollegeEmail(email)) return null;
+      const cookieStore = await cookies();
+      const onboardedUid = cookieStore.get(ONBOARDING_COOKIE)?.value;
+      return {
+        uid: decoded.uid,
+        email,
+        displayName: decoded.name ?? null,
+        photoURL: decoded.picture ?? null,
+        emailVerified: decoded.email_verified ?? false,
+        role: "alumni",
+        verificationStatus: "pending",
+        onboardingComplete: onboardedUid === decoded.uid,
+      };
+    } catch {
+      return null;
+    }
   }
 
   const sessionCookie = await getSessionCookieFromRequest();
