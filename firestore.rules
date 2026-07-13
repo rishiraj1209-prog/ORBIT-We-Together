@@ -2,45 +2,31 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-
-    function signedIn() {
+    function isSignedIn() {
       return request.auth != null;
     }
 
-    function isOwner(uid) {
-      return signedIn() && request.auth.uid == uid;
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
     }
 
-    match /profiles/{uid} {
-      allow read: if signedIn();
-      allow create, update, delete: if isOwner(uid);
+    match /users/{userId} {
+      allow read: if isOwner(userId);
+      allow create: if isOwner(userId)
+        && request.resource.data.uid == userId
+        && request.resource.data.keys().hasAll([
+          'uid', 'email', 'displayName', 'photoURL', 'role',
+          'verificationStatus', 'emailVerified', 'onboardingComplete',
+          'createdAt', 'updatedAt'
+        ]);
+      allow update: if isOwner(userId)
+        && request.resource.data.uid == userId
+        && request.resource.data.email == resource.data.email;
+      allow delete: if false;
     }
 
-    match /users/{uid}/chat/{messageId} {
-      allow read, create, update, delete: if isOwner(uid);
-    }
-
-    match /resumeAnalysis/{uid} {
-      allow read, create, update, delete: if isOwner(uid);
-    }
-
-    match /roadmaps/{uid} {
-      allow read, create, update, delete: if isOwner(uid);
-    }
-
-    match /alumni/{docId} {
-      allow read: if signedIn();
-      allow write: if false;
-    }
-
-    match /opportunities/{docId} {
-      allow read: if signedIn();
-      allow write: if false;
-    }
-
-    match /referrals/{docId} {
-      allow read: if signedIn();
-      allow write: if false;
+    match /{document=**} {
+      allow read, write: if false;
     }
   }
 }
