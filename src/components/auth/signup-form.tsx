@@ -18,8 +18,10 @@ import {
 } from "@/lib/auth/client";
 import { signupSchema, type SignupFormValues } from "@/lib/auth/validation";
 import { cn } from "@/lib/utils/cn";
+import { useOrbitExperience } from "@/components/experience/orbit-cinematic";
 
 export function SignupForm() {
+  const { armSound, celebrate } = useOrbitExperience();
   const router = useRouter();
 
   const [values, setValues] = useState<SignupFormValues>({
@@ -35,11 +37,13 @@ export function SignupForm() {
   const [googleLoading, setGoogleLoading] = useState(false);
 
   async function handleGoogleSignIn() {
+    armSound();
     setFormError(null);
     setGoogleLoading(true);
 
     try {
       const user = await signInWithGoogle();
+      await celebrate();
       router.push(user.emailVerified ? "/app" : AUTH_ROUTES.verifyEmail);
       router.refresh();
     } catch (error) {
@@ -51,6 +55,7 @@ export function SignupForm() {
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    armSound();
     setFormError(null);
     setFieldErrors({});
 
@@ -71,6 +76,7 @@ export function SignupForm() {
 
     try {
       await signUpWithEmail(parsed.data.email, parsed.data.password);
+      await celebrate();
       router.push(AUTH_ROUTES.verifyEmail);
       router.refresh();
     } catch (error) {

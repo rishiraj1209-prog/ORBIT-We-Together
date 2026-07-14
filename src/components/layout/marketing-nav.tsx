@@ -47,7 +47,7 @@ export function MarketingNav() {
           >
             {MARKETING_NAV.map((item) => (
               <Link
-                key={item.href}
+                key={item.label}
                 href={item.href}
                 className="text-xs font-medium uppercase tracking-[.08em] text-text-secondary transition-colors hover:text-text-primary"
               >
@@ -89,7 +89,7 @@ export function MarketingNav() {
           <Container className="flex flex-col gap-1 py-4">
             {MARKETING_NAV.map((item) => (
               <Link
-                key={item.href}
+                key={item.label}
                 href={item.href}
                 onClick={() => setMobileOpen(false)}
                 className="rounded-lg px-3 py-2.5 text-sm text-text-secondary transition-colors hover:bg-surface-elevated hover:text-text-primary"

@@ -20,8 +20,10 @@ import { loginSchema, type LoginFormValues } from "@/lib/auth/validation";
 import { cn } from "@/lib/utils/cn";
 import { isFirebaseConfigured } from "@/lib/firebase/config";
 import { ArrowRight, Sparkles } from "lucide-react";
+import { useOrbitExperience } from "@/components/experience/orbit-cinematic";
 
 export function LoginForm() {
+  const { armSound, celebrate } = useOrbitExperience();
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get("redirect") ?? PROTECTED_ROUTE_PREFIX;
@@ -39,6 +41,7 @@ export function LoginForm() {
   const demoMode = process.env.NODE_ENV === "development" && !isFirebaseConfigured();
 
   async function handleDemoSignIn() {
+    armSound();
     setFormError(null);
     setLoading(true);
     try {
@@ -53,6 +56,7 @@ export function LoginForm() {
       }
       const data = await response.json() as { error?: string; redirectTo?: string };
       if (!response.ok) throw new Error(data.error ?? "Unable to open demo workspace.");
+      await celebrate();
       router.push(data.redirectTo ?? PROTECTED_ROUTE_PREFIX);
       router.refresh();
     } catch (error) {
@@ -63,11 +67,13 @@ export function LoginForm() {
   }
 
   async function handleGoogleSignIn() {
+    armSound();
     setFormError(null);
     setGoogleLoading(true);
 
     try {
       const user = await signInWithGoogle();
+      await celebrate();
       router.push(user.emailVerified ? redirectTo : AUTH_ROUTES.verifyEmail);
       router.refresh();
     } catch (error) {
@@ -79,6 +85,7 @@ export function LoginForm() {
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    armSound();
     setFormError(null);
     setFieldErrors({});
 
@@ -99,6 +106,7 @@ export function LoginForm() {
 
     try {
       const user = await signInWithEmail(parsed.data.email, parsed.data.password);
+      await celebrate();
       router.push(user.emailVerified ? redirectTo : AUTH_ROUTES.verifyEmail);
       router.refresh();
     } catch (error) {
